@@ -1,0 +1,785 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Yobee — AI Operations Hub</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --yobee-dark: #070E1A;
+    --yobee-dark2: #0D1A2E;
+    --yobee-accent: #1D9E75;
+    --yobee-accent-light: #5DCAA5;
+    --yobee-muted: rgba(255,255,255,0.35);
+    --yobee-border: rgba(255,255,255,0.08);
+    --yobee-card: rgba(255,255,255,0.04);
+    --yobee-card-hover: rgba(255,255,255,0.07);
+    --font: 'DM Sans', sans-serif;
+    --mono: 'DM Mono', monospace;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--yobee-dark);
+    color: #fff;
+    font-family: var(--font);
+    min-height: 100vh;
+    padding: 0;
+    overflow-x: hidden;
+  }
+
+  /* GRID BACKGROUND */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(29,158,117,0.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(29,158,117,0.04) 1px, transparent 1px);
+    background-size: 48px 48px;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .container {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 2rem 1.5rem 4rem;
+    position: relative;
+    z-index: 1;
+  }
+
+  /* HEADER */
+  header {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    padding-bottom: 2.5rem;
+    border-bottom: 1px solid var(--yobee-border);
+    margin-bottom: 2.5rem;
+  }
+
+  .logo-block { display: flex; flex-direction: column; gap: 4px; }
+
+  .logo-name {
+    font-size: 22px;
+    font-weight: 500;
+    letter-spacing: -0.01em;
+    color: #fff;
+  }
+
+  .logo-sub {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--yobee-accent-light);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+
+  .header-meta {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .pill {
+    font-family: var(--mono);
+    font-size: 10px;
+    padding: 4px 10px;
+    border-radius: 99px;
+    border: 1px solid var(--yobee-border);
+    color: var(--yobee-muted);
+    letter-spacing: 0.06em;
+  }
+
+  .pill.live {
+    border-color: rgba(29,158,117,0.4);
+    color: var(--yobee-accent-light);
+    display: flex;
+    align-items: center;
+    gap: 5px;
+  }
+
+  .pill.live::before {
+    content: '';
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--yobee-accent);
+    animation: pulse 2s infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.3; }
+  }
+
+  /* SECTION LABEL */
+  .section-label {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--yobee-muted);
+    margin-bottom: 1rem;
+  }
+
+  /* WORKFLOW GRID */
+  .workflow-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+    margin-bottom: 2rem;
+  }
+
+  .wf-card {
+    background: var(--yobee-card);
+    border: 1px solid var(--yobee-border);
+    border-radius: 12px;
+    padding: 1.25rem;
+    cursor: pointer;
+    transition: background 0.15s, border-color 0.15s, transform 0.1s;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .wf-card::after {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 2px;
+    background: var(--yobee-accent);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.2s;
+  }
+
+  .wf-card:hover {
+    background: var(--yobee-card-hover);
+    border-color: rgba(255,255,255,0.14);
+    transform: translateY(-1px);
+  }
+
+  .wf-card:hover::after { transform: scaleX(1); }
+
+  .wf-card.active {
+    background: rgba(29,158,117,0.08);
+    border-color: rgba(29,158,117,0.4);
+  }
+
+  .wf-card.active::after { transform: scaleX(1); }
+
+  .wf-number {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--yobee-accent);
+    margin-bottom: 10px;
+    letter-spacing: 0.08em;
+  }
+
+  .wf-title {
+    font-size: 13px;
+    font-weight: 500;
+    color: #fff;
+    margin-bottom: 5px;
+    line-height: 1.3;
+  }
+
+  .wf-desc {
+    font-size: 11px;
+    color: var(--yobee-muted);
+    line-height: 1.5;
+  }
+
+  .wf-team {
+    display: inline-block;
+    margin-top: 12px;
+    font-family: var(--mono);
+    font-size: 9px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 3px 8px;
+    border-radius: 99px;
+    background: rgba(29,158,117,0.12);
+    color: var(--yobee-accent-light);
+    border: 1px solid rgba(29,158,117,0.2);
+  }
+
+  /* FORM PANEL */
+  .form-panel {
+    background: var(--yobee-card);
+    border: 1px solid var(--yobee-border);
+    border-radius: 16px;
+    overflow: hidden;
+    display: none;
+  }
+
+  .form-panel.visible { display: block; animation: slideIn 0.2s ease; }
+
+  @keyframes slideIn {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .form-topbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1rem 1.5rem;
+    border-bottom: 1px solid var(--yobee-border);
+    background: rgba(255,255,255,0.02);
+  }
+
+  .form-topbar-left {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .form-topbar-icon {
+    width: 28px;
+    height: 28px;
+    border-radius: 8px;
+    background: rgba(29,158,117,0.15);
+    border: 1px solid rgba(29,158,117,0.25);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 13px;
+    color: var(--yobee-accent-light);
+  }
+
+  .form-topbar-title {
+    font-size: 13px;
+    font-weight: 500;
+    color: #fff;
+  }
+
+  .form-topbar-webhook {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: rgba(29,158,117,0.6);
+    margin-top: 2px;
+  }
+
+  .btn-close {
+    background: none;
+    border: 1px solid var(--yobee-border);
+    border-radius: 6px;
+    color: var(--yobee-muted);
+    cursor: pointer;
+    font-size: 14px;
+    padding: 4px 8px;
+    transition: border-color 0.15s, color 0.15s;
+  }
+
+  .btn-close:hover { border-color: rgba(255,255,255,0.2); color: #fff; }
+
+  .form-body { padding: 1.5rem; }
+
+  .form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+    margin-bottom: 1.5rem;
+  }
+
+  .field { display: flex; flex-direction: column; gap: 6px; }
+  .field.full { grid-column: span 2; }
+
+  .field label {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--yobee-muted);
+  }
+
+  .field input,
+  .field select,
+  .field textarea {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid var(--yobee-border);
+    border-radius: 8px;
+    padding: 9px 12px;
+    color: #fff;
+    font-family: var(--font);
+    font-size: 13px;
+    transition: border-color 0.15s;
+    outline: none;
+    width: 100%;
+  }
+
+  .field input::placeholder,
+  .field textarea::placeholder { color: rgba(255,255,255,0.2); }
+
+  .field input:focus,
+  .field select:focus,
+  .field textarea:focus {
+    border-color: rgba(29,158,117,0.5);
+    background: rgba(29,158,117,0.04);
+  }
+
+  .field select {
+    appearance: none;
+    cursor: pointer;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='rgba(255,255,255,0.3)' stroke-width='2'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+    padding-right: 32px;
+  }
+
+  .field select option { background: #0D1A2E; color: #fff; }
+
+  .field textarea { resize: none; height: 80px; }
+
+  .form-footer {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    padding: 1rem 1.5rem;
+    border-top: 1px solid var(--yobee-border);
+    gap: 10px;
+  }
+
+  .btn-run {
+    background: var(--yobee-accent);
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    padding: 9px 20px;
+    font-family: var(--font);
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    transition: background 0.15s, transform 0.1s;
+  }
+
+  .btn-run:hover { background: #18875f; }
+  .btn-run:active { transform: scale(0.98); }
+  .btn-run:disabled { background: rgba(29,158,117,0.3); cursor: not-allowed; }
+
+  .btn-run svg { width: 14px; height: 14px; }
+
+  /* TOAST */
+  .toast {
+    display: none;
+    align-items: flex-start;
+    gap: 10px;
+    margin: 0 1.5rem 1.5rem;
+    background: rgba(29,158,117,0.08);
+    border: 1px solid rgba(29,158,117,0.25);
+    border-radius: 10px;
+    padding: 12px 14px;
+  }
+
+  .toast.visible { display: flex; animation: slideIn 0.2s ease; }
+  .toast.error { background: rgba(220,60,60,0.08); border-color: rgba(220,60,60,0.25); }
+
+  .toast-icon { font-size: 15px; margin-top: 1px; flex-shrink: 0; }
+  .toast-title { font-size: 12px; font-weight: 500; color: #fff; margin-bottom: 2px; }
+  .toast-msg { font-size: 11px; color: var(--yobee-muted); line-height: 1.5; }
+
+  /* FOOTER */
+  footer {
+    margin-top: 3rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--yobee-border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .footer-txt {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: rgba(255,255,255,0.2);
+    letter-spacing: 0.06em;
+  }
+
+  /* RESPONSIVE */
+  @media (max-width: 640px) {
+    .workflow-grid { grid-template-columns: 1fr 1fr; }
+    .form-grid { grid-template-columns: 1fr; }
+    .field.full { grid-column: span 1; }
+    header { flex-direction: column; align-items: flex-start; gap: 1rem; }
+  }
+
+  @media (max-width: 420px) {
+    .workflow-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+
+  <header>
+    <div class="logo-block">
+      <span class="logo-name">Yobee</span>
+      <span class="logo-sub">AI Operations Hub</span>
+    </div>
+    <div class="header-meta">
+      <span class="pill">n8n · foffyautomazioni.com</span>
+      <span class="pill live">online</span>
+    </div>
+  </header>
+
+  <div class="section-label">Workflow attivi — seleziona e compila</div>
+
+  <div class="workflow-grid">
+
+    <div class="wf-card" id="card-clienti" onclick="openForm('clienti')">
+      <div class="wf-number">01</div>
+      <div class="wf-title">Cerca nuovi clienti</div>
+      <div class="wf-desc">Lista prospect qualificati per settore, area e fatturato target</div>
+      <span class="wf-team">Sales & Account</span>
+    </div>
+
+    <div class="wf-card" id="card-gara" onclick="openForm('gara')">
+      <div class="wf-number">02</div>
+      <div class="wf-title">Gara media</div>
+      <div class="wf-desc">Documento strutturato con target, mezzi consigliati e KPI</div>
+      <span class="wf-team">Media</span>
+    </div>
+
+    <div class="wf-card" id="card-editori" onclick="openForm('editori')">
+      <div class="wf-number">03</div>
+      <div class="wf-title">Scouting editori</div>
+      <div class="wf-desc">Nuovi publisher per network e monetizzazione per verticale</div>
+      <span class="wf-team">Network</span>
+    </div>
+
+  </div>
+
+  <!-- FORM PANEL -->
+  <div class="form-panel" id="formPanel">
+
+    <!-- FORM: CERCA CLIENTI -->
+    <div id="form-clienti" style="display:none">
+      <div class="form-topbar">
+        <div class="form-topbar-left">
+          <div class="form-topbar-icon">01</div>
+          <div>
+            <div class="form-topbar-title">Cerca nuovi clienti</div>
+            <div class="form-topbar-webhook">POST → /webhook/cerca-clienti</div>
+          </div>
+        </div>
+        <button class="btn-close" onclick="closeForm()">✕</button>
+      </div>
+      <div class="form-body">
+        <div class="form-grid">
+          <div class="field">
+            <label>Nome richiedente</label>
+            <input type="text" id="cc-nome" placeholder="es. Mario Rossi">
+          </div>
+          <div class="field">
+            <label>Email (riceverai l'output)</label>
+            <input type="email" id="cc-email" placeholder="mario@yobee.it">
+          </div>
+          <div class="field">
+            <label>Settore target</label>
+            <input type="text" id="cc-settore" placeholder="es. Pharma, Finance, Retail">
+          </div>
+          <div class="field">
+            <label>Area geografica</label>
+            <input type="text" id="cc-area" placeholder="es. Milano, Nord Italia">
+          </div>
+          <div class="field">
+            <label>Fatturato minimo (€)</label>
+            <input type="text" id="cc-fatturato" placeholder="es. 5.000.000">
+          </div>
+          <div class="field">
+            <label>Numero prospect</label>
+            <input type="text" id="cc-numero" placeholder="es. 20">
+          </div>
+          <div class="field full">
+            <label>Note aggiuntive (opzionale)</label>
+            <textarea id="cc-note" placeholder="Criteri particolari, esclusioni, priorità..."></textarea>
+          </div>
+        </div>
+      </div>
+      <div class="toast" id="toast-clienti">
+        <div class="toast-icon" id="toast-clienti-icon"></div>
+        <div>
+          <div class="toast-title" id="toast-clienti-title"></div>
+          <div class="toast-msg" id="toast-clienti-msg"></div>
+        </div>
+      </div>
+      <div class="form-footer">
+        <button class="btn-run" id="btn-clienti" onclick="runWorkflow('clienti')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+          Avvia workflow
+        </button>
+      </div>
+    </div>
+
+    <!-- FORM: GARA MEDIA -->
+    <div id="form-gara" style="display:none">
+      <div class="form-topbar">
+        <div class="form-topbar-left">
+          <div class="form-topbar-icon">02</div>
+          <div>
+            <div class="form-topbar-title">Gara media</div>
+            <div class="form-topbar-webhook">POST → /webhook/gara-media</div>
+          </div>
+        </div>
+        <button class="btn-close" onclick="closeForm()">✕</button>
+      </div>
+      <div class="form-body">
+        <div class="form-grid">
+          <div class="field">
+            <label>Nome richiedente</label>
+            <input type="text" id="gm-nome" placeholder="es. Laura Bianchi">
+          </div>
+          <div class="field">
+            <label>Email (riceverai l'output)</label>
+            <input type="email" id="gm-email" placeholder="laura@yobee.it">
+          </div>
+          <div class="field">
+            <label>Cliente / Brand</label>
+            <input type="text" id="gm-cliente" placeholder="es. Agos, Samsung...">
+          </div>
+          <div class="field">
+            <label>Budget stimato (€)</label>
+            <input type="text" id="gm-budget" placeholder="es. 50.000">
+          </div>
+          <div class="field">
+            <label>Periodo campagna</label>
+            <input type="text" id="gm-periodo" placeholder="es. Q3 2025">
+          </div>
+          <div class="field">
+            <label>Obiettivo</label>
+            <select id="gm-obiettivo">
+              <option value="">Seleziona...</option>
+              <option>Awareness</option>
+              <option>Performance</option>
+              <option>Brand Safety</option>
+              <option>Traffico</option>
+              <option>Conversioni</option>
+            </select>
+          </div>
+          <div class="field full">
+            <label>Brief (settore, target, note)</label>
+            <textarea id="gm-brief" placeholder="Descrivi il cliente, il target e eventuali vincoli o formati preferiti..."></textarea>
+          </div>
+        </div>
+      </div>
+      <div class="toast" id="toast-gara">
+        <div class="toast-icon" id="toast-gara-icon"></div>
+        <div>
+          <div class="toast-title" id="toast-gara-title"></div>
+          <div class="toast-msg" id="toast-gara-msg"></div>
+        </div>
+      </div>
+      <div class="form-footer">
+        <button class="btn-run" id="btn-gara" onclick="runWorkflow('gara')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+          Avvia workflow
+        </button>
+      </div>
+    </div>
+
+    <!-- FORM: SCOUTING EDITORI -->
+    <div id="form-editori" style="display:none">
+      <div class="form-topbar">
+        <div class="form-topbar-left">
+          <div class="form-topbar-icon">03</div>
+          <div>
+            <div class="form-topbar-title">Scouting editori</div>
+            <div class="form-topbar-webhook">POST → /webhook/scouting-editori</div>
+          </div>
+        </div>
+        <button class="btn-close" onclick="closeForm()">✕</button>
+      </div>
+      <div class="form-body">
+        <div class="form-grid">
+          <div class="field">
+            <label>Nome richiedente</label>
+            <input type="text" id="se-nome" placeholder="es. Giulia Verdi">
+          </div>
+          <div class="field">
+            <label>Email (riceverai l'output)</label>
+            <input type="email" id="se-email" placeholder="giulia@yobee.it">
+          </div>
+          <div class="field">
+            <label>Verticale tematico</label>
+            <input type="text" id="se-verticale" placeholder="es. Sport, Finance, Lifestyle">
+          </div>
+          <div class="field">
+            <label>Formato adv</label>
+            <select id="se-formato">
+              <option value="">Seleziona...</option>
+              <option>Display</option>
+              <option>Native</option>
+              <option>Video</option>
+              <option>Tutti i formati</option>
+            </select>
+          </div>
+          <div class="field">
+            <label>Traffico mensile minimo</label>
+            <input type="text" id="se-traffico" placeholder="es. 500.000 UV/mese">
+          </div>
+          <div class="field">
+            <label>Numero editori da trovare</label>
+            <input type="text" id="se-numero" placeholder="es. 10">
+          </div>
+          <div class="field full">
+            <label>Note (brand safety, esclusioni, requisiti)</label>
+            <textarea id="se-note" placeholder="Requisiti particolari, editori da escludere, priorità geografiche..."></textarea>
+          </div>
+        </div>
+      </div>
+      <div class="toast" id="toast-editori">
+        <div class="toast-icon" id="toast-editori-icon"></div>
+        <div>
+          <div class="toast-title" id="toast-editori-title"></div>
+          <div class="toast-msg" id="toast-editori-msg"></div>
+        </div>
+      </div>
+      <div class="form-footer">
+        <button class="btn-run" id="btn-editori" onclick="runWorkflow('editori')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+          Avvia workflow
+        </button>
+      </div>
+    </div>
+
+  </div><!-- end form-panel -->
+
+  <footer>
+    <span class="footer-txt">YOBEE SRL · Via Giacomo Watt 27, Milano</span>
+    <span class="footer-txt">AI Operations Hub v1.0</span>
+  </footer>
+
+</div>
+
+<script>
+  const N8N_BASE = 'https://n8n.foffyautomazioni.com';
+
+  const WORKFLOWS = {
+    clienti: {
+      webhook: '/webhook/cerca-clienti',
+      fields: () => ({
+        nome: document.getElementById('cc-nome').value,
+        email: document.getElementById('cc-email').value,
+        settore: document.getElementById('cc-settore').value,
+        area: document.getElementById('cc-area').value,
+        fatturato_min: document.getElementById('cc-fatturato').value,
+        numero_prospect: document.getElementById('cc-numero').value,
+        note: document.getElementById('cc-note').value
+      }),
+      required: ['cc-nome','cc-email','cc-settore','cc-area']
+    },
+    gara: {
+      webhook: '/webhook/gara-media',
+      fields: () => ({
+        nome: document.getElementById('gm-nome').value,
+        email: document.getElementById('gm-email').value,
+        cliente: document.getElementById('gm-cliente').value,
+        budget: document.getElementById('gm-budget').value,
+        periodo: document.getElementById('gm-periodo').value,
+        obiettivo: document.getElementById('gm-obiettivo').value,
+        brief: document.getElementById('gm-brief').value
+      }),
+      required: ['gm-nome','gm-email','gm-cliente','gm-obiettivo']
+    },
+    editori: {
+      webhook: '/webhook/scouting-editori',
+      fields: () => ({
+        nome: document.getElementById('se-nome').value,
+        email: document.getElementById('se-email').value,
+        verticale: document.getElementById('se-verticale').value,
+        formato: document.getElementById('se-formato').value,
+        traffico_min: document.getElementById('se-traffico').value,
+        numero_editori: document.getElementById('se-numero').value,
+        note: document.getElementById('se-note').value
+      }),
+      required: ['se-nome','se-email','se-verticale']
+    }
+  };
+
+  let current = null;
+
+  function openForm(id) {
+    ['clienti','gara','editori'].forEach(f => {
+      document.getElementById('form-' + f).style.display = 'none';
+      document.getElementById('card-' + f).classList.remove('active');
+    });
+    document.getElementById('form-' + id).style.display = 'block';
+    document.getElementById('card-' + id).classList.add('active');
+    document.getElementById('formPanel').classList.add('visible');
+    hideToast(id);
+    current = id;
+  }
+
+  function closeForm() {
+    document.getElementById('formPanel').classList.remove('visible');
+    if (current) document.getElementById('card-' + current).classList.remove('active');
+    current = null;
+  }
+
+  function showToast(id, type, title, msg) {
+    const toast = document.getElementById('toast-' + id);
+    const icon = document.getElementById('toast-' + id + '-icon');
+    toast.classList.remove('error');
+    if (type === 'error') toast.classList.add('error');
+    icon.textContent = type === 'success' ? '✓' : '✕';
+    document.getElementById('toast-' + id + '-title').textContent = title;
+    document.getElementById('toast-' + id + '-msg').textContent = msg;
+    toast.classList.add('visible');
+  }
+
+  function hideToast(id) {
+    document.getElementById('toast-' + id).classList.remove('visible');
+  }
+
+  async function runWorkflow(id) {
+    const wf = WORKFLOWS[id];
+    const btn = document.getElementById('btn-' + id);
+
+    // Validazione campi obbligatori
+    const missing = wf.required.filter(fid => !document.getElementById(fid).value.trim());
+    if (missing.length > 0) {
+      missing.forEach(fid => {
+        const el = document.getElementById(fid);
+        el.style.borderColor = 'rgba(220,60,60,0.6)';
+        el.addEventListener('input', () => el.style.borderColor = '', { once: true });
+      });
+      showToast(id, 'error', 'Campi mancanti', 'Compila i campi obbligatori evidenziati.');
+      return;
+    }
+
+    btn.disabled = true;
+    btn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><circle cx="12" cy="12" r="10"/></svg> Invio in corso...';
+
+    try {
+      const payload = wf.fields();
+      const res = await fetch(N8N_BASE + wf.webhook, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+
+      if (res.ok) {
+        showToast(id, 'success', 'Workflow avviato', 'Riceverai l\'output via email a ' + payload.email + ' non appena il workflow sarà completato.');
+      } else {
+        throw new Error('HTTP ' + res.status);
+      }
+    } catch (err) {
+      showToast(id, 'error', 'Errore di connessione', 'Impossibile raggiungere n8n. Controlla che il webhook sia attivo. (' + err.message + ')');
+    } finally {
+      btn.disabled = false;
+      btn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><polygon points="5 3 19 12 5 21 5 3"/></svg> Avvia workflow';
+    }
+  }
+</script>
+
+</body>
+</html>
