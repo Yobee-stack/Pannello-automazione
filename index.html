@@ -456,6 +456,27 @@
       <span class="wf-team">Network</span>
     </div>
 
+    <div class="wf-card" id="card-coldmail" onclick="openForm('coldmail')">
+      <div class="wf-number">04</div>
+      <div class="wf-title">Email a freddo</div>
+      <div class="wf-desc">Genera e invia una cold email B2B personalizzata sul contatto target</div>
+      <span class="wf-team">Sales &amp; Account</span>
+    </div>
+
+    <div class="wf-card" id="card-aggiornato" onclick="openForm('aggiornato')">
+      <div class="wf-number">05</div>
+      <div class="wf-title">Resta aggiornato</div>
+      <div class="wf-desc">Monitoraggio fonti e digest periodico sui temi che segui</div>
+      <span class="wf-team">Knowledge</span>
+    </div>
+
+    <div class="wf-card" id="card-seogeo" onclick="openForm('seogeo')">
+      <div class="wf-number">06</div>
+      <div class="wf-title">Analisi SEO &amp; GEO</div>
+      <div class="wf-desc">Audit per motori di ricerca e per motori generativi (AI search)</div>
+      <span class="wf-team">SEO &amp; Media</span>
+    </div>
+
   </div>
 
   <!-- FORM PANEL -->
@@ -612,6 +633,190 @@
       </div>
     </div>
 
+    <!-- FORM: EMAIL A FREDDO -->
+    <div id="form-coldmail" style="display:none">
+      <div class="form-topbar">
+        <div class="form-topbar-left">
+          <div class="form-topbar-icon">04</div>
+          <div>
+            <div class="form-topbar-title">Email a freddo</div>
+            <div class="form-topbar-webhook">POST → /webhook/cold-email</div>
+          </div>
+        </div>
+        <button class="btn-close" onclick="closeForm()">✕</button>
+      </div>
+      <div class="form-body">
+        <div class="form-grid">
+          <div class="field">
+            <label>Nome richiedente</label>
+            <input type="text" id="ce-nome" placeholder="es. Mario Rossi">
+          </div>
+          <div class="field">
+            <label>Email mittente (riceverai la bozza)</label>
+            <input type="email" id="ce-email" placeholder="mario@yobee.it">
+          </div>
+          <div class="field">
+            <label>Nome prospect + ruolo</label>
+            <input type="text" id="ce-prospect" placeholder="es. Marco Rossi, Marketing Director">
+          </div>
+          <div class="field">
+            <label>Azienda + settore</label>
+            <input type="text" id="ce-azienda" placeholder="es. Barilla, food &amp; beverage">
+          </div>
+          <div class="field">
+            <label>Servizio da proporre</label>
+            <input type="text" id="ce-servizio" placeholder="es. Media Campaign Optimization (Yobee)">
+          </div>
+          <div class="field">
+            <label>Problema / obiettivo del prospect</label>
+            <input type="text" id="ce-problema" placeholder="es. Bassa performance campagne social">
+          </div>
+          <div class="field full">
+            <label>Argomento specifico (dipende dalla skill)</label>
+            <textarea id="ce-argomento" placeholder="Aggancio concreto per questa mail: dato, trend, evento o skill specifica da citare..."></textarea>
+          </div>
+        </div>
+      </div>
+      <div class="toast" id="toast-coldmail">
+        <div class="toast-icon" id="toast-coldmail-icon"></div>
+        <div>
+          <div class="toast-title" id="toast-coldmail-title"></div>
+          <div class="toast-msg" id="toast-coldmail-msg"></div>
+        </div>
+      </div>
+      <div class="form-footer">
+        <button class="btn-run" id="btn-coldmail" onclick="runWorkflow('coldmail')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+          Avvia workflow
+        </button>
+      </div>
+    </div>
+
+    <!-- FORM: RESTA AGGIORNATO -->
+    <div id="form-aggiornato" style="display:none">
+      <div class="form-topbar">
+        <div class="form-topbar-left">
+          <div class="form-topbar-icon">05</div>
+          <div>
+            <div class="form-topbar-title">Resta aggiornato</div>
+            <div class="form-topbar-webhook">POST → /webhook/resta-aggiornato</div>
+          </div>
+        </div>
+        <button class="btn-close" onclick="closeForm()">✕</button>
+      </div>
+      <div class="form-body">
+        <div class="form-grid">
+          <div class="field">
+            <label>Nome richiedente</label>
+            <input type="text" id="ag-nome" placeholder="es. Giulia Verdi">
+          </div>
+          <div class="field">
+            <label>Email (riceverai il digest)</label>
+            <input type="email" id="ag-email" placeholder="giulia@yobee.it">
+          </div>
+          <div class="field full">
+            <label>Temi / keyword da monitorare</label>
+            <input type="text" id="ag-temi" placeholder="es. EU AI Act, agenti AI, retail media">
+          </div>
+          <div class="field full">
+            <label>Fonti specifiche (opzionale)</label>
+            <input type="text" id="ag-fonti" placeholder="es. domini, newsletter, profili LinkedIn da seguire">
+          </div>
+          <div class="field">
+            <label>Frequenza</label>
+            <select id="ag-frequenza">
+              <option value="">Seleziona...</option>
+              <option>Giornaliera</option>
+              <option>Settimanale</option>
+              <option>Mensile</option>
+            </select>
+          </div>
+          <div class="field">
+            <label>Formato output</label>
+            <select id="ag-formato">
+              <option value="">Seleziona...</option>
+              <option>Digest email</option>
+              <option>Note in Obsidian</option>
+              <option>Entrambi</option>
+            </select>
+          </div>
+        </div>
+      </div>
+      <div class="toast" id="toast-aggiornato">
+        <div class="toast-icon" id="toast-aggiornato-icon"></div>
+        <div>
+          <div class="toast-title" id="toast-aggiornato-title"></div>
+          <div class="toast-msg" id="toast-aggiornato-msg"></div>
+        </div>
+      </div>
+      <div class="form-footer">
+        <button class="btn-run" id="btn-aggiornato" onclick="runWorkflow('aggiornato')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+          Avvia workflow
+        </button>
+      </div>
+    </div>
+
+    <!-- FORM: ANALISI SEO & GEO -->
+    <div id="form-seogeo" style="display:none">
+      <div class="form-topbar">
+        <div class="form-topbar-left">
+          <div class="form-topbar-icon">06</div>
+          <div>
+            <div class="form-topbar-title">Analisi SEO &amp; GEO</div>
+            <div class="form-topbar-webhook">POST → /webhook/seo-geo</div>
+          </div>
+        </div>
+        <button class="btn-close" onclick="closeForm()">✕</button>
+      </div>
+      <div class="form-body">
+        <div class="form-grid">
+          <div class="field">
+            <label>Nome richiedente</label>
+            <input type="text" id="sg-nome" placeholder="es. Marco Neri">
+          </div>
+          <div class="field">
+            <label>Email (riceverai il report)</label>
+            <input type="email" id="sg-email" placeholder="marco@yobee.it">
+          </div>
+          <div class="field full">
+            <label>URL da analizzare</label>
+            <input type="text" id="sg-url" placeholder="es. https://cliente.it">
+          </div>
+          <div class="field full">
+            <label>Keyword / query target</label>
+            <input type="text" id="sg-keyword" placeholder="es. consulenza AI PMI, agenzia retail media">
+          </div>
+          <div class="field">
+            <label>Tipo di analisi</label>
+            <select id="sg-tipo">
+              <option value="">Seleziona...</option>
+              <option>SEO classico</option>
+              <option>GEO (AI / generative search)</option>
+              <option>Entrambe</option>
+            </select>
+          </div>
+          <div class="field">
+            <label>Mercato / lingua</label>
+            <input type="text" id="sg-mercato" placeholder="es. Italia / it-IT">
+          </div>
+        </div>
+      </div>
+      <div class="toast" id="toast-seogeo">
+        <div class="toast-icon" id="toast-seogeo-icon"></div>
+        <div>
+          <div class="toast-title" id="toast-seogeo-title"></div>
+          <div class="toast-msg" id="toast-seogeo-msg"></div>
+        </div>
+      </div>
+      <div class="form-footer">
+        <button class="btn-run" id="btn-seogeo" onclick="runWorkflow('seogeo')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+          Avvia workflow
+        </button>
+      </div>
+    </div>
+
   </div><!-- end form-panel -->
 
   <footer>
@@ -655,13 +860,52 @@
         note: document.getElementById('se-note').value
       }),
       required: ['se-nome','se-email','se-verticale']
+    },
+    coldmail: {
+      webhook: '/webhook/cold-email',
+      fields: () => ({
+        nome: document.getElementById('ce-nome').value,
+        email: document.getElementById('ce-email').value,
+        prospect_ruolo: document.getElementById('ce-prospect').value,
+        azienda_settore: document.getElementById('ce-azienda').value,
+        servizio: document.getElementById('ce-servizio').value,
+        problema_obiettivo: document.getElementById('ce-problema').value,
+        argomento_specifico: document.getElementById('ce-argomento').value
+      }),
+      required: ['ce-nome','ce-email','ce-prospect','ce-azienda','ce-servizio']
+    },
+    aggiornato: {
+      webhook: '/webhook/resta-aggiornato',
+      fields: () => ({
+        nome: document.getElementById('ag-nome').value,
+        email: document.getElementById('ag-email').value,
+        temi: document.getElementById('ag-temi').value,
+        fonti: document.getElementById('ag-fonti').value,
+        frequenza: document.getElementById('ag-frequenza').value,
+        formato: document.getElementById('ag-formato').value
+      }),
+      required: ['ag-nome','ag-email','ag-temi']
+    },
+    seogeo: {
+      webhook: '/webhook/seo-geo',
+      fields: () => ({
+        nome: document.getElementById('sg-nome').value,
+        email: document.getElementById('sg-email').value,
+        url: document.getElementById('sg-url').value,
+        keyword: document.getElementById('sg-keyword').value,
+        tipo: document.getElementById('sg-tipo').value,
+        mercato: document.getElementById('sg-mercato').value
+      }),
+      required: ['sg-nome','sg-email','sg-url']
     }
   };
 
   let current = null;
 
+  const ALL_FORMS = ['clienti','gara','editori','coldmail','aggiornato','seogeo'];
+
   function openForm(id) {
-    ['clienti','gara','editori'].forEach(f => {
+    ALL_FORMS.forEach(f => {
       document.getElementById('form-' + f).style.display = 'none';
       document.getElementById('card-' + f).classList.remove('active');
     });
