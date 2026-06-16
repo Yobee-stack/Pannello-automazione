@@ -31,7 +31,6 @@
     overflow-x: hidden;
   }
 
-  /* GRID BACKGROUND */
   body::before {
     content: '';
     position: fixed;
@@ -52,7 +51,6 @@
     z-index: 1;
   }
 
-  /* HEADER */
   header {
     display: flex;
     align-items: flex-end;
@@ -117,7 +115,6 @@
     50% { opacity: 0.3; }
   }
 
-  /* SECTION LABEL */
   .section-label {
     font-family: var(--mono);
     font-size: 10px;
@@ -127,7 +124,6 @@
     margin-bottom: 1rem;
   }
 
-  /* WORKFLOW GRID */
   .workflow-grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
@@ -208,7 +204,6 @@
     border: 1px solid rgba(29,158,117,0.2);
   }
 
-  /* FORM PANEL */
   .form-panel {
     background: var(--yobee-card);
     border: 1px solid var(--yobee-border);
@@ -298,6 +293,13 @@
     color: var(--yobee-muted);
   }
 
+  .label-hint {
+    text-transform: none;
+    color: rgba(93,202,165,0.6);
+    font-weight: 400;
+    letter-spacing: 0.03em;
+  }
+
   .field input,
   .field select,
   .field textarea {
@@ -336,6 +338,78 @@
 
   .field textarea { resize: none; height: 80px; }
 
+  /* COMPETITOR DYNAMIC LIST */
+  .comp-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .comp-row {
+    display: grid;
+    grid-template-columns: 1fr 2fr auto;
+    gap: 8px;
+    align-items: stretch;
+  }
+
+  .comp-row input {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid var(--yobee-border);
+    border-radius: 8px;
+    padding: 9px 12px;
+    color: #fff;
+    font-family: var(--font);
+    font-size: 13px;
+    outline: none;
+    width: 100%;
+    transition: border-color 0.15s;
+  }
+
+  .comp-row input::placeholder { color: rgba(255,255,255,0.2); }
+  .comp-row input:focus {
+    border-color: rgba(29,158,117,0.5);
+    background: rgba(29,158,117,0.04);
+  }
+
+  .btn-comp-remove {
+    background: none;
+    border: 1px solid var(--yobee-border);
+    border-radius: 8px;
+    color: rgba(255,255,255,0.4);
+    cursor: pointer;
+    font-size: 14px;
+    padding: 8px 12px;
+    transition: border-color 0.15s, color 0.15s;
+  }
+
+  .btn-comp-remove:hover {
+    border-color: rgba(220,60,60,0.4);
+    color: rgba(255,140,140,0.9);
+  }
+
+  .btn-comp-add {
+    margin-top: 10px;
+    align-self: flex-start;
+    background: rgba(29,158,117,0.1);
+    border: 1px solid rgba(29,158,117,0.3);
+    color: var(--yobee-accent-light);
+    border-radius: 8px;
+    padding: 8px 14px;
+    font-family: var(--font);
+    font-size: 12px;
+    cursor: pointer;
+    transition: background 0.15s;
+  }
+
+  .btn-comp-add:hover {
+    background: rgba(29,158,117,0.18);
+  }
+
+  .btn-comp-add:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+  }
+
   .form-footer {
     display: flex;
     align-items: center;
@@ -367,7 +441,6 @@
 
   .btn-run svg { width: 14px; height: 14px; }
 
-  /* TOAST */
   .toast {
     display: none;
     align-items: flex-start;
@@ -386,7 +459,6 @@
   .toast-title { font-size: 12px; font-weight: 500; color: #fff; margin-bottom: 2px; }
   .toast-msg { font-size: 11px; color: var(--yobee-muted); line-height: 1.5; }
 
-  /* FOOTER */
   footer {
     margin-top: 3rem;
     padding-top: 1.5rem;
@@ -403,19 +475,18 @@
     letter-spacing: 0.06em;
   }
 
-  /* RESPONSIVE */
   @media (max-width: 640px) {
     .workflow-grid { grid-template-columns: 1fr 1fr; }
     .form-grid { grid-template-columns: 1fr; }
     .field.full { grid-column: span 1; }
     header { flex-direction: column; align-items: flex-start; gap: 1rem; }
+    .comp-row { grid-template-columns: 1fr; }
   }
 
   @media (max-width: 420px) {
     .workflow-grid { grid-template-columns: 1fr; }
   }
 
-  /* ───── W2 OVERLAY ───── */
   #w2-overlay {
     position: fixed;
     inset: 0;
@@ -729,10 +800,8 @@
 
   </div>
 
-  <!-- FORM PANEL -->
   <div class="form-panel" id="formPanel">
 
-    <!-- FORM: CERCA CLIENTI -->
     <div id="form-clienti" style="display:none">
       <div class="form-topbar">
         <div class="form-topbar-left">
@@ -775,7 +844,6 @@
       </div>
     </div>
 
-    <!-- FORM: GARA MEDIA -->
     <div id="form-gara" style="display:none">
       <div class="form-topbar">
         <div class="form-topbar-left">
@@ -801,6 +869,18 @@
             <label>URL cliente da analizzare</label>
             <input type="text" id="gm-url" placeholder="es. https://cliente.it">
           </div>
+          <div class="field full">
+            <label>Cosa sai del brand? <span class="label-hint">— opzionale ma consigliato</span></label>
+            <textarea id="gm-contesto" style="height:90px"
+              placeholder="Es. Produttore di biscotti per la GDO, fa private label per Conad. Stabilimento in Veneto. Posizionamento mid-market, non premium."></textarea>
+          </div>
+          <div class="field full">
+            <label>Competitor noti <span class="label-hint">— opzionale, max 5</span></label>
+            <div id="gm-comp-list" class="comp-list"></div>
+            <button type="button" id="gm-comp-add" class="btn-comp-add" onclick="garaAddCompetitor()">
+              + Aggiungi competitor
+            </button>
+          </div>
         </div>
       </div>
       <div class="toast" id="toast-gara">
@@ -818,7 +898,6 @@
       </div>
     </div>
 
-    <!-- FORM: SCOUTING EDITORI -->
     <div id="form-editori" style="display:none">
       <div class="form-topbar">
         <div class="form-topbar-left">
@@ -883,7 +962,6 @@
       </div>
     </div>
 
-    <!-- FORM: EMAIL A FREDDO -->
     <div id="form-coldmail" style="display:none">
       <div class="form-topbar">
         <div class="form-topbar-left">
@@ -942,7 +1020,6 @@
       </div>
     </div>
 
-    <!-- FORM: RESTA AGGIORNATO -->
     <div id="form-aggiornato" style="display:none">
       <div class="form-topbar">
         <div class="form-topbar-left">
@@ -1007,7 +1084,6 @@
       </div>
     </div>
 
-    <!-- FORM: ANALISI SEO & GEO -->
     <div id="form-seogeo" style="display:none">
       <div class="form-topbar">
         <div class="form-topbar-left">
@@ -1067,11 +1143,11 @@
       </div>
     </div>
 
-  </div><!-- end form-panel -->
+  </div>
 
   <footer>
     <span class="footer-txt">YOBEE SRL · Via Giacomo Watt 27, Milano</span>
-    <span class="footer-txt">AI Operations Hub v1.0</span>
+    <span class="footer-txt">AI Operations Hub v1.1</span>
   </footer>
 
 </div>
@@ -1094,7 +1170,9 @@
       fields: () => ({
         nome: document.getElementById('gm-nome').value,
         email: document.getElementById('gm-email').value,
-        url: document.getElementById('gm-url').value
+        url: document.getElementById('gm-url').value,
+        contesto: document.getElementById('gm-contesto').value.trim(),
+        competitor_noti: garaCollectCompetitors()
       }),
       required: ['gm-nome','gm-email','gm-url']
     },
@@ -1187,11 +1265,64 @@
     document.getElementById('toast-' + id).classList.remove('visible');
   }
 
+  /* ── GARA: dynamic competitor rows ── */
+  let garaCompCounter = 0;
+  const GARA_COMP_MAX = 5;
+
+  function garaAddCompetitor() {
+    const visible = document.querySelectorAll('#gm-comp-list > .comp-row').length;
+    if (visible >= GARA_COMP_MAX) return;
+    garaCompCounter++;
+    const idx = garaCompCounter;
+    const list = document.getElementById('gm-comp-list');
+    const row = document.createElement('div');
+    row.id = 'gm-comp-row-' + idx;
+    row.className = 'comp-row';
+    row.innerHTML =
+      '<input type="text" id="gm-comp-nome-' + idx + '" placeholder="Nome brand">' +
+      '<input type="text" id="gm-comp-url-' + idx + '" placeholder="https://...">' +
+      '<button type="button" class="btn-comp-remove" onclick="garaRemoveCompetitor(' + idx + ')">✕</button>';
+    list.appendChild(row);
+    garaUpdateAddBtn();
+  }
+
+  function garaRemoveCompetitor(idx) {
+    const row = document.getElementById('gm-comp-row-' + idx);
+    if (row) row.remove();
+    garaUpdateAddBtn();
+  }
+
+  function garaUpdateAddBtn() {
+    const visible = document.querySelectorAll('#gm-comp-list > .comp-row').length;
+    const btn = document.getElementById('gm-comp-add');
+    if (!btn) return;
+    if (visible >= GARA_COMP_MAX) {
+      btn.disabled = true;
+      btn.textContent = '+ Massimo ' + GARA_COMP_MAX + ' competitor';
+    } else {
+      btn.disabled = false;
+      btn.textContent = '+ Aggiungi competitor';
+    }
+  }
+
+  function garaCollectCompetitors() {
+    const rows = document.querySelectorAll('#gm-comp-list > .comp-row');
+    const out = [];
+    rows.forEach(row => {
+      const idx = row.id.replace('gm-comp-row-', '');
+      const nome = (document.getElementById('gm-comp-nome-' + idx)?.value || '').trim();
+      let url  = (document.getElementById('gm-comp-url-'  + idx)?.value || '').trim();
+      if (!nome && !url) return;
+      if (url && !url.match(/^https?:\/\//)) url = 'https://' + url;
+      out.push({ nome: nome || url, url: url });
+    });
+    return out.slice(0, GARA_COMP_MAX);
+  }
+
   async function runWorkflow(id) {
     const wf = WORKFLOWS[id];
     const btn = document.getElementById('btn-' + id);
 
-    // Validazione campi obbligatori
     const missing = wf.required.filter(fid => !document.getElementById(fid).value.trim());
     if (missing.length > 0) {
       missing.forEach(fid => {
@@ -1229,11 +1360,9 @@
 </script>
 
 
-<!-- ─── W2 OVERLAY: Analisi Social Competitor ─── -->
 <div id="w2-overlay" style="display:none">
   <div id="w2-panel">
 
-    <!-- STATE: loading -->
     <div id="w2-s-loading">
       <div class="w2-topbar">
         <div class="w2-topbar-left">
@@ -1251,7 +1380,6 @@
       </div>
     </div>
 
-    <!-- STATE: error -->
     <div id="w2-s-error" style="display:none">
       <div class="w2-topbar">
         <div class="w2-topbar-left">
@@ -1272,7 +1400,6 @@
       </div>
     </div>
 
-    <!-- STATE: form -->
     <div id="w2-s-form" style="display:none">
       <div class="w2-topbar">
         <div class="w2-topbar-left">
@@ -1284,7 +1411,6 @@
         </div>
       </div>
 
-      <!-- form fields (hidden on success) -->
       <div id="w2-form-content">
         <div class="w2-body">
 
@@ -1327,12 +1453,10 @@
         </div>
       </div>
 
-      <!-- hidden fields (always accessible) -->
       <input type="hidden" id="w2-token-val">
       <input type="hidden" id="w2-nome-val">
       <input type="hidden" id="w2-email-val">
 
-      <!-- success message (shown after submit) -->
       <div id="w2-success" style="display:none">
         <div class="w2-center">
           <div class="w2-center-icon" style="color:var(--yobee-accent-light)">✓</div>
@@ -1341,7 +1465,6 @@
         </div>
       </div>
 
-      <!-- footer (hidden after submit) -->
       <div class="w2-footer" id="w2-footer">
         <button class="btn-run" id="w2-btn" onclick="w2Submit()">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
@@ -1349,10 +1472,10 @@
         </button>
       </div>
 
-    </div><!-- /w2-s-form -->
+    </div>
 
-  </div><!-- /w2-panel -->
-</div><!-- /w2-overlay -->
+  </div>
+</div>
 
 <script>
 (function () {
