@@ -925,19 +925,19 @@
       <div class="form-body">
         <div class="form-grid">
           <div class="field">
-            <label>Nome richiedente</label>
+            <label for="se-nome">Nome e cognome (Obbligatorio)</label>
             <input type="text" id="se-nome" placeholder="es. Giulia Verdi">
           </div>
           <div class="field">
-            <label>Email (riceverai l'output)</label>
+            <label for="se-email">Email (Obbligatorio) — riceverai l'output</label>
             <input type="email" id="se-email" placeholder="giulia@yobee.it">
           </div>
           <div class="field">
-            <label>Verticale tematico</label>
+            <label for="se-verticale">Verticale tematico — opzionale</label>
             <input type="text" id="se-verticale" placeholder="es. Sport, Finance, Lifestyle">
           </div>
           <div class="field">
-            <label>Formato adv</label>
+            <label for="se-formato">Formato adv — opzionale</label>
             <select id="se-formato">
               <option value="">Seleziona...</option>
               <option>Display</option>
@@ -947,15 +947,16 @@
             </select>
           </div>
           <div class="field">
-            <label>Traffico mensile minimo</label>
+            <label for="se-traffico">Traffico mensile minimo — opzionale</label>
             <input type="text" id="se-traffico" placeholder="es. 500.000 UV/mese">
           </div>
           <div class="field">
-            <label>Numero editori da trovare</label>
-            <input type="text" id="se-numero" placeholder="es. 10">
+            <label for="se-numero">Numero editori da trovare — opzionale, max 50</label>
+            <input type="number" id="se-numero" min="1" max="50" step="1" placeholder="es. 10"
+                   oninput="if(this.value>50)this.value=50; if(this.value<0)this.value='';">
           </div>
           <div class="field full">
-            <label>Note (brand safety, esclusioni, requisiti)</label>
+            <label for="se-note">Note (brand safety, esclusioni, requisiti) — opzionale</label>
             <textarea id="se-note" placeholder="Requisiti particolari, editori da escludere, priorità geografiche..."></textarea>
           </div>
         </div>
@@ -1209,10 +1210,10 @@
         verticale: document.getElementById('se-verticale').value,
         formato: document.getElementById('se-formato').value,
         traffico_min: document.getElementById('se-traffico').value,
-        numero_editori: document.getElementById('se-numero').value,
+        numero_editori: Math.min(50, parseInt(document.getElementById('se-numero').value, 10) || 0) || '',
         note: document.getElementById('se-note').value
       }),
-      required: ['se-nome','se-email','se-verticale']
+      required: ['se-nome','se-email']
     },
     coldmail: {
       webhook: '/webhook/cold-email',
