@@ -300,6 +300,12 @@
     letter-spacing: 0.03em;
   }
 
+  .req {
+    color: #e0635f;
+    margin-left: 2px;
+    font-weight: 500;
+  }
+
   .field input,
   .field select,
   .field textarea {
@@ -816,15 +822,15 @@
       <div class="form-body">
         <div class="form-grid">
           <div class="field">
-            <label>Nome richiedente</label>
+            <label for="cc-nome">Nome richiedente <span class="req">*</span></label>
             <input type="text" id="cc-nome" placeholder="es. Mario Rossi">
           </div>
           <div class="field">
-            <label>Email (riceverai l'output)</label>
+            <label for="cc-email">Email (riceverai l'output) <span class="req">*</span></label>
             <input type="email" id="cc-email" placeholder="mario@yobee.it">
           </div>
           <div class="field full">
-            <label>Settore target</label>
+            <label for="cc-settore">Settore target <span class="req">*</span></label>
             <input type="text" id="cc-settore" placeholder="es. Pharma, Finance, Retail">
           </div>
         </div>
@@ -858,19 +864,19 @@
       <div class="form-body">
         <div class="form-grid">
           <div class="field">
-            <label>Nome richiedente</label>
+            <label for="gm-nome">Nome richiedente <span class="req">*</span></label>
             <input type="text" id="gm-nome" placeholder="es. Laura Bianchi">
           </div>
           <div class="field">
-            <label>Email (riceverai l'output)</label>
+            <label for="gm-email">Email (riceverai l'output) <span class="req">*</span></label>
             <input type="email" id="gm-email" placeholder="laura@yobee.it">
           </div>
           <div class="field full">
-            <label>URL cliente da analizzare</label>
+            <label for="gm-url">URL cliente da analizzare <span class="req">*</span></label>
             <input type="text" id="gm-url" placeholder="es. https://cliente.it">
           </div>
           <div class="field">
-            <label>Modello di Business (Obbligatorio)</label>
+            <label for="gm-modello">Modello di Business <span class="req">*</span></label>
             <select id="gm-modello">
               <option value="">Seleziona...</option>
               <option value="B2C">B2C (Vende ai consumatori finali)</option>
@@ -879,11 +885,11 @@
             </select>
           </div>
           <div class="field">
-            <label>Settore specifico (Obbligatorio)</label>
+            <label for="gm-settore">Settore specifico <span class="req">*</span></label>
             <input type="text" id="gm-settore" placeholder="es. Credito, Prodotti da forno, Farmaci">
           </div>
           <div class="field full">
-            <label>Cosa sai del brand? (Obbligatorio)</label>
+            <label for="gm-contesto">Cosa sai del brand? <span class="req">*</span></label>
             <textarea id="gm-contesto" style="height:90px"
               placeholder="Fornisci una bussola all'IA. Es: 'Fanno prestiti personali online, diretti concorrenti di Agos e Findomestic'"></textarea>
           </div>
@@ -925,19 +931,19 @@
       <div class="form-body">
         <div class="form-grid">
           <div class="field">
-            <label for="se-nome">Nome e cognome (Obbligatorio)</label>
+            <label for="se-nome">Nome e cognome <span class="req">*</span></label>
             <input type="text" id="se-nome" placeholder="es. Giulia Verdi">
           </div>
           <div class="field">
-            <label for="se-email">Email (Obbligatorio) — riceverai l'output</label>
+            <label for="se-email">Email <span class="req">*</span> <span class="label-hint">— riceverai l'output</span></label>
             <input type="email" id="se-email" placeholder="giulia@yobee.it">
           </div>
           <div class="field">
-            <label for="se-verticale">Verticale tematico — opzionale</label>
+            <label for="se-verticale">Verticale tematico <span class="label-hint">— opzionale</span></label>
             <input type="text" id="se-verticale" placeholder="es. Sport, Finance, Lifestyle">
           </div>
           <div class="field">
-            <label for="se-formato">Formato adv — opzionale</label>
+            <label for="se-formato">Formato adv <span class="label-hint">— opzionale</span></label>
             <select id="se-formato">
               <option value="">Seleziona...</option>
               <option>Display</option>
@@ -947,16 +953,16 @@
             </select>
           </div>
           <div class="field">
-            <label for="se-traffico">Traffico mensile minimo — opzionale</label>
+            <label for="se-traffico">Traffico mensile minimo <span class="label-hint">— opzionale</span></label>
             <input type="text" id="se-traffico" placeholder="es. 500.000 UV/mese">
           </div>
           <div class="field">
-            <label for="se-numero">Numero editori da trovare — opzionale, max 50</label>
+            <label for="se-numero">Numero editori da trovare <span class="label-hint">— opzionale, max 50</span></label>
             <input type="number" id="se-numero" min="1" max="50" step="1" placeholder="es. 10"
                    oninput="if(this.value>50)this.value=50; if(this.value<0)this.value='';">
           </div>
           <div class="field full">
-            <label for="se-note">Note (brand safety, esclusioni, requisiti) — opzionale</label>
+            <label for="se-note">Note (brand safety, esclusioni, requisiti) <span class="label-hint">— opzionale</span></label>
             <textarea id="se-note" placeholder="Requisiti particolari, editori da escludere, priorità geografiche..."></textarea>
           </div>
         </div>
@@ -990,31 +996,31 @@
       <div class="form-body">
         <div class="form-grid">
           <div class="field">
-            <label>Nome richiedente</label>
+            <label for="ce-nome">Nome richiedente <span class="req">*</span></label>
             <input type="text" id="ce-nome" placeholder="es. Mario Rossi">
           </div>
           <div class="field">
-            <label>Email mittente (riceverai la bozza)</label>
+            <label for="ce-email">Email mittente (riceverai la bozza) <span class="req">*</span></label>
             <input type="email" id="ce-email" placeholder="mario@yobee.it">
           </div>
           <div class="field">
-            <label>Nome prospect + ruolo</label>
+            <label for="ce-prospect">Nome prospect + ruolo <span class="req">*</span></label>
             <input type="text" id="ce-prospect" placeholder="es. Marco Rossi, Marketing Director">
           </div>
           <div class="field">
-            <label>Azienda + settore</label>
+            <label for="ce-azienda">Azienda + settore <span class="req">*</span></label>
             <input type="text" id="ce-azienda" placeholder="es. Barilla, food &amp; beverage">
           </div>
           <div class="field">
-            <label>Servizio da proporre</label>
+            <label for="ce-servizio">Servizio da proporre <span class="req">*</span></label>
             <input type="text" id="ce-servizio" placeholder="es. Media Campaign Optimization (Yobee)">
           </div>
           <div class="field">
-            <label>Problema / obiettivo del prospect</label>
+            <label for="ce-problema">Problema / obiettivo del prospect <span class="label-hint">— opzionale</span></label>
             <input type="text" id="ce-problema" placeholder="es. Bassa performance campagne social">
           </div>
           <div class="field full">
-            <label>Argomento specifico (dipende dalla skill)</label>
+            <label for="ce-argomento">Argomento specifico (dipende dalla skill) <span class="label-hint">— opzionale</span></label>
             <textarea id="ce-argomento" placeholder="Aggancio concreto per questa mail: dato, trend, evento o skill specifica da citare..."></textarea>
           </div>
         </div>
@@ -1048,23 +1054,23 @@
       <div class="form-body">
         <div class="form-grid">
           <div class="field">
-            <label>Nome richiedente</label>
+            <label for="ag-nome">Nome richiedente <span class="req">*</span></label>
             <input type="text" id="ag-nome" placeholder="es. Giulia Verdi">
           </div>
           <div class="field">
-            <label>Email (riceverai il digest)</label>
+            <label for="ag-email">Email (riceverai il digest) <span class="req">*</span></label>
             <input type="email" id="ag-email" placeholder="giulia@yobee.it">
           </div>
           <div class="field full">
-            <label>Temi / keyword da monitorare</label>
+            <label for="ag-temi">Temi / keyword da monitorare <span class="req">*</span></label>
             <input type="text" id="ag-temi" placeholder="es. EU AI Act, agenti AI, retail media">
           </div>
           <div class="field full">
-            <label>Fonti specifiche (opzionale)</label>
+            <label for="ag-fonti">Fonti specifiche <span class="label-hint">— opzionale</span></label>
             <input type="text" id="ag-fonti" placeholder="es. domini, newsletter, profili LinkedIn da seguire">
           </div>
           <div class="field">
-            <label>Frequenza</label>
+            <label for="ag-frequenza">Frequenza <span class="label-hint">— opzionale</span></label>
             <select id="ag-frequenza">
               <option value="">Seleziona...</option>
               <option>Giornaliera</option>
@@ -1073,7 +1079,7 @@
             </select>
           </div>
           <div class="field">
-            <label>Formato output</label>
+            <label for="ag-formato">Formato output <span class="label-hint">— opzionale</span></label>
             <select id="ag-formato">
               <option value="">Seleziona...</option>
               <option>Digest email</option>
@@ -1112,23 +1118,23 @@
       <div class="form-body">
         <div class="form-grid">
           <div class="field">
-            <label>Nome richiedente</label>
+            <label for="sg-nome">Nome richiedente <span class="req">*</span></label>
             <input type="text" id="sg-nome" placeholder="es. Marco Neri">
           </div>
           <div class="field">
-            <label>Email (riceverai il report)</label>
+            <label for="sg-email">Email (riceverai il report) <span class="req">*</span></label>
             <input type="email" id="sg-email" placeholder="marco@yobee.it">
           </div>
           <div class="field full">
-            <label>URL da analizzare</label>
+            <label for="sg-url">URL da analizzare <span class="req">*</span></label>
             <input type="text" id="sg-url" placeholder="es. https://cliente.it">
           </div>
           <div class="field full">
-            <label>Keyword / query target</label>
+            <label for="sg-keyword">Keyword / query target <span class="label-hint">— opzionale</span></label>
             <input type="text" id="sg-keyword" placeholder="es. consulenza AI PMI, agenzia retail media">
           </div>
           <div class="field">
-            <label>Tipo di analisi</label>
+            <label for="sg-tipo">Tipo di analisi <span class="label-hint">— opzionale</span></label>
             <select id="sg-tipo">
               <option value="">Seleziona...</option>
               <option>SEO classico</option>
@@ -1137,7 +1143,7 @@
             </select>
           </div>
           <div class="field">
-            <label>Mercato / lingua</label>
+            <label for="sg-mercato">Mercato / lingua <span class="label-hint">— opzionale</span></label>
             <input type="text" id="sg-mercato" placeholder="es. Italia / it-IT">
           </div>
         </div>
@@ -1161,13 +1167,35 @@
 
   <footer>
     <span class="footer-txt">YOBEE SRL · Via Giacomo Watt 27, Milano</span>
-    <span class="footer-txt">AI Operations Hub v1.2</span>
+    <span class="footer-txt">AI Operations Hub v1.3</span>
   </footer>
 
 </div>
 
 <script>
   const N8N_BASE = 'https://n8n.foffyautomazioni.com';
+
+  // Deterrente anti-abuso: questo valore deve coincidere con la credenziale
+  // "Header Auth" configurata sul nodo Webhook in n8n (header: X-Yobee-Token).
+  // NB: essendo un sito statico, il token è comunque leggibile nel sorgente:
+  // serve a fermare richieste casuali, NON è autenticazione forte.
+  const YOBEE_TOKEN = 'yobee-hub-2026';
+  const REQUEST_TIMEOUT_MS = 20000;
+
+  // Chiavi localStorage per ricordare il richiedente tra le sessioni
+  const LS_NOME = 'yobee_nome';
+  const LS_EMAIL = 'yobee_email';
+
+  function isValidEmail(v) {
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v.trim());
+  }
+
+  // Dato un form, ricava gli id dei campi nome ed email (se presenti nel required)
+  function getIdentityFields(wf) {
+    const nomeId = wf.required.find(f => f.endsWith('-nome'));
+    const emailId = wf.required.find(f => f.endsWith('-email'));
+    return { nomeId, emailId };
+  }
 
   const WORKFLOWS = {
     clienti: {
@@ -1268,6 +1296,7 @@
     document.getElementById('formPanel').classList.add('visible');
     hideToast(id);
     current = id;
+    prefillIdentity(id);
   }
 
   function closeForm() {
@@ -1349,6 +1378,7 @@
     const wf = WORKFLOWS[id];
     const btn = document.getElementById('btn-' + id);
 
+    // 1) Campi obbligatori
     const missing = wf.required.filter(fid => !document.getElementById(fid).value.trim());
     if (missing.length > 0) {
       missing.forEach(fid => {
@@ -1360,28 +1390,89 @@
       return;
     }
 
+    // 2) Validazione formato email
+    const { emailId } = getIdentityFields(wf);
+    if (emailId) {
+      const emailEl = document.getElementById(emailId);
+      if (!isValidEmail(emailEl.value)) {
+        emailEl.style.borderColor = 'rgba(220,60,60,0.6)';
+        emailEl.addEventListener('input', () => emailEl.style.borderColor = '', { once: true });
+        showToast(id, 'error', 'Email non valida', 'Controlla l\'indirizzo email: riceverai lì l\'output del workflow.');
+        return;
+      }
+    }
+
     btn.disabled = true;
     btn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><circle cx="12" cy="12" r="10"/></svg> Invio in corso...';
+
+    // 4) Timeout della richiesta
+    const controller = new AbortController();
+    const timer = setTimeout(() => controller.abort(), REQUEST_TIMEOUT_MS);
 
     try {
       const payload = wf.fields();
       const res = await fetch(N8N_BASE + wf.webhook, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload)
+        headers: {
+          'Content-Type': 'application/json',
+          'X-Yobee-Token': YOBEE_TOKEN
+        },
+        body: JSON.stringify(payload),
+        signal: controller.signal
       });
 
       if (res.ok) {
+        // 6) Ricorda nome ed email per le prossime sessioni
+        const { nomeId } = getIdentityFields(wf);
+        try {
+          if (nomeId) localStorage.setItem(LS_NOME, document.getElementById(nomeId).value.trim());
+          if (emailId) localStorage.setItem(LS_EMAIL, document.getElementById(emailId).value.trim());
+        } catch (e) { /* localStorage non disponibile: si ignora */ }
+
         showToast(id, 'success', 'Workflow avviato', 'Riceverai l\'output via email a ' + payload.email + ' non appena il workflow sarà completato.');
+        resetForm(id);
       } else {
         throw new Error('HTTP ' + res.status);
       }
     } catch (err) {
-      showToast(id, 'error', 'Errore di connessione', 'Impossibile raggiungere n8n. Controlla che il webhook sia attivo. (' + err.message + ')');
+      if (err.name === 'AbortError') {
+        showToast(id, 'error', 'Tempo scaduto', 'n8n non ha risposto entro ' + (REQUEST_TIMEOUT_MS / 1000) + ' secondi. Riprova o verifica che il workflow sia attivo.');
+      } else {
+        showToast(id, 'error', 'Errore di connessione', 'Impossibile raggiungere n8n. Controlla che il webhook sia attivo. (' + err.message + ')');
+      }
     } finally {
+      clearTimeout(timer);
       btn.disabled = false;
       btn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><polygon points="5 3 19 12 5 21 5 3"/></svg> Avvia workflow';
     }
+  }
+
+  // 4) Svuota i campi del form dopo un invio riuscito, riproponendo nome/email salvati
+  function resetForm(id) {
+    const form = document.getElementById('form-' + id);
+    if (!form) return;
+    form.querySelectorAll('input, select, textarea').forEach(el => {
+      if (el.tagName === 'SELECT') el.selectedIndex = 0;
+      else el.value = '';
+      el.style.borderColor = '';
+    });
+    // pulizia righe competitor dinamiche (solo gara)
+    const compList = form.querySelector('#gm-comp-list');
+    if (compList) { compList.innerHTML = ''; if (typeof garaUpdateAddBtn === 'function') garaUpdateAddBtn(); }
+    prefillIdentity(id);
+  }
+
+  // 6) Precompila nome ed email dai valori salvati, se i campi sono vuoti
+  function prefillIdentity(id) {
+    const wf = WORKFLOWS[id];
+    if (!wf) return;
+    const { nomeId, emailId } = getIdentityFields(wf);
+    try {
+      const savedNome = localStorage.getItem(LS_NOME);
+      const savedEmail = localStorage.getItem(LS_EMAIL);
+      if (nomeId && savedNome && !document.getElementById(nomeId).value) document.getElementById(nomeId).value = savedNome;
+      if (emailId && savedEmail && !document.getElementById(emailId).value) document.getElementById(emailId).value = savedEmail;
+    } catch (e) { /* localStorage non disponibile */ }
   }
 </script>
 
