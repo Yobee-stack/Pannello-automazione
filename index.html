@@ -297,7 +297,7 @@
     const missing = wf.required.filter(fid => !document.getElementById(fid).value.trim());
     if (missing.length > 0) { missing.forEach(fid => { const el = document.getElementById(fid); el.style.borderColor = 'rgba(220,60,60,0.6)'; el.addEventListener('input', () => el.style.borderColor = '', { once: true }); }); showToast(id, 'error', 'Campi mancanti', 'Compila i campi obbligatori evidenziati.'); return; }
     const { emailId } = getIdentityFields(wf);
-    if (emailId) { const emailEl = document.getElementById(emailId); if (!isValidEmail(emailEl.value)) { emailEl.style.borderColor = 'rgba(220,60,60,0.6)'; emailEl.addEventListener('input', () => emailEl.style.borderColor = '', { once: true }); showToast(id, 'error', 'Email non valida', 'Controlla l\'indirizzo email: riceverai l\u00 EC l\'output del workflow.'); return; } }
+    if (emailId) { const emailEl = document.getElementById(emailId); if (!isValidEmail(emailEl.value)) { emailEl.style.borderColor = 'rgba(220,60,60,0.6)'; emailEl.addEventListener('input', () => emailEl.style.borderColor = '', { once: true }); showToast(id, 'error', 'Email non valida', 'Controlla l\'indirizzo email: riceverai l\'output del workflow.'); return; } }
     btn.disabled = true; btn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><circle cx="12" cy="12" r="10"/></svg> Invio in corso...';
     const controller = new AbortController(); const timer = setTimeout(() => controller.abort(), REQUEST_TIMEOUT_MS);
     try {
