@@ -128,6 +128,13 @@
   .w2-back { display: inline-block; margin-top: 1.5rem; font-family: var(--mono); font-size: 11px; color: var(--yobee-accent-light); cursor: pointer; text-decoration: underline; text-decoration-color: rgba(93,202,165,0.3); }
   .w2-back:hover { color: #fff; }
   @media (max-width: 480px) { #w2-panel { max-height: 95vh; border-radius: 12px; } .w2-body { padding: 1rem; } .w2-footer { padding: 0.75rem 1rem; } }
+  .form-topbar-right { display: flex; align-items: center; gap: 10px; flex-shrink: 0; }
+  .form-topbar-quota { display: none; align-items: center; gap: 6px; font-family: var(--mono); font-size: 10px; letter-spacing: 0.03em; padding: 5px 10px; border-radius: 99px; border: 1px solid rgba(29,158,117,0.3); color: var(--yobee-accent-light); background: rgba(29,158,117,0.08); white-space: nowrap; }
+  .form-topbar-quota.visible { display: flex; }
+  .form-topbar-quota.low { border-color: rgba(220,160,60,0.4); color: rgba(255,210,120,0.95); background: rgba(220,160,60,0.08); }
+  .form-topbar-quota.empty { border-color: rgba(220,60,60,0.4); color: rgba(255,140,140,0.95); background: rgba(220,60,60,0.08); }
+  .form-topbar-quota-dot { width: 6px; height: 6px; border-radius: 50%; background: currentColor; flex-shrink: 0; }
+  @media (max-width: 640px) { .form-topbar { flex-wrap: wrap; gap: 8px; } .form-topbar-right { margin-left: auto; } }
 </style>
 </head>
 <body>
@@ -207,7 +214,7 @@
       <div class="form-footer"><button class="btn-run" id="btn-gara" onclick="runWorkflow('gara')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>Avvia workflow</button></div>
     </div>
     <div id="form-editori" style="display:none">
-      <div class="form-topbar"><div class="form-topbar-left"><div class="form-topbar-icon">03</div><div><div class="form-topbar-title">Scouting editori</div><div class="form-topbar-webhook">POST &rarr; /webhook/scouting-editori</div></div></div><button class="btn-close" onclick="closeForm()">&#10005;</button></div>
+      <div class="form-topbar"><div class="form-topbar-left"><div class="form-topbar-icon">03</div><div><div class="form-topbar-title">Scouting editori</div><div class="form-topbar-webhook">POST &rarr; /webhook/scouting-editori</div></div></div><div class="form-topbar-right"><span class="form-topbar-quota" id="quota-editori-pill"><span class="form-topbar-quota-dot"></span><span id="quota-editori-text">&hellip;</span></span><button class="btn-close" onclick="closeForm()">&#10005;</button></div></div>
       <div class="form-body"><div class="form-grid">
         <div class="field"><label for="se-nome">Nome e cognome <span class="req">*</span></label><input type="text" id="se-nome" placeholder="es. Giulia Verdi"></div>
         <div class="field"><label for="se-email">Email <span class="req">*</span> <span class="label-hint">&mdash; riceverai l'output</span></label><input type="email" id="se-email" placeholder="giulia@yobee.it"></div>
@@ -262,7 +269,7 @@
   </div>
   <footer>
     <span class="footer-txt">YOBEE SRL · Via Giacomo Watt 27, Milano</span>
-    <span class="footer-txt">AI Operations Hub v1.3</span>
+    <span class="footer-txt">AI Operations Hub v1.4</span>
   </footer>
 </div>
 <script>
@@ -283,10 +290,33 @@
   };
   let current = null;
   const ALL_FORMS = ['clienti','gara','editori','coldmail','aggiornato','seogeo'];
-  function openForm(id) { ALL_FORMS.forEach(f => { document.getElementById('form-' + f).style.display = 'none'; document.getElementById('card-' + f).classList.remove('active'); }); document.getElementById('form-' + id).style.display = 'block'; document.getElementById('card-' + id).classList.add('active'); document.getElementById('formPanel').classList.add('visible'); hideToast(id); current = id; prefillIdentity(id); }
+  function openForm(id) { ALL_FORMS.forEach(f => { document.getElementById('form-' + f).style.display = 'none'; document.getElementById('card-' + f).classList.remove('active'); }); document.getElementById('form-' + id).style.display = 'block'; document.getElementById('card-' + id).classList.add('active'); document.getElementById('formPanel').classList.add('visible'); hideToast(id); current = id; prefillIdentity(id); if (id === 'editori') { loadQuotaEditori(); } }
   function closeForm() { document.getElementById('formPanel').classList.remove('visible'); if (current) document.getElementById('card-' + current).classList.remove('active'); current = null; }
   function showToast(id, type, title, msg) { const toast = document.getElementById('toast-' + id); const icon = document.getElementById('toast-' + id + '-icon'); toast.classList.remove('error'); if (type === 'error') toast.classList.add('error'); icon.textContent = type === 'success' ? '\u2713' : '\u2715'; document.getElementById('toast-' + id + '-title').textContent = title; document.getElementById('toast-' + id + '-msg').textContent = msg; toast.classList.add('visible'); }
   function hideToast(id) { document.getElementById('toast-' + id).classList.remove('visible'); }
+
+  // --- Contatore quota team (Scouting editori) ---
+  function loadQuotaEditori() {
+    const pill = document.getElementById('quota-editori-pill');
+    const text = document.getElementById('quota-editori-text');
+    pill.classList.remove('low', 'empty');
+    pill.classList.add('visible');
+    text.textContent = 'quota\u2026';
+    fetch(N8N_BASE + '/webhook/quota-status')
+      .then(r => { if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); })
+      .then(data => {
+        const usati = data.richiesteMese || 0;
+        const max = data.quotaMax || 40;
+        const rimanenti = data.richiesteRimanenti != null ? data.richiesteRimanenti : Math.max(0, max - usati);
+        text.textContent = 'Team ' + usati + '/' + max + ' \u2014 ' + rimanenti + ' rimaste';
+        if (rimanenti <= 0) { pill.classList.add('empty'); }
+        else if (rimanenti <= 5) { pill.classList.add('low'); }
+      })
+      .catch(() => {
+        text.textContent = 'quota non disponibile';
+      });
+  }
+
   let garaCompCounter = 0; const GARA_COMP_MAX = 5;
   function garaAddCompetitor() { const visible = document.querySelectorAll('#gm-comp-list > .comp-row').length; if (visible >= GARA_COMP_MAX) return; garaCompCounter++; const idx = garaCompCounter; const list = document.getElementById('gm-comp-list'); const row = document.createElement('div'); row.id = 'gm-comp-row-' + idx; row.className = 'comp-row'; row.innerHTML = '<input type="text" id="gm-comp-nome-' + idx + '" placeholder="Nome brand">' + '<input type="text" id="gm-comp-url-' + idx + '" placeholder="https://...">' + '<button type="button" class="btn-comp-remove" onclick="garaRemoveCompetitor(' + idx + ')">\u2715</button>'; list.appendChild(row); garaUpdateAddBtn(); }
   function garaRemoveCompetitor(idx) { const row = document.getElementById('gm-comp-row-' + idx); if (row) row.remove(); garaUpdateAddBtn(); }
@@ -303,7 +333,7 @@
     try {
       const payload = wf.fields();
       const res = await fetch(N8N_BASE + wf.webhook, { method: 'POST', headers: { 'Content-Type': 'application/json', 'X-Yobee-Token': YOBEE_TOKEN }, body: JSON.stringify(payload), signal: controller.signal });
-      if (res.ok) { const { nomeId } = getIdentityFields(wf); try { if (nomeId) localStorage.setItem(LS_NOME, document.getElementById(nomeId).value.trim()); if (emailId) localStorage.setItem(LS_EMAIL, document.getElementById(emailId).value.trim()); } catch (e) {} showToast(id, 'success', 'Workflow avviato', 'Riceverai l\'output via email a ' + payload.email + ' non appena il workflow sar\u00E0 completato.'); resetForm(id); } else { throw new Error('HTTP ' + res.status); }
+      if (res.ok) { const { nomeId } = getIdentityFields(wf); try { if (nomeId) localStorage.setItem(LS_NOME, document.getElementById(nomeId).value.trim()); if (emailId) localStorage.setItem(LS_EMAIL, document.getElementById(emailId).value.trim()); } catch (e) {} showToast(id, 'success', 'Workflow avviato', 'Riceverai l\'output via email a ' + payload.email + ' non appena il workflow sar\u00E0 completato.'); resetForm(id); if (id === 'editori') { loadQuotaEditori(); } } else { throw new Error('HTTP ' + res.status); }
     } catch (err) { if (err.name === 'AbortError') { showToast(id, 'error', 'Tempo scaduto', 'n8n non ha risposto entro ' + (REQUEST_TIMEOUT_MS / 1000) + ' secondi. Riprova o verifica che il workflow sia attivo.'); } else { showToast(id, 'error', 'Errore di connessione', 'Impossibile raggiungere n8n. Controlla che il webhook sia attivo. (' + err.message + ')'); } }
     finally { clearTimeout(timer); btn.disabled = false; btn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><polygon points="5 3 19 12 5 21 5 3"/></svg> Avvia workflow'; }
   }
