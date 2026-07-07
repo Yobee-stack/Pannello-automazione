@@ -137,6 +137,31 @@
   @media (max-width: 640px) { .form-topbar { flex-wrap: wrap; gap: 8px; } .form-topbar-right { margin-left: auto; } }
 </style>
 </head>
+  <!-- ============================================================ -->
+<!-- DEEP-LINK SEO/GEO — precompila la card 06 da ?seo=<url>      -->
+<!-- Incollare PRIMA di </body>, dopo il blocco W3.               -->
+<!-- ============================================================ -->
+<script>
+(function () {
+  var params = new URLSearchParams(window.location.search);
+  var seoUrl = params.get('seo');
+  if (!seoUrl) return;
+
+  // Apre la card 06 (precompila nome/email da localStorage se presenti)
+  openForm('seogeo');
+
+  // I parametri del link hanno priorita' su localStorage
+  document.getElementById('sg-url').value = seoUrl;
+  var pNome = params.get('nome');
+  var pEmail = params.get('email');
+  if (pNome) document.getElementById('sg-nome').value = pNome;
+  if (pEmail) document.getElementById('sg-email').value = pEmail;
+
+  // Porta il form in vista e pulisce l'URL (evita riaperture al refresh)
+  document.getElementById('formPanel').scrollIntoView({ behavior: 'smooth' });
+  try { history.replaceState(null, '', window.location.pathname); } catch (e) {}
+})();
+</script>
 <body>
 <div class="container">
   <header>
