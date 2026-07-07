@@ -648,6 +648,31 @@
   };
 })();
 </script>
+</script>
 
+<!-- ============================================================ -->
+<!-- DEEP-LINK SEO/GEO — precompila la card 06 da ?seo=<url>      -->
+<!-- ============================================================ -->
+<script>
+(function () {
+  var params = new URLSearchParams(window.location.search);
+  var seoUrl = params.get('seo');
+  if (!seoUrl) return;
+
+  openForm('seogeo');
+
+  document.getElementById('sg-url').value = seoUrl;
+  var pNome = params.get('nome');
+  var pEmail = params.get('email');
+  if (pNome) document.getElementById('sg-nome').value = pNome;
+  if (pEmail) document.getElementById('sg-email').value = pEmail;
+
+  document.getElementById('formPanel').scrollIntoView({ behavior: 'smooth' });
+  try { history.replaceState(null, '', window.location.pathname); } catch (e) {}
+})();
+</script>
+
+</body>
+</html>
 </body>
 </html>
