@@ -270,7 +270,7 @@
   </div>
   <footer>
     <span class="footer-txt">YOBEE SRL · Via Giacomo Watt 27, Milano</span>
-    <span class="footer-txt">AI Operations Hub v1.5</span>
+    <span class="footer-txt">AI Operations Hub v1.6</span>
   </footer>
 </div>
 <script>
@@ -627,6 +627,8 @@
 
 <!-- ============================================================ -->
 <!-- DEEP-LINK SEO/GEO — precompila la card 06 da ?seo=<url>      -->
+<!-- Aggiunto ?keyword=<settore>: arriva dai bottoni SEO del      -->
+<!-- report social (W2) e precompila il campo keyword.            -->
 <!-- ============================================================ -->
 <script>
 (function () {
@@ -639,8 +641,10 @@
   document.getElementById('sg-url').value = seoUrl;
   var pNome = params.get('nome');
   var pEmail = params.get('email');
+  var pKeyword = params.get('keyword');
   if (pNome) document.getElementById('sg-nome').value = pNome;
   if (pEmail) document.getElementById('sg-email').value = pEmail;
+  if (pKeyword) document.getElementById('sg-keyword').value = pKeyword;
 
   document.getElementById('formPanel').scrollIntoView({ behavior: 'smooth' });
   try { history.replaceState(null, '', window.location.pathname); } catch (e) {}
