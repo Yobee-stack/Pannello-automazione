@@ -10,6 +10,17 @@ Sito unico su GitHub Pages, servito da `main`: https://yobee-stack.github.io/Pan
 
 I repo `Contatore--Admin` e `contatore-workflow` sono stati dismessi in favore di questo hub: le loro GitHub Pages ora reindirizzano qui.
 
+## Endpoint n8n usati dalle pagine
+
+| Endpoint | Workflow n8n | Risposta | Usato da |
+| --- | --- | --- | --- |
+| `quota` | Contatore — Endpoint Quota | `{trovato, numero}` | `/contatore/` |
+| `quota-status` | 03 — Scouting Editori IT ES v6d (nodo "Webhook — quota-status", GET) | `{meseAnno, quotaMax, richiesteMese, richiesteRimanenti}` | pill quota sulla card Scouting editori in `/` |
+| `contatore-stats` | Contatore — Endpoint Stats (monitoraggio admin) | statistiche aggregate — **protetto da Basic Auth** | `/admin/` |
+
+Base: `https://n8n.foffyautomazioni.com/webhook/`. `quota-status` non sta nel workflow del contatore: vive dentro lo scouting editori perche legge lo stesso foglio quota di quel workflow.
+
+
 ---
 
 <!-- NOTA: il blocco qui sotto riguarda il repo Yobee-stack/workflows (changelog scraping-editori), non questo repo. Va spostato la. -->
