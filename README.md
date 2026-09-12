@@ -1,3 +1,15 @@
+# Yobee AI Operations Hub
+
+Sito unico su GitHub Pages, servito da `main`: https://yobee-stack.github.io/Pannello-automazione/
+
+- `/` — Automazioni (colleghi): avvia i workflow n8n dalle card.
+- `/contatore/` — I tuoi lanci (colleghi): ogni collega inserisce il proprio numero identificativo e vede quanti lanci gli restano nel mese.
+- `/admin/` — Statistiche aggregate (solo Alfonso): riepilogo per workflow/utente/credenziale ed eventi. Protetto da Basic Auth sul webhook n8n `contatore-stats` — va configurata una credenziale "Basic Auth" su quel nodo webhook (workflow "00 - Pannello Contatore API") prima che la pagina funzioni; senza quella configurazione la pagina resta bloccata sul login con errore, senza esporre dati.
+
+I repo `Contatore--Admin` e `contatore-workflow` sono stati dismessi in favore di questo hub: le loro GitHub Pages ora reindirizzano qui.
+
+---
+
 # Aggiornamento README — blocchi da incollare
 
 ## 1. Riga di changelog (repo `Yobee-stack/workflows`, README di progetto `scraping-editori`)

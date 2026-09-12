@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#070E1A">
+<title>I tuoi lanci — Yobee</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#070E1A; --bg2:#0D1A2E;
+    --panel:rgba(255,255,255,0.04); --panel-2:rgba(255,255,255,0.06);
+    --border:rgba(255,255,255,0.08); --border-strong:rgba(255,255,255,0.14);
+    --text:#FFFFFF; --muted:rgba(255,255,255,0.40);
+    --accent:#1D9E75; --accent-light:#5DCAA5; --accent-dim:rgba(29,158,117,0.30);
+    --warn:#E0A23C; --danger:#E0635F;
+    --font:'DM Sans',sans-serif; --mono:'DM Mono',monospace;
+  }
+  *{box-sizing:border-box;}
+  body{margin:0;background:var(--bg);color:var(--text);font-family:var(--font);
+    -webkit-font-smoothing:antialiased;min-height:100vh;overflow-x:hidden;}
+  body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
+    background-image:linear-gradient(rgba(29,158,117,0.04) 1px,transparent 1px),
+                     linear-gradient(90deg,rgba(29,158,117,0.04) 1px,transparent 1px);
+    background-size:48px 48px;}
+  .wrap{max-width:760px;margin:0 auto;padding:32px 24px 80px;position:relative;z-index:1;}
+
+  header{display:flex;justify-content:space-between;align-items:flex-end;
+    border-bottom:1px solid var(--border);padding-bottom:20px;margin-bottom:28px;flex-wrap:wrap;gap:14px;}
+  .logo-img{height:28px;width:auto;display:block;align-self:flex-start;margin:0 0 10px;}
+  .eyebrow{font-family:var(--mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--accent-light);margin:0 0 6px;}
+  h1{font-family:var(--font);font-size:26px;font-weight:500;margin:0;letter-spacing:-.01em;}
+  .sub{color:var(--muted);font-size:14px;margin:4px 0 0;}
+  .backlink{font-family:var(--mono);font-size:12px;color:var(--muted);text-decoration:none;padding:8px 13px;border:1px solid var(--border);border-radius:8px;}
+  .backlink:hover{color:var(--accent-light);border-color:var(--accent);}
+
+  .lookup{display:flex;gap:12px;align-items:flex-end;flex-wrap:wrap;
+    background:linear-gradient(160deg,var(--bg2),rgba(255,255,255,0.02));
+    border:1px solid var(--border);border-radius:16px;padding:22px;margin-bottom:22px;}
+  .lk-field{display:flex;flex-direction:column;gap:8px;flex:1;min-width:200px;}
+  label{font-family:var(--mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);}
+  input#numero{background:var(--bg);border:1px solid var(--border-strong);border-radius:10px;color:#fff;
+    font-family:var(--mono);font-size:22px;letter-spacing:.04em;padding:12px 16px;width:100%;outline:none;transition:border-color .15s,background .15s;}
+  input#numero::placeholder{color:rgba(255,255,255,0.2);}
+  input#numero:focus{border-color:var(--accent);background:rgba(29,158,117,0.05);}
+  input#numero.err{border-color:rgba(224,99,95,0.7);}
+  .btn{background:var(--accent);color:#fff;border:none;border-radius:10px;padding:13px 22px;font-family:var(--font);
+    font-size:14px;font-weight:500;cursor:pointer;display:flex;align-items:center;gap:8px;transition:background .15s,transform .1s;white-space:nowrap;}
+  .btn:hover{background:#18875f;} .btn:active{transform:scale(.98);} .btn:disabled{background:rgba(29,158,117,0.3);cursor:not-allowed;}
+  .btn svg{width:14px;height:14px;}
+
+  .status{min-height:20px;margin:0 2px 20px;font-family:var(--mono);font-size:13px;color:var(--muted);}
+  .status.err{color:#F0A0A0;}
+
+  /* pannello risultato */
+  .result{display:none;}
+  .result.show{display:block;animation:fade .25s ease;}
+  @keyframes fade{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:translateY(0);}}
+
+  .who{display:flex;align-items:baseline;gap:10px;margin:0 2px 14px;}
+  .who .name{font-size:18px;font-weight:500;}
+  .who .mese{font-family:var(--mono);font-size:12px;color:var(--muted);}
+
+  /* misuratore grande budget unico */
+  .hero{background:linear-gradient(160deg,var(--bg2),rgba(255,255,255,0.02));
+    border:1px solid var(--border);border-radius:18px;padding:28px;margin-bottom:16px;position:relative;overflow:hidden;}
+  .hero .row{display:flex;align-items:baseline;justify-content:space-between;flex-wrap:wrap;gap:8px;}
+  .hero .big{font-family:var(--mono);font-weight:500;font-size:64px;line-height:1;font-variant-numeric:tabular-nums;}
+  .hero .big .of{font-size:26px;color:rgba(255,255,255,0.3);}
+  .hero .word{font-size:15px;color:var(--muted);}
+  .hero .used{font-family:var(--mono);font-size:13px;color:var(--muted);}
+  .track{height:12px;border-radius:8px;background:rgba(255,255,255,0.07);overflow:hidden;margin-top:20px;}
+  .fill{height:100%;border-radius:8px;width:0;transition:width .55s ease;}
+  .badge-inf{display:inline-block;font-family:var(--mono);font-size:11px;color:var(--accent-light);
+    border:1px solid rgba(29,158,117,0.4);border-radius:99px;padding:4px 11px;}
+
+  /* dettaglio per workflow */
+  .det-label{font-family:var(--mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin:22px 2px 10px;}
+  .det{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px;}
+  .det-card{background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:14px 16px;}
+  .det-card .n{font-family:var(--mono);font-size:26px;font-weight:500;color:#fff;line-height:1;}
+  .det-card .l{font-size:12px;color:var(--muted);margin-top:6px;line-height:1.35;}
+
+  .empty{border:1px dashed var(--border-strong);border-radius:16px;padding:44px 24px;text-align:center;color:var(--muted);}
+  .empty h3{color:#fff;font-weight:500;margin:0 0 6px;font-size:17px;}
+
+  footer{margin-top:38px;padding-top:18px;border-top:1px solid var(--border);
+    display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;font-family:var(--mono);font-size:11px;color:rgba(255,255,255,0.22);}
+
+  @media (max-width:560px){h1{font-size:22px}.hero .big{font-size:52px}}
+  @media (prefers-reduced-motion:reduce){.fill{transition:none;}.result.show{animation:none;}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div>
+      <img src="../yobee-logo.png" alt="Yobee" class="logo-img">
+      <p class="eyebrow">AI Operations</p>
+      <h1>I tuoi lanci</h1>
+      <p class="sub">Inserisci il tuo numero per vedere quanti lanci ti restano questo mese.</p>
+    </div>
+    <a class="backlink" href="../">← Hub</a>
+  </header>
+
+  <div class="lookup">
+    <div class="lk-field">
+      <label for="numero">Il tuo numero</label>
+      <input id="numero" inputmode="numeric" autocomplete="off" placeholder="es. 3">
+    </div>
+    <button class="btn" id="go" onclick="cerca()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
+      Vedi i miei lanci
+    </button>
+  </div>
+
+  <div class="status" id="status" role="status" aria-live="polite"></div>
+
+  <div id="content">
+    <div class="empty">
+      <h3>Inserisci il tuo numero</h3>
+      <div>Digita il codice che ti è stato assegnato e premi “Vedi i miei lanci”.</div>
+    </div>
+  </div>
+
+  <div class="result" id="result">
+    <div class="who"><span class="name" id="r-nome"></span><span class="mese" id="r-mese"></span></div>
+    <div class="hero">
+      <div class="row">
+        <div class="big" id="r-big"></div>
+        <div style="text-align:right">
+          <div class="word" id="r-word"></div>
+          <div class="used" id="r-used"></div>
+        </div>
+      </div>
+      <div class="track"><div class="fill" id="r-fill"></div></div>
+    </div>
+    <div class="det-label" id="r-detlabel">Dettaglio per workflow</div>
+    <div class="det" id="r-det"></div>
+  </div>
+
+  <footer>
+    <span>YOBEE SRL · Via Giacomo Watt 27, Milano</span>
+    <span>Contatore lanci · reset il 1° del mese</span>
+  </footer>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  var QUOTA_ENDPOINT = "https://n8n.foffyautomazioni.com/webhook/quota";
+
+  var numEl=document.getElementById("numero"), statusEl=document.getElementById("status"),
+      contentEl=document.getElementById("content"), resultEl=document.getElementById("result"),
+      goBtn=document.getElementById("go");
+
+  function esc(s){return String(s).replace(/[&<>"]/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c];});}
+  function setStatus(m,e){statusEl.textContent=m||"";statusEl.className="status"+(e?" err":"");}
+  function colorFor(ratio){ if(ratio<=0.15)return "var(--danger)"; if(ratio<=0.40)return "var(--warn)"; return "var(--accent)"; }
+  function showEmpty(html){ resultEl.classList.remove("show"); contentEl.style.display="block"; contentEl.innerHTML=html; }
+  function showResult(){ contentEl.style.display="none"; resultEl.classList.add("show"); }
+
+  function render(data){
+    var illimitato = data.illimitato===true;
+    document.getElementById("r-nome").textContent = data.nome || ("Numero "+(data.numero||""));
+    document.getElementById("r-mese").textContent = data.mese ? ("· "+data.mese) : "";
+
+    var big=document.getElementById("r-big"), word=document.getElementById("r-word"),
+        used=document.getElementById("r-used"), fill=document.getElementById("r-fill");
+
+    if(illimitato){
+      big.innerHTML='\u221E';
+      big.style.color='var(--accent-light)';
+      word.innerHTML='<span class="badge-inf">Illimitato</span>';
+      used.textContent='';
+      fill.style.width='100%'; fill.style.background='var(--accent)';
+    } else {
+      var limite=Number(data.limite||10), usati=Number(data.usati||0);
+      var restanti=(typeof data.restanti==='number')?data.restanti:Math.max(0,limite-usati);
+      var ratio=limite>0?restanti/limite:0, col=colorFor(ratio);
+      big.innerHTML=restanti+' <span class="of">/ '+limite+'</span>';
+      big.style.color=col;
+      word.textContent = restanti===0 ? 'Quota esaurita' : (restanti===1?'lancio rimasto':'lanci rimasti');
+      used.textContent = 'usati '+usati+' di '+limite;
+      fill.style.width=Math.round(ratio*100)+'%'; fill.style.background=col;
+    }
+
+    var det=data.dettaglio||[];
+    var lbl=document.getElementById("r-detlabel"), box=document.getElementById("r-det");
+    if(det.length){
+      lbl.style.display='block';
+      box.innerHTML=det.map(function(d){
+        return '<div class="det-card"><div class="n">'+Number(d.usati||0)+'</div>'+
+               '<div class="l">'+esc(d.nome||d.workflow||'')+'</div></div>';
+      }).join("");
+    } else { lbl.style.display='none'; box.innerHTML=''; }
+    showResult();
+  }
+
+  function cerca(){
+    var numero=(numEl.value||"").trim();
+    if(!numero){ numEl.classList.add("err"); numEl.addEventListener("input",function(){numEl.classList.remove("err");},{once:true}); setStatus("Inserisci il tuo numero.",true); return; }
+    goBtn.disabled=true; setStatus("Leggo i tuoi lanci…");
+    var url=QUOTA_ENDPOINT+(QUOTA_ENDPOINT.indexOf("?")>=0?"&":"?")+"numero="+encodeURIComponent(numero);
+    fetch(url,{method:"GET",headers:{"Accept":"application/json"}})
+      .then(function(r){ if(!r.ok) throw new Error("HTTP "+r.status); return r.json(); })
+      .then(function(data){
+        if(data && data.trovato===false){
+          showEmpty('<div class="empty"><h3>Numero non riconosciuto</h3><div>Il numero digitato non corrisponde a nessuno. Controllalo o avvisa Foffy.</div></div>');
+          setStatus(""); return;
+        }
+        render(data);
+        var when=new Date();
+        setStatus("aggiornato alle "+when.toLocaleTimeString("it-IT",{hour:"2-digit",minute:"2-digit"}));
+      })
+      .catch(function(err){
+        showEmpty('<div class="empty"><h3>Non riesco a leggere i tuoi lanci</h3><div>L\'endpoint non ha risposto. Riprova tra poco o avvisa Foffy.</div></div>');
+        setStatus("Errore: "+err.message,true);
+      })
+      .finally(function(){ goBtn.disabled=false; });
+  }
+  window.cerca=cerca;
+  numEl.addEventListener("keydown",function(e){ if(e.key==="Enter") cerca(); });
+  (function initFromUrl(){ var m=/[?&]numero=([^&]+)/.exec(location.search); if(m){ numEl.value=decodeURIComponent(m[1]).trim(); cerca(); } })();
+})();
+</script>
+</body>
+</html>

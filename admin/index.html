@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#070E1A">
+<title>Admin — Yobee</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  /* Palette Yobee — allineata all'AI Operations Hub (colori del brand yobee.it) */
+  :root{
+    --bg:#070E1A;
+    --bg2:#0D1A2E;
+    --panel:rgba(255,255,255,0.04);
+    --panel-2:rgba(255,255,255,0.06);
+    --border:rgba(255,255,255,0.08);
+    --border-strong:rgba(255,255,255,0.14);
+    --text:#FFFFFF;
+    --muted:rgba(255,255,255,0.38);
+    --accent:#1D9E75;
+    --accent-light:#5DCAA5;
+    --accent-dim:rgba(29,158,117,0.35);
+    --warn:#E0A23C;
+    --danger:#E0635F;
+    --font:'DM Sans',sans-serif;
+    --mono:'DM Mono',monospace;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:var(--bg);
+    color:var(--text);
+    font-family:var(--font);
+    -webkit-font-smoothing:antialiased;
+    min-height:100vh;
+    overflow-x:hidden;
+  }
+  /* griglia ambientale come nell'hub */
+  body::before{
+    content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
+    background-image:linear-gradient(rgba(29,158,117,0.04) 1px, transparent 1px),
+                     linear-gradient(90deg, rgba(29,158,117,0.04) 1px, transparent 1px);
+    background-size:48px 48px;
+  }
+  .wrap{max-width:1180px;margin:0 auto;padding:32px 24px 80px;position:relative;z-index:1;}
+
+  /* ---- Header ---- */
+  header{
+    display:flex;justify-content:space-between;align-items:flex-end;
+    border-bottom:1px solid var(--border);
+    padding-bottom:20px;margin-bottom:28px;flex-wrap:wrap;gap:16px;
+  }
+  .logo-block{display:flex;flex-direction:column;gap:6px;}
+  .logo-img{height:28px;width:auto;display:block;align-self:flex-start;margin-bottom:2px;}
+  .eyebrow{
+    font-family:var(--mono);
+    font-size:11px;letter-spacing:.12em;text-transform:uppercase;
+    color:var(--accent-light);margin:0;
+  }
+  h1{
+    font-family:var(--font);
+    font-size:26px;font-weight:500;margin:0;letter-spacing:-.01em;color:#fff;
+  }
+  .status-row{display:flex;align-items:center;gap:10px;font-family:var(--mono);font-size:12px;color:var(--muted);}
+  .pill{
+    font-family:var(--mono);font-size:10px;padding:5px 12px;border-radius:99px;
+    border:1px solid var(--border);color:var(--muted);letter-spacing:.06em;
+    display:flex;align-items:center;gap:6px;
+  }
+  .pill.live{border-color:rgba(29,158,117,0.4);color:var(--accent-light);}
+  .pill.live .dot{background:var(--accent);animation:pulse 2s infinite;}
+  .pill.off{border-color:rgba(224,99,95,0.4);color:#F0A0A0;}
+  .pill.off .dot{background:var(--danger);}
+  .dot{width:6px;height:6px;border-radius:50%;background:var(--accent);}
+  @keyframes pulse{0%,100%{opacity:1;}50%{opacity:.3;}}
+  button.refresh{
+    font-family:var(--mono);font-size:12px;
+    background:transparent;border:1px solid var(--border);color:var(--text);
+    padding:8px 14px;border-radius:8px;cursor:pointer;transition:.15s;
+  }
+  button.refresh:hover{border-color:var(--accent);color:var(--accent-light);}
+  select.mese{font-family:var(--mono);font-size:12px;background:var(--bg2);border:1px solid var(--border);
+    color:var(--text);padding:8px 30px 8px 12px;border-radius:8px;cursor:pointer;appearance:none;
+    background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='14' height='14' fill='none' stroke='%235DCAA5' stroke-width='1.6'><path d='M3.5 5l3.5 3.5L10.5 5'/></svg>");
+    background-repeat:no-repeat;background-position:right 10px center;}
+  select.mese:focus{outline:none;border-color:var(--accent);}
+  select.mese option{background:var(--bg2);color:var(--text);}
+
+  /* ---- Config bar (mostrata solo se manca URL) ---- */
+  .config{
+    background:var(--panel);border:1px solid var(--warn);border-radius:10px;
+    padding:16px 18px;margin-bottom:24px;font-size:13px;color:var(--muted);
+    display:none;
+  }
+  .config code{color:var(--warn);font-family:var(--mono);}
+  .config input{
+    width:100%;margin-top:10px;background:var(--bg2);border:1px solid var(--border);
+    color:var(--text);padding:9px 10px;border-radius:8px;font-family:var(--mono);font-size:12px;
+  }
+
+  /* ---- Hero counter ---- */
+  .hero{display:grid;grid-template-columns:1.1fr 2fr;gap:20px;margin-bottom:28px;}
+  .hero-main{
+    background:linear-gradient(160deg,var(--bg2),rgba(255,255,255,0.02));
+    border:1px solid var(--border);border-radius:14px;padding:26px;
+    display:flex;flex-direction:column;justify-content:center;position:relative;overflow:hidden;
+  }
+  .hero-main::after{
+    content:'';position:absolute;left:0;bottom:0;height:2px;width:100%;
+    background:linear-gradient(90deg,var(--accent),transparent);
+  }
+  .hero-main .num{
+    font-family:var(--mono);font-size:52px;font-weight:500;
+    color:var(--accent-light);line-height:1;letter-spacing:-.01em;
+  }
+  .hero-main .label{font-size:13px;color:var(--muted);margin-top:10px;}
+  .mini-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;}
+  .mini-card{
+    background:var(--panel);border:1px solid var(--border);border-radius:14px;
+    padding:18px;transition:border-color .15s,background .15s;
+  }
+  .mini-card:hover{border-color:var(--border-strong);background:var(--panel-2);}
+  .mini-card .n{font-family:var(--mono);font-size:26px;font-weight:500;color:#fff;}
+  .mini-card .l{font-size:12px;color:var(--muted);margin-top:6px;}
+
+  /* ---- Sezioni ---- */
+  section{margin-bottom:32px;}
+  .sec-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;}
+  .sec-head h2{
+    font-family:var(--font);font-size:14px;font-weight:500;margin:0;
+    text-transform:uppercase;letter-spacing:.06em;color:var(--text);
+  }
+  .sec-head span{font-size:11px;color:var(--muted);font-family:var(--mono);}
+
+  .bar-list{display:flex;flex-direction:column;gap:10px;}
+  .bar-row{display:grid;grid-template-columns:220px 1fr 46px;align-items:center;gap:12px;}
+  .bar-row .name{font-size:13px;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+  .bar-track{background:var(--panel);border:1px solid var(--border);border-radius:6px;height:10px;overflow:hidden;}
+  .bar-fill{height:100%;background:linear-gradient(90deg,var(--accent-dim),var(--accent));}
+  .bar-row .count{font-family:var(--mono);font-size:12px;color:var(--muted);text-align:right;}
+
+  .badge{
+    display:inline-block;padding:2px 8px;border-radius:20px;font-size:11px;
+    font-family:var(--mono);border:1px solid var(--border);color:var(--muted);
+  }
+  .badge.team{color:var(--warn);border-color:rgba(224,162,60,0.5);}
+
+  /* ---- Log ---- */
+  .log{background:var(--panel);border:1px solid var(--border);border-radius:12px;overflow:hidden;}
+  .log-row{
+    display:grid;grid-template-columns:150px 1fr 140px 1fr;gap:14px;
+    padding:11px 16px;border-bottom:1px solid var(--border);
+    font-family:var(--mono);font-size:12px;align-items:center;
+  }
+  .log-row:last-child{border-bottom:none;}
+  .log-row.head{color:var(--muted);text-transform:uppercase;letter-spacing:.06em;font-size:10px;background:rgba(255,255,255,0.02);}
+  .log-row .ts{color:var(--muted);}
+  .log-row .wf{color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+  .log-row .cr{color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+
+  .empty{
+    text-align:center;padding:50px 20px;color:var(--muted);font-size:13px;
+    border:1px dashed var(--border);border-radius:12px;
+  }
+
+  @media (max-width:760px){
+    .hero{grid-template-columns:1fr;}
+    .mini-grid{grid-template-columns:1fr 1fr;}
+    .bar-row{grid-template-columns:120px 1fr 40px;}
+    .log-row{grid-template-columns:100px 1fr 90px;}
+    .log-row .cr{display:none;}
+  }
+  @media (prefers-reduced-motion:reduce){.pill.live .dot{animation:none;}}
+
+  /* ---- Login gate ---- */
+  .login-gate{display:flex;justify-content:center;padding:60px 0;}
+  .login-box{width:100%;max-width:340px;background:linear-gradient(160deg,var(--bg2),rgba(255,255,255,0.02));
+    border:1px solid var(--border);border-radius:16px;padding:26px;}
+  .login-box h2{font-size:20px;font-weight:500;margin:4px 0 8px;}
+  .login-box .sub{color:var(--muted);font-size:13px;margin:0 0 18px;line-height:1.5;}
+  .login-box .lk-field{display:flex;flex-direction:column;gap:6px;margin-bottom:14px;}
+  .login-box label{font-family:var(--mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);}
+  .login-box input{background:var(--bg);border:1px solid var(--border-strong);border-radius:10px;color:#fff;
+    font-family:var(--font);font-size:14px;padding:10px 12px;width:100%;outline:none;}
+  .login-box input:focus{border-color:var(--accent);}
+  .login-box .btn{background:var(--accent);color:#fff;border:none;border-radius:10px;padding:11px 18px;
+    font-family:var(--font);font-size:14px;font-weight:500;cursor:pointer;width:100%;margin-top:4px;}
+  .login-box .btn:hover{background:#18875f;}
+  .login-box .status{margin-top:12px;min-height:auto;}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <div class="logo-block">
+      <img src="../yobee-logo.png" alt="Yobee" class="logo-img">
+      <p class="eyebrow">AI Operations</p>
+      <h1>Admin — Statistiche</h1>
+    </div>
+    <div class="status-row">
+      <a class="refresh" style="text-decoration:none;display:inline-block" href="../">← Hub</a>
+      <span class="pill live" id="statusPill"><span class="dot" id="statusDot"></span><span id="statusText">connessione in corso…</span></span>
+      <select class="mese" id="meseSel" onchange="carica()" aria-label="Filtra per mese"><option value="">Tutto lo storico</option></select>
+      <button class="refresh" onclick="carica()">↻ Aggiorna</button>
+    </div>
+  </header>
+
+  <div class="login-gate" id="loginGate">
+    <div class="login-box">
+      <p class="eyebrow">Accesso riservato</p>
+      <h2>Area Admin</h2>
+      <p class="sub">Inserisci le credenziali configurate su n8n per il webhook "contatore-stats".</p>
+      <div class="lk-field"><label for="au">Utente</label><input id="au" autocomplete="username"></div>
+      <div class="lk-field"><label for="ap">Password</label><input id="ap" type="password" autocomplete="current-password"></div>
+      <button class="btn" onclick="loginAdmin()">Entra</button>
+      <div class="status err" id="loginStatus"></div>
+    </div>
+  </div>
+
+  <div id="dashboard" style="display:none">
+
+  <div class="config" id="configBox">
+    Nessun endpoint configurato. Apri questo file e imposta la costante
+    <code>WEBHOOK_URL</code> nello script in fondo alla pagina con l'URL del webhook
+    <code>contatore-stats</code> del workflow "00 - Pannello Contatore API".
+    <input type="text" id="urlInput" placeholder="https://tuo-n8n.dominio.it/webhook/contatore-stats">
+  </div>
+
+  <div class="hero">
+    <div class="hero-main">
+      <div class="num" id="totale">—</div>
+      <div class="label">esecuzioni registrate in totale</div>
+    </div>
+    <div class="mini-grid">
+      <div class="mini-card"><div class="n" id="numWorkflow">—</div><div class="l">workflow attivi</div></div>
+      <div class="mini-card"><div class="n" id="numUtenti">—</div><div class="l">utenti distinti</div></div>
+      <div class="mini-card"><div class="n" id="numCred">—</div><div class="l">credenziali monitorate</div></div>
+    </div>
+  </div>
+
+  <section>
+    <div class="sec-head"><h2>Utilizzo per workflow</h2><span id="wfSpan"></span></div>
+    <div class="bar-list" id="perWorkflow"></div>
+  </section>
+
+  <section>
+    <div class="sec-head"><h2>Consumo per credenziale</h2><span>stima da mappa statica per workflow</span></div>
+    <div class="bar-list" id="perCredenziale"></div>
+  </section>
+
+  <section>
+    <div class="sec-head"><h2>Utilizzo per utente</h2><span>"Team" = account condiviso, quota estesa</span></div>
+    <div class="bar-list" id="perUtente"></div>
+  </section>
+
+  <section>
+    <div class="sec-head"><h2>Ultimi eventi</h2><span id="logSpan"></span></div>
+    <div class="log" id="logBox">
+      <div class="log-row head">
+        <span>Data/ora</span><span>Workflow</span><span>Utente</span><span>Credenziali</span>
+      </div>
+    </div>
+  </section>
+
+  </div>
+</div>
+
+<script>
+  // Imposta qui l'URL del webhook "contatore-stats" del workflow 00 - Pannello Contatore API
+  const WEBHOOK_URL = "https://n8n.foffyautomazioni.com/webhook/contatore-stats";
+  const AUTH_KEY = 'yobee_admin_auth';
+
+  function authHeader(){
+    const v = sessionStorage.getItem(AUTH_KEY);
+    return v ? { 'Authorization': 'Basic ' + v } : {};
+  }
+  function showGate(msg){
+    document.getElementById('loginGate').style.display = 'flex';
+    document.getElementById('dashboard').style.display = 'none';
+    document.getElementById('loginStatus').textContent = msg || '';
+  }
+  function showDashboard(){
+    document.getElementById('loginGate').style.display = 'none';
+    document.getElementById('dashboard').style.display = 'block';
+  }
+  function loginAdmin(){
+    const u = document.getElementById('au').value.trim();
+    const p = document.getElementById('ap').value;
+    if(!u || !p){ document.getElementById('loginStatus').textContent = 'Inserisci utente e password.'; return; }
+    sessionStorage.setItem(AUTH_KEY, btoa(u + ':' + p));
+    carica();
+  }
+  document.getElementById('ap')?.addEventListener('keydown', function(e){ if(e.key === 'Enter') loginAdmin(); });
+
+  function setStatus(ok, msg){
+    var pill = document.getElementById('statusPill');
+    pill.className = 'pill ' + (ok ? 'live' : 'off');
+    document.getElementById('statusText').textContent = msg;
+  }
+
+  function barra(container, dati, max){
+    container.innerHTML = '';
+    const entries = Object.entries(dati).sort((a,b) => b[1]-a[1]);
+    if(entries.length === 0){
+      container.innerHTML = '<div class="empty">Nessun dato ancora registrato.</div>';
+      return;
+    }
+    entries.forEach(([nome, count]) => {
+      const pct = Math.max(4, Math.round((count / max) * 100));
+      const isTeam = nome.toLowerCase() === 'team';
+      const row = document.createElement('div');
+      row.className = 'bar-row';
+      row.innerHTML = `
+        <div class="name">${nome} ${isTeam ? '<span class="badge team">TEAM</span>' : ''}</div>
+        <div class="bar-track"><div class="bar-fill" style="width:${pct}%"></div></div>
+        <div class="count">${count}</div>`;
+      container.appendChild(row);
+    });
+  }
+
+  function renderLog(eventi){
+    const box = document.getElementById('logBox');
+    box.innerHTML = '<div class="log-row head"><span>Data/ora</span><span>Workflow</span><span>Utente</span><span>Credenziali</span></div>';
+    if(!eventi || eventi.length === 0){
+      box.innerHTML += '<div class="empty">Nessun evento registrato.</div>';
+      return;
+    }
+    eventi.forEach(e => {
+      const d = e.timestamp ? new Date(e.timestamp) : null;
+      const ts = d ? d.toLocaleString('it-IT', {day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'}) : '—';
+      const row = document.createElement('div');
+      row.className = 'log-row';
+      row.innerHTML = `<span class="ts">${ts}</span><span class="wf">${e.workflow||''}</span><span>${e.utente||''}</span><span class="cr">${e.credenziali||''}</span>`;
+      box.appendChild(row);
+    });
+  }
+
+  let meseInizializzato = false;
+  async function carica(){
+    const base = WEBHOOK_URL || document.getElementById('urlInput').value.trim();
+    if(!base){
+      document.getElementById('configBox').style.display = 'block';
+      setStatus(false, 'endpoint non configurato');
+      return;
+    }
+    const mese = (document.getElementById('meseSel')||{}).value || '';
+    const url = base + (mese ? ((base.indexOf('?')>=0?'&':'?') + 'mese=' + encodeURIComponent(mese)) : '');
+    setStatus(true, 'aggiornamento…');
+    try{
+      const res = await fetch(url, { headers: authHeader() });
+      if(res.status === 401 || res.status === 403){
+        sessionStorage.removeItem(AUTH_KEY);
+        showGate('Credenziali non valide.');
+        return;
+      }
+      if(!res.ok) throw new Error('HTTP ' + res.status);
+      const data = await res.json();
+      showDashboard();
+
+      // popola il filtro mese una sola volta, dai mesi realmente presenti
+      if(!meseInizializzato && Array.isArray(data.mesiDisponibili)){
+        const sel = document.getElementById('meseSel');
+        const cur = sel.value;
+        sel.innerHTML = '<option value="">Tutto lo storico</option>' +
+          data.mesiDisponibili.map(function(m){ return '<option value="'+m+'">'+m+'</option>'; }).join('');
+        sel.value = cur;
+        meseInizializzato = true;
+      }
+
+      document.getElementById('totale').textContent = data.totaleEsecuzioni ?? 0;
+      document.getElementById('numWorkflow').textContent = Object.keys(data.perWorkflow||{}).length;
+      document.getElementById('numUtenti').textContent = Object.keys(data.perUtente||{}).length;
+      document.getElementById('numCred').textContent = Object.keys(data.perCredenziale||{}).length;
+
+      const maxWf = Math.max(1, ...Object.values(data.perWorkflow||{0:0}));
+      const maxCr = Math.max(1, ...Object.values(data.perCredenziale||{0:0}));
+      const maxUt = Math.max(1, ...Object.values(data.perUtente||{0:0}));
+
+      barra(document.getElementById('perWorkflow'), data.perWorkflow||{}, maxWf);
+      barra(document.getElementById('perCredenziale'), data.perCredenziale||{}, maxCr);
+      barra(document.getElementById('perUtente'), data.perUtente||{}, maxUt);
+      renderLog(data.ultimiEventi||[]);
+
+      document.getElementById('wfSpan').textContent = Object.keys(data.perWorkflow||{}).length + ' workflow monitorati';
+      document.getElementById('logSpan').textContent = 'ultimi ' + (data.ultimiEventi||[]).length + ' eventi';
+
+      setStatus(true, 'aggiornato alle ' + new Date().toLocaleTimeString('it-IT'));
+    }catch(err){
+      setStatus(false, 'errore di connessione: ' + err.message);
+    }
+  }
+
+  document.getElementById('urlInput')?.addEventListener('keydown', (e) => {
+    if(e.key === 'Enter') carica();
+  });
+
+  if(sessionStorage.getItem(AUTH_KEY)){ carica(); } else { showGate(); }
+</script>
+</body>
+</html>

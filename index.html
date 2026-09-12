@@ -91,6 +91,8 @@
   .toast-msg { font-size: 11px; color: var(--yobee-muted); line-height: 1.5; }
   footer { margin-top: 3rem; padding-top: 1.5rem; border-top: 1px solid var(--yobee-border); display: flex; align-items: center; justify-content: space-between; }
   .footer-txt { font-family: var(--mono); font-size: 10px; color: rgba(255,255,255,0.2); letter-spacing: 0.06em; }
+  .nav-link { font-family: var(--mono); font-size: 11px; color: var(--yobee-muted); text-decoration: none; padding: 6px 12px; border: 1px solid var(--yobee-border); border-radius: 8px; transition: color 0.15s, border-color 0.15s; }
+  .nav-link:hover { color: var(--yobee-accent-light); border-color: var(--yobee-accent); }
   @media (max-width: 640px) { .workflow-grid { grid-template-columns: 1fr 1fr; } .form-grid { grid-template-columns: 1fr; } .field.full { grid-column: span 1; } header { flex-direction: column; align-items: flex-start; gap: 1rem; } .comp-row { grid-template-columns: 1fr; } }
   @media (max-width: 420px) { .workflow-grid { grid-template-columns: 1fr; } }
   #w2-overlay, #w3-overlay { position: fixed; inset: 0; z-index: 200; background: rgba(7,14,26,0.9); display: flex; align-items: center; justify-content: center; padding: 1.5rem; backdrop-filter: blur(3px); animation: fadeIn 0.2s ease; }
@@ -145,6 +147,8 @@
       <span class="logo-sub">AI Operations Hub</span>
     </div>
     <div class="header-meta">
+      <a class="nav-link" href="contatore/">I tuoi lanci</a>
+      <a class="nav-link" href="admin/" style="opacity:.55">Admin</a>
       <span class="pill">n8n · foffyautomazioni.com</span>
       <span class="pill live">online</span>
     </div>
