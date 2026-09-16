@@ -278,7 +278,10 @@
   </footer>
 </div>
 <script>
+  // ===== UNICO PUNTO DA CAMBIARE PER MIGRARE L'ISTANZA n8n =====
+  // Migrazione: sostituire il valore qui sotto e nient'altro in questo file.
   const N8N_BASE = 'https://n8n.foffyautomazioni.com';
+  // =============================================================
   const YOBEE_TOKEN = 'yobee-hub-2026';
   const REQUEST_TIMEOUT_MS = 30000;
   const LS_NOME = 'yobee_nome';
@@ -387,7 +390,7 @@
   var w2token = params.get('w2');
   if (!w2token) return;
   document.getElementById('w2-overlay').style.display = 'flex';
-  fetch('https://n8n.foffyautomazioni.com/webhook/w2-session?token=' + encodeURIComponent(w2token))
+  fetch(N8N_BASE + '/webhook/w2-session?token=' + encodeURIComponent(w2token))
     .then(function (r) { if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); })
     .then(function (data) { if (!data.valido) { showW2Error(); return; } renderW2Form(data, w2token); })
     .catch(function () { showW2Error(); });
@@ -417,7 +420,7 @@
     errEl.style.display = 'none';
     var payload = { token: document.getElementById('w2-token-val').value, nome: document.getElementById('w2-nome-val').value, email: document.getElementById('w2-email-val').value, competitors: competitors.slice(0, 5), piattaforme: piattaforme };
     var btn = document.getElementById('w2-btn'); btn.disabled = true; btn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><circle cx="12" cy="12" r="10"/></svg> Avvio in corso&hellip;';
-    fetch('https://n8n.foffyautomazioni.com/webhook/social-competitor', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) })
+    fetch(N8N_BASE + '/webhook/social-competitor', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) })
       .then(function (res) { if (!res.ok) throw new Error('HTTP ' + res.status); document.getElementById('w2-form-content').style.display = 'none'; document.getElementById('w2-footer').style.display = 'none'; document.getElementById('w2-success-msg').textContent = 'Riceverai il report via email a ' + payload.email + '.'; document.getElementById('w2-success').style.display = 'block'; })
       .catch(function () { btn.disabled = false; btn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><polygon points="5 3 19 12 5 21 5 3"/></svg> Avvia analisi social &rarr;'; errEl.textContent = "Errore durante l'avvio. Riprova o contatta alfonso.buonaiuto@yobee.it"; errEl.style.display = 'block'; });
   };
@@ -521,7 +524,7 @@
 
   document.getElementById('w3-overlay').style.display = 'flex';
 
-  fetch('https://n8n.foffyautomazioni.com/webhook/w3-session?token=' + encodeURIComponent(w3token))
+  fetch(N8N_BASE + '/webhook/w3-session?token=' + encodeURIComponent(w3token))
     .then(function (r) {
       if (!r.ok) throw new Error('HTTP ' + r.status);
       return r.json();
@@ -603,7 +606,7 @@
       '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14">' +
       '<circle cx="12" cy="12" r="10"/></svg> Avvio in corso…';
 
-    fetch('https://n8n.foffyautomazioni.com/webhook/analisi-traffico', {
+    fetch(N8N_BASE + '/webhook/analisi-traffico', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(payload)
