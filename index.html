@@ -43,6 +43,10 @@
   .wf-number { font-family: var(--mono); font-size: 10px; color: var(--yobee-accent); margin-bottom: 10px; letter-spacing: 0.08em; }
   .wf-title { font-size: 13px; font-weight: 500; color: #fff; margin-bottom: 5px; line-height: 1.3; }
   .wf-desc { font-size: 11px; color: var(--yobee-muted); line-height: 1.5; }
+  .wf-card.wip { cursor: default; opacity: 0.6; }
+  .wf-card.wip:hover { background: var(--yobee-card); border-color: var(--yobee-border); transform: none; }
+  .wf-card.wip:hover::after { transform: scaleX(0); }
+  .wf-wip { display: inline-block; margin-top: 12px; margin-left: 6px; font-family: var(--mono); font-size: 9px; letter-spacing: 0.08em; text-transform: uppercase; padding: 3px 8px; border-radius: 99px; background: rgba(234,179,8,0.12); color: #eab308; border: 1px solid rgba(234,179,8,0.3); }
   .wf-team { display: inline-block; margin-top: 12px; font-family: var(--mono); font-size: 9px; letter-spacing: 0.08em; text-transform: uppercase; padding: 3px 8px; border-radius: 99px; background: rgba(29,158,117,0.12); color: var(--yobee-accent-light); border: 1px solid rgba(29,158,117,0.2); }
   .form-panel { background: var(--yobee-card); border: 1px solid var(--yobee-border); border-radius: 16px; overflow: hidden; display: none; }
   .form-panel.visible { display: block; animation: slideIn 0.2s ease; }
@@ -173,17 +177,17 @@
       <div class="wf-desc">Nuovi publisher per network e monetizzazione per verticale</div>
       <span class="wf-team">Network</span>
     </div>
-    <div class="wf-card" id="card-coldmail" onclick="openForm('coldmail')">
+    <div class="wf-card wip" id="card-coldmail">
       <div class="wf-number">04</div>
       <div class="wf-title">Email a freddo</div>
       <div class="wf-desc">Genera e invia una cold email B2B personalizzata sul contatto target</div>
-      <span class="wf-team">Sales &amp; Account</span>
+      <span class="wf-team">Sales &amp; Account</span><span class="wf-wip">Work in progress</span>
     </div>
-    <div class="wf-card" id="card-aggiornato" onclick="openForm('aggiornato')">
+    <div class="wf-card wip" id="card-aggiornato">
       <div class="wf-number">05</div>
       <div class="wf-title">Resta aggiornato</div>
       <div class="wf-desc">Monitoraggio fonti e digest periodico sui temi che segui</div>
-      <span class="wf-team">Knowledge</span>
+      <span class="wf-team">Knowledge</span><span class="wf-wip">Work in progress</span>
     </div>
     <div class="wf-card" id="card-seogeo" onclick="openForm('seogeo')">
       <div class="wf-number">06</div>
