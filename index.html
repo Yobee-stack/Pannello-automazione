@@ -612,7 +612,7 @@
 
     fetch(N8N_BASE + '/webhook/analisi-traffico', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: { 'Content-Type': 'application/json', 'X-Yobee-Token': YOBEE_TOKEN },
       body: JSON.stringify(payload)
     })
       .then(function (res) {
