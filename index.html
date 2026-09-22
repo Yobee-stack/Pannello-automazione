@@ -424,7 +424,7 @@
     errEl.style.display = 'none';
     var payload = { token: document.getElementById('w2-token-val').value, nome: document.getElementById('w2-nome-val').value, email: document.getElementById('w2-email-val').value, competitors: competitors.slice(0, 5), piattaforme: piattaforme };
     var btn = document.getElementById('w2-btn'); btn.disabled = true; btn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><circle cx="12" cy="12" r="10"/></svg> Avvio in corso&hellip;';
-    fetch(N8N_BASE + '/webhook/social-competitor', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) })
+    fetch(N8N_BASE + '/webhook/social-competitor', { method: 'POST', headers: { 'Content-Type': 'application/json', 'X-Yobee-Token': YOBEE_TOKEN }, body: JSON.stringify(payload) })
       .then(function (res) { if (!res.ok) throw new Error('HTTP ' + res.status); document.getElementById('w2-form-content').style.display = 'none'; document.getElementById('w2-footer').style.display = 'none'; document.getElementById('w2-success-msg').textContent = 'Riceverai il report via email a ' + payload.email + '.'; document.getElementById('w2-success').style.display = 'block'; })
       .catch(function () { btn.disabled = false; btn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><polygon points="5 3 19 12 5 21 5 3"/></svg> Avvia analisi social &rarr;'; errEl.textContent = "Errore durante l'avvio. Riprova o contatta alfonso.buonaiuto@yobee.it"; errEl.style.display = 'block'; });
   };
