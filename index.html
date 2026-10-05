@@ -99,7 +99,7 @@
   .nav-link:hover { color: var(--yobee-accent-light); border-color: var(--yobee-accent); }
   @media (max-width: 640px) { .workflow-grid { grid-template-columns: 1fr 1fr; } .form-grid { grid-template-columns: 1fr; } .field.full { grid-column: span 1; } header { flex-direction: column; align-items: flex-start; gap: 1rem; } .comp-row { grid-template-columns: 1fr; } }
   @media (max-width: 420px) { .workflow-grid { grid-template-columns: 1fr; } }
-  #w2-overlay, #w3-overlay { position: fixed; inset: 0; z-index: 200; background: rgba(7,14,26,0.9); display: flex; align-items: center; justify-content: center; padding: 1.5rem; backdrop-filter: blur(3px); animation: fadeIn 0.2s ease; }
+  #w2-overlay { position: fixed; inset: 0; z-index: 200; background: rgba(7,14,26,0.9); display: flex; align-items: center; justify-content: center; padding: 1.5rem; backdrop-filter: blur(3px); animation: fadeIn 0.2s ease; }
   @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
   #w2-panel { background: var(--yobee-dark2); border: 1px solid var(--yobee-border); border-radius: 16px; width: 100%; max-width: 680px; max-height: 90vh; overflow-y: auto; animation: slideIn 0.25s ease; scrollbar-width: thin; scrollbar-color: rgba(255,255,255,0.1) transparent; }
   .w2-topbar { display: flex; align-items: center; justify-content: space-between; padding: 1rem 1.5rem; border-bottom: 1px solid var(--yobee-border); background: rgba(255,255,255,0.02); position: sticky; top: 0; z-index: 1; }
@@ -174,7 +174,7 @@
     <div class="wf-card" id="card-editori" onclick="openForm('editori')">
       <div class="wf-number">03</div>
       <div class="wf-title">Scouting editori</div>
-      <div class="wf-desc">Nuovi publisher per network e monetizzazione per verticale</div>
+      <div class="wf-desc">Nuovi publisher (siti e app) per network e monetizzazione</div>
       <span class="wf-team">Network</span>
     </div>
     <div class="wf-card wip" id="card-coldmail">
@@ -224,6 +224,8 @@
     <div id="form-editori" style="display:none">
       <div class="form-topbar"><div class="form-topbar-left"><div class="form-topbar-icon">03</div><div><div class="form-topbar-title">Scouting editori</div><div class="form-topbar-webhook">POST &rarr; /webhook/scouting-editori</div></div></div><div class="form-topbar-right"><span class="form-topbar-quota" id="quota-editori-pill"><span class="form-topbar-quota-dot"></span><span id="quota-editori-text">&hellip;</span></span><button class="btn-close" onclick="closeForm()">&#10005;</button></div></div>
       <div class="form-body"><div class="form-grid">
+        <div class="field"><label for="se-tipo">Cosa cerchi <span class="req">*</span></label><select id="se-tipo" onchange="updateEditoriVisibility()"><option value="siti">Siti</option><option value="app">App</option><option value="entrambi">Siti e app</option></select></div>
+        <div class="field" style="display:none"><label for="se-categoria">Categoria Play Store <span class="req">*</span></label><select id="se-categoria"><option value="">Seleziona...</option><option value="APPLICATION">Tutte le app</option><option value="ART_AND_DESIGN">Arte e design</option><option value="AUTO_AND_VEHICLES">Auto e veicoli</option><option value="BEAUTY">Bellezza</option><option value="BOOKS_AND_REFERENCE">Libri e consultazione</option><option value="BUSINESS">Business</option><option value="COMICS">Fumetti</option><option value="COMMUNICATION">Comunicazione</option><option value="DATING">Incontri</option><option value="EDUCATION">Istruzione</option><option value="ENTERTAINMENT">Intrattenimento</option><option value="EVENTS">Eventi</option><option value="FINANCE">Finanza</option><option value="FOOD_AND_DRINK">Cibo e bevande</option><option value="GAME">Giochi</option><option value="HEALTH_AND_FITNESS">Salute e fitness</option><option value="HOUSE_AND_HOME">Casa</option><option value="LIBRARIES_AND_DEMO">Raccolte e demo</option><option value="LIFESTYLE">Stile di vita</option><option value="MAPS_AND_NAVIGATION">Mappe e navigatori</option><option value="MEDICAL">Medicina</option><option value="MUSIC_AND_AUDIO">Musica e audio</option><option value="NEWS_AND_MAGAZINES">Notizie e riviste</option><option value="PARENTING">Genitorialità</option><option value="PERSONALIZATION">Personalizzazione</option><option value="PHOTOGRAPHY">Fotografia</option><option value="PRODUCTIVITY">Produttività</option><option value="SHOPPING">Shopping</option><option value="SOCIAL">Social</option><option value="SPORTS">Sport</option><option value="TOOLS">Strumenti</option><option value="TRAVEL_AND_LOCAL">Viaggi e info locali</option><option value="VIDEO_PLAYERS">Video player ed editor</option><option value="WEATHER">Meteo</option></select></div>
         <div class="field"><label for="se-nome">Nome e cognome <span class="req">*</span></label><input type="text" id="se-nome" placeholder="es. Giulia Verdi"></div>
         <div class="field"><label for="se-email">Email <span class="req">*</span> <span class="label-hint">&mdash; riceverai l'output</span></label><input type="email" id="se-email" placeholder="giulia@yobee.it"></div>
         <div class="field"><label for="se-verticale">Verticale tematico <span class="req">*</span></label><select id="se-verticale"><option value="">Seleziona…</option><option value="sport">Sport</option><option value="motori">Motori</option><option value="motori auto">Motori — auto</option><option value="moda">Moda</option><option value="moda tendenze">Moda e tendenze</option><option value="cucina">Cucina</option><option value="food">Food</option><option value="viaggi">Viaggi</option><option value="viaggi turismo">Viaggi e turismo</option><option value="cultura">Cultura</option><option value="tecnologia">Tecnologia</option><option value="salute">Salute</option><option value="benessere">Benessere</option><option value="salute benessere">Salute e benessere</option><option value="finanza personale">Finanza personale</option><option value="risparmio">Risparmio</option><option value="immobiliare">Immobiliare</option><option value="arredamento">Arredamento</option><option value="edilizia">Edilizia</option></select></div>
@@ -295,14 +297,15 @@
   const WORKFLOWS = {
     clienti: { webhook: '/webhook/cerca-clienti', fields: () => ({ nome: document.getElementById('cc-nome').value, email: document.getElementById('cc-email').value, settore: document.getElementById('cc-settore').value }), required: ['cc-nome','cc-email','cc-settore'] },
     gara: { webhook: '/webhook/gara-media', fields: () => { const baseContesto = document.getElementById('gm-contesto').value.trim(); const modelloBiz = document.getElementById('gm-modello').value; const settore = document.getElementById('gm-settore').value.trim(); let contestoEsteso = baseContesto; if (modelloBiz || settore) { contestoEsteso = '[INFO OBBLIGATORIE FORNITE DAL COMMERCIALE]\nModello di Business: ' + (modelloBiz || 'Non specificato') + '\nSettore specifico: ' + (settore || 'Non specificato') + '\n\n[DETTAGLI AGGIUNTIVI]\n' + baseContesto; } return { nome: document.getElementById('gm-nome').value, email: document.getElementById('gm-email').value, url: document.getElementById('gm-url').value, contesto: contestoEsteso, competitor_noti: garaCollectCompetitors() }; }, required: ['gm-nome','gm-email','gm-url','gm-modello','gm-settore','gm-contesto'] },
-    editori: { webhook: '/webhook/scouting-editori', fields: () => ({ nome: document.getElementById('se-nome').value, email: document.getElementById('se-email').value, verticale: document.getElementById('se-verticale').value, formato: document.getElementById('se-formato').value, mercato: document.getElementById('se-mercato').value, traffico_min: '', numero_editori: Math.min(20, parseInt(document.getElementById('se-numero').value, 10) || 0) || '', note: document.getElementById('se-note').value }), required: ['se-nome','se-email','se-verticale'] },
+    editori: { webhook: '/webhook/scouting-editori', fields: () => { const t = document.getElementById('se-tipo').value; const isA = t === 'app'; return { tipo: t, categoria: t === 'siti' ? '' : document.getElementById('se-categoria').value, nome: document.getElementById('se-nome').value, email: document.getElementById('se-email').value, verticale: isA ? '' : document.getElementById('se-verticale').value, formato: isA ? '' : document.getElementById('se-formato').value, mercato: isA ? '' : document.getElementById('se-mercato').value, traffico_min: '', numero_editori: isA ? '' : (Math.min(20, parseInt(document.getElementById('se-numero').value, 10) || 0) || ''), note: isA ? '' : document.getElementById('se-note').value }; }, get required() { const t = document.getElementById('se-tipo').value; if (t === 'app') return ['se-nome','se-email','se-categoria']; if (t === 'entrambi') return ['se-nome','se-email','se-verticale','se-categoria']; return ['se-nome','se-email','se-verticale']; } },
     coldmail: { webhook: '/webhook/cold-email', fields: () => ({ nome: document.getElementById('ce-nome').value, email: document.getElementById('ce-email').value, prospect_ruolo: document.getElementById('ce-prospect').value, azienda_settore: document.getElementById('ce-azienda').value, servizio: document.getElementById('ce-servizio').value, problema_obiettivo: document.getElementById('ce-problema').value, argomento_specifico: document.getElementById('ce-argomento').value }), required: ['ce-nome','ce-email','ce-prospect','ce-azienda','ce-servizio'] },
     aggiornato: { webhook: '/webhook/resta-aggiornato', fields: () => ({ nome: document.getElementById('ag-nome').value, email: document.getElementById('ag-email').value, temi: document.getElementById('ag-temi').value, fonti: document.getElementById('ag-fonti').value, frequenza: document.getElementById('ag-frequenza').value, formato: document.getElementById('ag-formato').value }), required: ['ag-nome','ag-email','ag-temi'] },
     seogeo: { webhook: '/webhook/seo-geo', fields: () => ({ nome: document.getElementById('sg-nome').value, email: document.getElementById('sg-email').value, url: document.getElementById('sg-url').value, keyword: document.getElementById('sg-keyword').value, tipo: document.getElementById('sg-tipo').value, mercato: document.getElementById('sg-mercato').value }), required: ['sg-nome','sg-email','sg-url'] }
   };
   let current = null;
   const ALL_FORMS = ['clienti','gara','editori','coldmail','aggiornato','seogeo'];
-  function openForm(id) { ALL_FORMS.forEach(f => { document.getElementById('form-' + f).style.display = 'none'; document.getElementById('card-' + f).classList.remove('active'); }); document.getElementById('form-' + id).style.display = 'block'; document.getElementById('card-' + id).classList.add('active'); document.getElementById('formPanel').classList.add('visible'); hideToast(id); current = id; prefillIdentity(id); if (id === 'editori') { loadQuotaEditori(); } }
+  function updateEditoriVisibility() { const t = document.getElementById('se-tipo').value; const siti = t === 'siti' || t === 'entrambi'; const app = t === 'app' || t === 'entrambi'; document.getElementById('se-categoria').parentElement.style.display = app ? 'flex' : 'none'; ['se-verticale', 'se-formato', 'se-mercato', 'se-numero', 'se-note'].forEach(id => { document.getElementById(id).parentElement.style.display = siti ? 'flex' : 'none'; }); }
+  function openForm(id) { ALL_FORMS.forEach(f => { document.getElementById('form-' + f).style.display = 'none'; document.getElementById('card-' + f).classList.remove('active'); }); document.getElementById('form-' + id).style.display = 'block'; document.getElementById('card-' + id).classList.add('active'); document.getElementById('formPanel').classList.add('visible'); hideToast(id); current = id; prefillIdentity(id); if (id === 'editori') { loadQuotaEditori(); updateEditoriVisibility(); } }
   function closeForm() { document.getElementById('formPanel').classList.remove('visible'); if (current) document.getElementById('card-' + current).classList.remove('active'); current = null; }
   function showToast(id, type, title, msg) { const toast = document.getElementById('toast-' + id); const icon = document.getElementById('toast-' + id + '-icon'); toast.classList.remove('error'); if (type === 'error') toast.classList.add('error'); icon.textContent = type === 'success' ? '\u2713' : '\u2715'; document.getElementById('toast-' + id + '-title').textContent = title; document.getElementById('toast-' + id + '-msg').textContent = msg; toast.classList.add('visible'); }
   function hideToast(id) { document.getElementById('toast-' + id).classList.remove('visible'); }
@@ -349,7 +352,7 @@
     } catch (err) { if (err.name === 'AbortError') { showToast(id, 'error', 'Tempo scaduto', 'n8n non ha risposto entro ' + (REQUEST_TIMEOUT_MS / 1000) + ' secondi. Riprova o verifica che il workflow sia attivo.'); } else { showToast(id, 'error', 'Errore di connessione', 'Impossibile raggiungere n8n. Controlla che il webhook sia attivo. (' + err.message + ')'); } }
     finally { clearTimeout(timer); btn.disabled = false; btn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><polygon points="5 3 19 12 5 21 5 3"/></svg> Avvia workflow'; }
   }
-  function resetForm(id) { const form = document.getElementById('form-' + id); if (!form) return; form.querySelectorAll('input, select, textarea').forEach(el => { if (el.tagName === 'SELECT') el.selectedIndex = 0; else el.value = ''; el.style.borderColor = ''; }); const compList = form.querySelector('#gm-comp-list'); if (compList) { compList.innerHTML = ''; if (typeof garaUpdateAddBtn === 'function') garaUpdateAddBtn(); } prefillIdentity(id); }
+  function resetForm(id) { const form = document.getElementById('form-' + id); if (!form) return; form.querySelectorAll('input, select, textarea').forEach(el => { if (el.tagName === 'SELECT') el.selectedIndex = 0; else el.value = ''; el.style.borderColor = ''; }); const compList = form.querySelector('#gm-comp-list'); if (compList) { compList.innerHTML = ''; if (typeof garaUpdateAddBtn === 'function') garaUpdateAddBtn(); } prefillIdentity(id); if (id === 'editori') { updateEditoriVisibility(); } }
   function prefillIdentity(id) { const wf = WORKFLOWS[id]; if (!wf) return; const { nomeId, emailId } = getIdentityFields(wf); try { const savedNome = localStorage.getItem(LS_NOME); const savedEmail = localStorage.getItem(LS_EMAIL); if (nomeId && savedNome && !document.getElementById(nomeId).value) document.getElementById(nomeId).value = savedNome; if (emailId && savedEmail && !document.getElementById(emailId).value) document.getElementById(emailId).value = savedEmail; } catch (e) {} }
 </script>
 
@@ -431,210 +434,6 @@
 })();
 </script>
 
-<!-- ============================================================ -->
-<!-- BLOCCO W3 — ANALISI TRAFFICO EDITORI                         -->
-<!-- Incollare PRIMA di </body>, dopo il blocco W2 esistente.     -->
-<!-- ============================================================ -->
-
-<div id="w3-overlay" style="display:none">
-  <div id="w2-panel">
-
-    <div id="w3-s-loading">
-      <div class="w2-topbar">
-        <div class="w2-topbar-left">
-          <div class="w2-icon">W3</div>
-          <div>
-            <div class="form-topbar-title">Analisi Traffico Editori</div>
-            <div class="form-topbar-webhook">Verifica sessione in corso…</div>
-          </div>
-        </div>
-      </div>
-      <div class="w2-loading-wrap">
-        <div class="w2-dot"></div>
-        <div class="w2-dot"></div>
-        <div class="w2-dot"></div>
-      </div>
-    </div>
-
-    <div id="w3-s-error" style="display:none">
-      <div class="w2-topbar">
-        <div class="w2-topbar-left">
-          <div class="w2-icon">W3</div>
-          <div><div class="form-topbar-title">Analisi Traffico Editori</div></div>
-        </div>
-      </div>
-      <div class="w2-center">
-        <div class="w2-center-icon">⚠</div>
-        <div class="w2-center-title">Link non valido o già utilizzato</div>
-        <div class="w2-center-body">
-          Il link che hai aperto non è più valido o è già stato utilizzato.<br>
-          Contatta <strong style="color:#fff">alfonso.buonaiuto@yobee.it</strong> per assistenza.
-        </div>
-        <span class="w2-back" onclick="document.getElementById('w3-overlay').style.display='none'">← Torna all'hub</span>
-      </div>
-    </div>
-
-    <div id="w3-s-form" style="display:none">
-      <div class="w2-topbar">
-        <div class="w2-topbar-left">
-          <div class="w2-icon">W3</div>
-          <div>
-            <div class="form-topbar-title" id="w3-form-title">Analisi Traffico Editori</div>
-            <div class="form-topbar-webhook">POST → /webhook/analisi-traffico</div>
-          </div>
-        </div>
-      </div>
-
-      <div id="w3-form-content">
-        <div class="w2-body">
-          <div class="w2-subtitle">Seleziona gli editori di cui vuoi analizzare il traffico SimilarWeb (max 10)</div>
-          <div class="w2-slabel">Editori qualificati</div>
-          <div class="w2-cb-list" id="w3-dom-list"></div>
-          <div id="w3-limit-warn" class="w2-warn" style="display:none">
-            Hai selezionato più di 10 domini. Verranno inviati solo i primi 10.
-          </div>
-          <div id="w3-val-err" class="w2-err" style="display:none"></div>
-        </div>
-      </div>
-
-      <input type="hidden" id="w3-token-val">
-      <input type="hidden" id="w3-nome-val">
-      <input type="hidden" id="w3-email-val">
-
-      <div id="w3-success" style="display:none">
-        <div class="w2-center">
-          <div class="w2-center-icon" style="color:var(--yobee-accent-light)">✓</div>
-          <div class="w2-center-title">Analisi avviata</div>
-          <div class="w2-center-body" id="w3-success-msg"></div>
-        </div>
-      </div>
-
-      <div class="w2-footer" id="w3-footer">
-        <button class="btn-run" id="w3-btn" onclick="w3Submit()">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
-          Avvia analisi traffico →
-        </button>
-      </div>
-    </div>
-
-  </div>
-</div>
-
-<script>
-(function () {
-  var params = new URLSearchParams(window.location.search);
-  var w3token = params.get('w3');
-  if (!w3token) return;
-
-  document.getElementById('w3-overlay').style.display = 'flex';
-
-  fetch(N8N_BASE + '/webhook/w3-session?token=' + encodeURIComponent(w3token))
-    .then(function (r) {
-      if (!r.ok) throw new Error('HTTP ' + r.status);
-      return r.json();
-    })
-    .then(function (data) {
-      if (!data.valido) { showW3Error(); return; }
-      renderW3Form(data, w3token);
-    })
-    .catch(function () { showW3Error(); });
-
-  function showW3Error() {
-    document.getElementById('w3-s-loading').style.display = 'none';
-    document.getElementById('w3-s-error').style.display = 'block';
-  }
-
-  function esc(s) {
-    return String(s)
-      .replace(/&/g, '&amp;').replace(/</g, '&lt;')
-      .replace(/>/g, '&gt;').replace(/"/g, '&quot;');
-  }
-
-  function renderW3Form(data, token) {
-    document.getElementById('w3-s-loading').style.display = 'none';
-    if (data.nome) {
-      document.getElementById('w3-form-title').textContent =
-        'Analisi Traffico Editori — ' + data.nome;
-    }
-
-    var list = document.getElementById('w3-dom-list');
-    list.innerHTML = '';
-    (data.domini || []).forEach(function (dom) {
-      var lbl = document.createElement('label');
-      lbl.className = 'w2-comp-row';
-      lbl.innerHTML =
-        '<input type="checkbox" class="w3-dom-cb" checked data-dom="' + esc(dom) + '">' +
-        '<div><div class="w2-comp-name">' + esc(dom) + '</div></div>';
-      list.appendChild(lbl);
-    });
-
-    document.getElementById('w3-token-val').value = token;
-    document.getElementById('w3-nome-val').value  = data.nome || '';
-    document.getElementById('w3-email-val').value = data.email || '';
-
-    document.getElementById('w3-s-form').style.display = 'block';
-
-    list.addEventListener('change', function () {
-      var n = collectDomini().length;
-      document.getElementById('w3-limit-warn').style.display = n > 10 ? 'block' : 'none';
-    });
-  }
-
-  function collectDomini() {
-    return [].slice.call(
-      document.querySelectorAll('#w3-dom-list .w3-dom-cb:checked')
-    ).map(function (cb) { return cb.dataset.dom; });
-  }
-
-  window.w3Submit = function () {
-    var domini = collectDomini();
-    var errEl = document.getElementById('w3-val-err');
-
-    if (domini.length === 0) {
-      errEl.textContent = 'Seleziona almeno un editore.';
-      errEl.style.display = 'block';
-      return;
-    }
-    errEl.style.display = 'none';
-
-    var payload = {
-      token:  document.getElementById('w3-token-val').value,
-      nome:   document.getElementById('w3-nome-val').value,
-      email:  document.getElementById('w3-email-val').value,
-      domini: domini.slice(0, 10)
-    };
-
-    var btn = document.getElementById('w3-btn');
-    btn.disabled = true;
-    btn.innerHTML =
-      '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14">' +
-      '<circle cx="12" cy="12" r="10"/></svg> Avvio in corso…';
-
-    fetch(N8N_BASE + '/webhook/analisi-traffico', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json', 'X-Yobee-Token': YOBEE_TOKEN },
-      body: JSON.stringify(payload)
-    })
-      .then(function (res) {
-        if (!res.ok) throw new Error('HTTP ' + res.status);
-        document.getElementById('w3-form-content').style.display = 'none';
-        document.getElementById('w3-footer').style.display = 'none';
-        document.getElementById('w3-success-msg').textContent =
-          'I risultati verranno scritti nel foglio Analisi Traffico. Riceverai una notifica via email a ' + payload.email + '.';
-        document.getElementById('w3-success').style.display = 'block';
-      })
-      .catch(function () {
-        btn.disabled = false;
-        btn.innerHTML =
-          '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14">' +
-          '<polygon points="5 3 19 12 5 21 5 3"/></svg> Avvia analisi traffico →';
-        errEl.textContent =
-          "Errore durante l'avvio. Riprova o contatta alfonso.buonaiuto@yobee.it";
-        errEl.style.display = 'block';
-      });
-  };
-})();
-</script>
 
 <!-- ============================================================ -->
 <!-- DEEP-LINK SEO/GEO — precompila la card 06 da ?seo=<url>      -->
