@@ -281,7 +281,7 @@
         card.appendChild(titolo);
         var meta = el('div', 'meta');
         meta.appendChild(el('span', null, x.testata));
-        if (x.in_newsletter) meta.appendChild(el('span', 'badge-nl', 'in newsletter il ' + giornoCorto(x.in_newsletter)));
+        if (x.in_newsletter) meta.appendChild(el('span', 'badge-nl', 'proposta in newsletter il ' + giornoCorto(x.in_newsletter)));
         card.appendChild(meta);
         if (x.sintesi) card.appendChild(el('p', null, x.sintesi));
         sec.appendChild(card);
