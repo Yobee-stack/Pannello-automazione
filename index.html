@@ -195,6 +195,12 @@
       <div class="wf-desc">Audit per motori di ricerca e per motori generativi (AI search)</div>
       <span class="wf-team">SEO &amp; Media</span>
     </div>
+    <div class="wf-card" id="card-yopie" onclick="openForm('yopie')">
+      <div class="wf-number">07</div>
+      <div class="wf-title">YoPie</div>
+      <div class="wf-desc">Dossier per la prima call: azienda, referente e spunti, via email</div>
+      <span class="wf-team">Sales &amp; Account</span>
+    </div>
   </div>
   <div class="form-panel" id="formPanel">
     <div id="form-clienti" style="display:none">
@@ -277,10 +283,25 @@
       <div class="toast" id="toast-seogeo"><div class="toast-icon" id="toast-seogeo-icon"></div><div><div class="toast-title" id="toast-seogeo-title"></div><div class="toast-msg" id="toast-seogeo-msg"></div></div></div>
       <div class="form-footer"><button class="btn-run" id="btn-seogeo" onclick="runWorkflow('seogeo')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>Avvia workflow</button></div>
     </div>
+    <div id="form-yopie" style="display:none">
+      <div class="form-topbar"><div class="form-topbar-left"><div class="form-topbar-icon">07</div><div><div class="form-topbar-title">YoPie &mdash; Dossier per la prima call</div><div class="form-topbar-webhook">POST &rarr; /webhook/yopie</div></div></div><button class="btn-close" onclick="closeForm()">&#10005;</button></div>
+      <div class="form-body"><div class="form-grid">
+        <div class="field"><label for="yp-azienda">Azienda <span class="req">*</span></label><input type="text" id="yp-azienda" placeholder="es. Barilla"></div>
+        <div class="field"><label for="yp-sito">Sito dell'azienda <span class="req">*</span></label><input type="text" id="yp-sito" placeholder="es. https://www.barilla.com"></div>
+        <div class="field full"><label for="yp-email">La tua email <span class="req">*</span> <span class="label-hint">&mdash; solo @yobee.it, riceverai il dossier</span></label><input type="email" id="yp-email" placeholder="mario@yobee.it"></div>
+        <div class="field"><label for="yp-ref-nome">Nome del referente <span class="label-hint">&mdash; opzionale</span></label><input type="text" id="yp-ref-nome" placeholder="es. Marco Rossi"></div>
+        <div class="field"><label for="yp-ref-ruolo">Ruolo del referente <span class="label-hint">&mdash; opzionale</span></label><input type="text" id="yp-ref-ruolo" placeholder="es. Marketing Director"></div>
+        <div class="field full"><label for="yp-linkedin">Profilo LinkedIn del referente <span class="label-hint">&mdash; opzionale</span></label><textarea id="yp-linkedin" style="height:120px;resize:vertical" placeholder="Incolla qui il testo del profilo LinkedIn del referente"></textarea></div>
+        <div class="field"><label for="yp-codice">Codice YoPie <span class="req">*</span> <span class="label-hint">&mdash; te lo d&agrave; il team</span></label><input type="password" id="yp-codice" autocomplete="off" placeholder="&bull;&bull;&bull;&bull;&bull;&bull;&bull;&bull;"></div>
+        <div class="field" style="justify-content:flex-end"><label for="yp-ricorda" style="display:flex;align-items:center;gap:8px;cursor:pointer;text-transform:none;letter-spacing:0.02em;font-family:var(--font);font-size:12px"><input type="checkbox" id="yp-ricorda" style="width:15px;height:15px;accent-color:var(--yobee-accent)"> Ricorda il codice su questo computer</label></div>
+      </div></div>
+      <div class="toast" id="toast-yopie"><div class="toast-icon" id="toast-yopie-icon"></div><div><div class="toast-title" id="toast-yopie-title"></div><div class="toast-msg" id="toast-yopie-msg"></div></div></div>
+      <div class="form-footer"><button class="btn-run" id="btn-yopie" onclick="runYoPie()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>Invia</button></div>
+    </div>
   </div>
   <footer>
     <span class="footer-txt">YOBEE SRL · Via Giacomo Watt 27, Milano</span>
-    <span class="footer-txt">AI Operations Hub v1.6</span>
+    <span class="footer-txt">AI Operations Hub v1.7</span>
   </footer>
 </div>
 <script>
@@ -300,12 +321,13 @@
     editori: { webhook: '/webhook/scouting-editori', fields: () => { const t = document.getElementById('se-tipo').value; const isA = t === 'app'; return { tipo: t, categoria: t === 'siti' ? '' : document.getElementById('se-categoria').value, nome: document.getElementById('se-nome').value, email: document.getElementById('se-email').value, verticale: isA ? '' : document.getElementById('se-verticale').value, formato: isA ? '' : document.getElementById('se-formato').value, mercato: isA ? '' : document.getElementById('se-mercato').value, traffico_min: '', numero_editori: isA ? '' : (Math.min(20, parseInt(document.getElementById('se-numero').value, 10) || 0) || ''), note: isA ? '' : document.getElementById('se-note').value }; }, get required() { const t = document.getElementById('se-tipo').value; if (t === 'app') return ['se-nome','se-email','se-categoria']; if (t === 'entrambi') return ['se-nome','se-email','se-verticale','se-categoria']; return ['se-nome','se-email','se-verticale']; } },
     coldmail: { webhook: '/webhook/cold-email', fields: () => ({ nome: document.getElementById('ce-nome').value, email: document.getElementById('ce-email').value, prospect_ruolo: document.getElementById('ce-prospect').value, azienda_settore: document.getElementById('ce-azienda').value, servizio: document.getElementById('ce-servizio').value, problema_obiettivo: document.getElementById('ce-problema').value, argomento_specifico: document.getElementById('ce-argomento').value }), required: ['ce-nome','ce-email','ce-prospect','ce-azienda','ce-servizio'] },
     aggiornato: { webhook: '/webhook/resta-aggiornato', fields: () => ({ nome: document.getElementById('ag-nome').value, email: document.getElementById('ag-email').value, temi: document.getElementById('ag-temi').value, fonti: document.getElementById('ag-fonti').value, frequenza: document.getElementById('ag-frequenza').value, formato: document.getElementById('ag-formato').value }), required: ['ag-nome','ag-email','ag-temi'] },
-    seogeo: { webhook: '/webhook/seo-geo', fields: () => ({ nome: document.getElementById('sg-nome').value, email: document.getElementById('sg-email').value, url: document.getElementById('sg-url').value, keyword: document.getElementById('sg-keyword').value, tipo: document.getElementById('sg-tipo').value, mercato: document.getElementById('sg-mercato').value }), required: ['sg-nome','sg-email','sg-url','sg-keyword'] }
+    seogeo: { webhook: '/webhook/seo-geo', fields: () => ({ nome: document.getElementById('sg-nome').value, email: document.getElementById('sg-email').value, url: document.getElementById('sg-url').value, keyword: document.getElementById('sg-keyword').value, tipo: document.getElementById('sg-tipo').value, mercato: document.getElementById('sg-mercato').value }), required: ['sg-nome','sg-email','sg-url','sg-keyword'] },
+    yopie: { webhook: '/webhook/yopie', fields: () => ({ azienda: document.getElementById('yp-azienda').value.trim(), sito: document.getElementById('yp-sito').value.trim(), email: document.getElementById('yp-email').value.trim(), referente_nome: document.getElementById('yp-ref-nome').value.trim(), referente_ruolo: document.getElementById('yp-ref-ruolo').value.trim(), linkedin_testo: document.getElementById('yp-linkedin').value.trim() }), required: ['yp-azienda','yp-sito','yp-email','yp-codice'] }
   };
   let current = null;
-  const ALL_FORMS = ['clienti','gara','editori','coldmail','aggiornato','seogeo'];
+  const ALL_FORMS = ['clienti','gara','editori','coldmail','aggiornato','seogeo','yopie'];
   function updateEditoriVisibility() { const t = document.getElementById('se-tipo').value; const siti = t === 'siti' || t === 'entrambi'; const app = t === 'app' || t === 'entrambi'; document.getElementById('se-categoria').parentElement.style.display = app ? 'flex' : 'none'; ['se-verticale', 'se-formato', 'se-mercato', 'se-numero', 'se-note'].forEach(id => { document.getElementById(id).parentElement.style.display = siti ? 'flex' : 'none'; }); }
-  function openForm(id) { ALL_FORMS.forEach(f => { document.getElementById('form-' + f).style.display = 'none'; document.getElementById('card-' + f).classList.remove('active'); }); document.getElementById('form-' + id).style.display = 'block'; document.getElementById('card-' + id).classList.add('active'); document.getElementById('formPanel').classList.add('visible'); hideToast(id); current = id; prefillIdentity(id); if (id === 'editori') { loadQuotaEditori(); updateEditoriVisibility(); } }
+  function openForm(id) { ALL_FORMS.forEach(f => { document.getElementById('form-' + f).style.display = 'none'; document.getElementById('card-' + f).classList.remove('active'); }); document.getElementById('form-' + id).style.display = 'block'; document.getElementById('card-' + id).classList.add('active'); document.getElementById('formPanel').classList.add('visible'); hideToast(id); current = id; prefillIdentity(id); if (id === 'editori') { loadQuotaEditori(); updateEditoriVisibility(); } if (id === 'yopie') { yopiePrefillCodice(); } }
   function closeForm() { document.getElementById('formPanel').classList.remove('visible'); if (current) document.getElementById('card-' + current).classList.remove('active'); current = null; }
   function showToast(id, type, title, msg) { const toast = document.getElementById('toast-' + id); const icon = document.getElementById('toast-' + id + '-icon'); toast.classList.remove('error'); if (type === 'error') toast.classList.add('error'); icon.textContent = type === 'success' ? '\u2713' : '\u2715'; document.getElementById('toast-' + id + '-title').textContent = title; document.getElementById('toast-' + id + '-msg').textContent = msg; toast.classList.add('visible'); }
   function hideToast(id) { document.getElementById('toast-' + id).classList.remove('visible'); }
@@ -351,6 +373,47 @@
       if (res.ok) { const { nomeId } = getIdentityFields(wf); try { if (nomeId) localStorage.setItem(LS_NOME, document.getElementById(nomeId).value.trim()); if (emailId) localStorage.setItem(LS_EMAIL, document.getElementById(emailId).value.trim()); } catch (e) {} showToast(id, 'success', 'Workflow avviato', 'Riceverai l\'output via email a ' + payload.email + ' non appena il workflow sar\u00E0 completato.'); resetForm(id); if (id === 'editori') { loadQuotaEditori(); } } else { throw new Error('HTTP ' + res.status); }
     } catch (err) { if (err.name === 'AbortError') { showToast(id, 'error', 'Tempo scaduto', 'n8n non ha risposto entro ' + (REQUEST_TIMEOUT_MS / 1000) + ' secondi. Riprova o verifica che il workflow sia attivo.'); } else { showToast(id, 'error', 'Errore di connessione', 'Impossibile raggiungere n8n. Controlla che il webhook sia attivo. (' + err.message + ')'); } }
     finally { clearTimeout(timer); btn.disabled = false; btn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><polygon points="5 3 19 12 5 21 5 3"/></svg> Avvia workflow'; }
+  }
+  // --- 07 YoPie: il codice YoPie NON sta in questa pagina. Lo scrive il commerciale,
+  // va solo nell'header X-YoPie-Codice (mai nel corpo) e, se richiesto, resta nel suo browser.
+  const LS_YOPIE_CODICE = 'yobee_yopie_codice';
+  function yopiePrefillCodice() { try { const c = localStorage.getItem(LS_YOPIE_CODICE); if (c && !document.getElementById('yp-codice').value) { document.getElementById('yp-codice').value = c; document.getElementById('yp-ricorda').checked = true; } } catch (e) {} }
+  function yopieMark(fid) { const el = document.getElementById(fid); el.style.borderColor = 'rgba(220,60,60,0.6)'; el.addEventListener('input', () => el.style.borderColor = '', { once: true }); }
+  async function runYoPie() {
+    const id = 'yopie'; const wf = WORKFLOWS.yopie; const btn = document.getElementById('btn-yopie');
+    hideToast(id);
+    const missing = wf.required.filter(fid => !document.getElementById(fid).value.trim());
+    if (missing.length > 0) { missing.forEach(yopieMark); showToast(id, 'error', 'Campi mancanti', 'Compila i campi obbligatori evidenziati: azienda, sito, la tua email e il codice YoPie.'); return; }
+    const email = document.getElementById('yp-email').value.trim();
+    if (!isValidEmail(email)) { yopieMark('yp-email'); showToast(id, 'error', 'Email non valida', 'Controlla la tua email: il dossier arriva l\u00EC.'); return; }
+    if (!/@yobee\.it$/i.test(email)) { yopieMark('yp-email'); showToast(id, 'error', 'Serve un indirizzo @yobee.it', 'Il dossier si manda solo a indirizzi @yobee.it. Scrivi la tua email aziendale.'); return; }
+    const codice = document.getElementById('yp-codice').value.trim();
+    const ricorda = document.getElementById('yp-ricorda').checked;
+    btn.disabled = true; btn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><circle cx="12" cy="12" r="10"/></svg> Invio in corso...';
+    const controller = new AbortController(); const timer = setTimeout(() => controller.abort(), REQUEST_TIMEOUT_MS);
+    try {
+      const res = await fetch(N8N_BASE + wf.webhook, { method: 'POST', headers: { 'Content-Type': 'application/json', 'X-Yobee-Token': YOBEE_TOKEN, 'X-YoPie-Codice': codice }, body: JSON.stringify(wf.fields()), signal: controller.signal });
+      let data = null; try { data = await res.json(); } catch (e) {}
+      const mancanti = data && Array.isArray(data.mancanti) ? data.mancanti.filter(Boolean) : [];
+      const msgServer = data && (data.errore || data.messaggio) ? String(data.errore || data.messaggio) : '';
+      if (res.status === 401 || res.status === 403) {
+        try { localStorage.removeItem(LS_YOPIE_CODICE); } catch (e) {}
+        yopieMark('yp-codice'); showToast(id, 'error', 'Codice YoPie errato', 'Il codice YoPie non \u00E8 giusto. Ricontrollalo o chiedilo ad Alfonso.'); return;
+      }
+      if (res.ok && mancanti.length === 0 && !(data && data.ok === false)) {
+        try { if (ricorda) localStorage.setItem(LS_YOPIE_CODICE, codice); else localStorage.removeItem(LS_YOPIE_CODICE); localStorage.setItem(LS_EMAIL, email); } catch (e) {}
+        showToast(id, 'success', 'Richiesta ricevuta', 'Il dossier arriva per email entro 2 ore.');
+        ['yp-azienda','yp-sito','yp-ref-nome','yp-ref-ruolo','yp-linkedin'].forEach(f => { document.getElementById(f).value = ''; });
+        if (!ricorda) document.getElementById('yp-codice').value = '';
+        return;
+      }
+      if (mancanti.length > 0) { showToast(id, 'error', 'Mancano dei dati', 'Controlla questi campi: ' + mancanti.join(', ') + '.' + (msgServer ? ' ' + msgServer : '')); return; }
+      if (res.status === 400 || res.status === 422) { showToast(id, 'error', 'Dati non validi', msgServer || 'Controlla azienda, sito e la tua email @yobee.it.'); return; }
+      throw new Error('HTTP ' + res.status);
+    } catch (err) {
+      if (err.name === 'AbortError') { showToast(id, 'error', 'Tempo scaduto', 'YoPie non ha risposto entro ' + (REQUEST_TIMEOUT_MS / 1000) + ' secondi. Riprova tra poco.'); }
+      else { showToast(id, 'error', 'Errore di connessione', 'Impossibile raggiungere YoPie. Riprova tra poco o avvisa Alfonso. (' + err.message + ')'); }
+    } finally { clearTimeout(timer); btn.disabled = false; btn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><polygon points="5 3 19 12 5 21 5 3"/></svg> Invia'; }
   }
   function resetForm(id) { const form = document.getElementById('form-' + id); if (!form) return; form.querySelectorAll('input, select, textarea').forEach(el => { if (el.tagName === 'SELECT') el.selectedIndex = 0; else el.value = ''; el.style.borderColor = ''; }); const compList = form.querySelector('#gm-comp-list'); if (compList) { compList.innerHTML = ''; if (typeof garaUpdateAddBtn === 'function') garaUpdateAddBtn(); } prefillIdentity(id); if (id === 'editori') { updateEditoriVisibility(); } }
   function prefillIdentity(id) { const wf = WORKFLOWS[id]; if (!wf) return; const { nomeId, emailId } = getIdentityFields(wf); try { const savedNome = localStorage.getItem(LS_NOME); const savedEmail = localStorage.getItem(LS_EMAIL); if (nomeId && savedNome && !document.getElementById(nomeId).value) document.getElementById(nomeId).value = savedNome; if (emailId && savedEmail && !document.getElementById(emailId).value) document.getElementById(emailId).value = savedEmail; } catch (e) {} }
