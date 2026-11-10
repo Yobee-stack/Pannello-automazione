@@ -3,92 +3,100 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="theme-color" content="#070E1A">
+<meta name="theme-color" content="#000000">
 <title>I tuoi lanci — Yobee</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Staatliches&family=Urbanist:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
+  /* Palette Yobee — Brand book 1.0 (ottobre 2026), palette ufficiale e digitale */
   :root{
-    --bg:#070E1A; --bg2:#0D1A2E;
-    --panel:rgba(255,255,255,0.04); --panel-2:rgba(255,255,255,0.06);
-    --border:rgba(255,255,255,0.08); --border-strong:rgba(255,255,255,0.14);
-    --text:#FFFFFF; --muted:rgba(255,255,255,0.40);
-    --accent:#1D9E75; --accent-light:#5DCAA5; --accent-dim:rgba(29,158,117,0.30);
-    --warn:#E0A23C; --danger:#E0635F;
-    --font:'DM Sans',sans-serif; --mono:'DM Mono',monospace;
+    --yb-nero:#000000; --yb-indaco:#3533CD;
+    --yb-teal:#71BABC;            /* unico accento: kicker, bordi, numeri */
+    --yb-ink:#0B0B1A; --yb-lavanda:#C9CBE8; --yb-navy:#15144D; --yb-grigio-chiaro:#BDBCBC;
+    --yb-corallo:#FF6A4D;         /* errori e rischi (eccezione prevista dal brand) */
+    --yb-ambra:#E0A23C;           /* solo avvisi di quota bassa: eccezione funzionale */
+    --yb-gradiente:linear-gradient(90deg,var(--yb-nero) 0%,var(--yb-indaco) 100%);
+
+    --bg:var(--yb-nero); --bg2:var(--yb-navy);
+    --panel:color-mix(in srgb,var(--yb-ink) 55%,transparent); --panel-2:color-mix(in srgb,var(--yb-ink) 72%,transparent);
+    --border:color-mix(in srgb,var(--yb-lavanda) 18%,transparent); --border-strong:color-mix(in srgb,var(--yb-lavanda) 32%,transparent);
+    --text:#FFFFFF; --muted:color-mix(in srgb,var(--yb-lavanda) 82%,transparent); --soft:var(--yb-lavanda);
+    --field:color-mix(in srgb,var(--yb-nero) 35%,transparent); --placeholder:color-mix(in srgb,var(--yb-lavanda) 60%,transparent);
+    --accent:var(--yb-teal); --accent-light:var(--yb-teal); --accent-dim:color-mix(in srgb,var(--yb-teal) 30%,transparent);
+    --accent-soft:color-mix(in srgb,var(--yb-teal) 14%,transparent); --accent-line:color-mix(in srgb,var(--yb-teal) 45%,transparent);
+    --warn:var(--yb-ambra); --danger:var(--yb-corallo);
+    --font:'Urbanist',system-ui,sans-serif;
+    --mono:'Urbanist',system-ui,sans-serif;   /* il brand non ha un monospazio: etichette in Urbanist */
+    --display:'Staatliches','Urbanist',sans-serif;
   }
   *{box-sizing:border-box;}
-  body{margin:0;background:var(--bg);color:var(--text);font-family:var(--font);
+  body{margin:0;background:var(--yb-gradiente) var(--bg);color:var(--text);font-family:var(--font);font-size:15px;
     -webkit-font-smoothing:antialiased;min-height:100vh;overflow-x:hidden;}
-  body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
-    background-image:linear-gradient(rgba(29,158,117,0.04) 1px,transparent 1px),
-                     linear-gradient(90deg,rgba(29,158,117,0.04) 1px,transparent 1px);
-    background-size:48px 48px;}
   .wrap{max-width:760px;margin:0 auto;padding:32px 24px 80px;position:relative;z-index:1;}
 
   header{display:flex;justify-content:space-between;align-items:flex-end;
     border-bottom:1px solid var(--border);padding-bottom:20px;margin-bottom:28px;flex-wrap:wrap;gap:14px;}
-  .logo-img{height:28px;width:auto;display:block;align-self:flex-start;margin:0 0 10px;}
-  .eyebrow{font-family:var(--mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--accent-light);margin:0 0 6px;}
-  h1{font-family:var(--font);font-size:26px;font-weight:500;margin:0;letter-spacing:-.01em;}
-  .sub{color:var(--muted);font-size:14px;margin:4px 0 0;}
-  .backlink{font-family:var(--mono);font-size:12px;color:var(--muted);text-decoration:none;padding:8px 13px;border:1px solid var(--border);border-radius:8px;}
-  .backlink:hover{color:var(--accent-light);border-color:var(--accent);}
+  .logo-img{height:32px;width:auto;display:block;align-self:flex-start;margin:0 0 18px;}
+  .eyebrow{font-family:var(--mono);font-size:11px;font-weight:700;letter-spacing:.25em;text-transform:uppercase;color:var(--accent-light);margin:0 0 8px;}
+  h1{font-family:var(--display);font-size:44px;font-weight:400;line-height:.92;margin:0;letter-spacing:.01em;text-transform:uppercase;}
+  .sub{color:var(--soft);font-size:15px;margin:8px 0 0;line-height:1.45;}
+  .backlink{font-family:var(--mono);font-size:13px;font-weight:600;color:#fff;text-decoration:none;padding:8px 13px;border:1px solid var(--border-strong);border-radius:8px;}
+  .backlink:hover{color:#fff;border-color:var(--accent);}
 
   .lookup{display:flex;gap:12px;align-items:flex-end;flex-wrap:wrap;
-    background:linear-gradient(160deg,var(--bg2),rgba(255,255,255,0.02));
-    border:1px solid var(--border);border-radius:16px;padding:22px;margin-bottom:22px;}
+    background:var(--panel-2);
+    border:1px solid var(--border-strong);border-radius:16px;padding:22px;margin-bottom:22px;}
   .lk-field{display:flex;flex-direction:column;gap:8px;flex:1;min-width:200px;}
-  label{font-family:var(--mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);}
-  input#numero{background:var(--bg);border:1px solid var(--border-strong);border-radius:10px;color:#fff;
-    font-family:var(--mono);font-size:22px;letter-spacing:.04em;padding:12px 16px;width:100%;outline:none;transition:border-color .15s,background .15s;}
-  input#numero::placeholder{color:rgba(255,255,255,0.2);}
-  input#numero:focus{border-color:var(--accent);background:rgba(29,158,117,0.05);}
-  input#numero.err{border-color:rgba(224,99,95,0.7);}
-  .btn{background:var(--accent);color:#fff;border:none;border-radius:10px;padding:13px 22px;font-family:var(--font);
-    font-size:14px;font-weight:500;cursor:pointer;display:flex;align-items:center;gap:8px;transition:background .15s,transform .1s;white-space:nowrap;}
-  .btn:hover{background:#18875f;} .btn:active{transform:scale(.98);} .btn:disabled{background:rgba(29,158,117,0.3);cursor:not-allowed;}
+  label{font-family:var(--mono);font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--soft);}
+  input#numero{background:var(--field);border:1px solid var(--border-strong);border-radius:10px;color:#fff;
+    font-family:var(--display);font-size:30px;letter-spacing:.04em;padding:9px 16px;width:100%;outline:none;transition:border-color .15s,background .15s;}
+  input#numero::placeholder{color:var(--placeholder);}
+  input#numero:focus{border-color:var(--accent);background:color-mix(in srgb,var(--yb-nero) 50%,transparent);box-shadow:0 0 0 3px var(--accent-soft);}
+  input#numero.err{border-color:var(--danger);}
+  .btn{background:var(--accent);color:var(--yb-navy);border:none;border-radius:10px;padding:13px 22px;font-family:var(--font);
+    font-size:15px;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:8px;transition:background .15s,transform .1s;white-space:nowrap;}
+  .btn:hover{background:color-mix(in srgb,var(--yb-teal) 82%,#fff);} .btn:active{transform:scale(.98);} .btn:disabled{background:var(--accent-dim);color:color-mix(in srgb,#fff 60%,transparent);cursor:not-allowed;}
   .btn svg{width:14px;height:14px;}
 
-  .status{min-height:20px;margin:0 2px 20px;font-family:var(--mono);font-size:13px;color:var(--muted);}
-  .status.err{color:#F0A0A0;}
+  .status{min-height:20px;margin:0 2px 20px;font-family:var(--mono);font-size:14px;color:var(--muted);}
+  .status.err{color:var(--danger);}
 
   /* pannello risultato */
   .result{display:none;}
   .result.show{display:block;animation:fade .25s ease;}
   @keyframes fade{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:translateY(0);}}
 
-  .who{display:flex;align-items:baseline;gap:10px;margin:0 2px 14px;}
-  .who .name{font-size:18px;font-weight:500;}
-  .who .mese{font-family:var(--mono);font-size:12px;color:var(--muted);}
+  .who{display:flex;align-items:baseline;flex-wrap:wrap;gap:10px;margin:0 2px 14px;}
+  .who .name{font-size:20px;font-weight:700;}
+  .who .mese{font-family:var(--mono);font-size:13px;color:var(--muted);}
 
   /* misuratore grande budget unico */
-  .hero{background:linear-gradient(160deg,var(--bg2),rgba(255,255,255,0.02));
-    border:1px solid var(--border);border-radius:18px;padding:28px;margin-bottom:16px;position:relative;overflow:hidden;}
+  .hero{background:var(--panel-2);
+    border:1px solid var(--border-strong);border-radius:18px;padding:28px;margin-bottom:16px;position:relative;overflow:hidden;}
   .hero .row{display:flex;align-items:baseline;justify-content:space-between;flex-wrap:wrap;gap:8px;}
-  .hero .big{font-family:var(--mono);font-weight:500;font-size:64px;line-height:1;font-variant-numeric:tabular-nums;}
-  .hero .big .of{font-size:26px;color:rgba(255,255,255,0.3);}
-  .hero .word{font-size:15px;color:var(--muted);}
-  .hero .used{font-family:var(--mono);font-size:13px;color:var(--muted);}
-  .track{height:12px;border-radius:8px;background:rgba(255,255,255,0.07);overflow:hidden;margin-top:20px;}
+  .hero .big{font-family:var(--display);font-weight:400;font-size:88px;line-height:.92;font-variant-numeric:tabular-nums;}
+  .hero .big .of{font-size:36px;color:var(--muted);}
+  .hero .word{font-size:16px;font-weight:600;color:var(--soft);}
+  .hero .used{font-family:var(--mono);font-size:14px;color:var(--muted);}
+  .track{height:12px;border-radius:8px;background:color-mix(in srgb,var(--yb-lavanda) 14%,transparent);overflow:hidden;margin-top:20px;}
   .fill{height:100%;border-radius:8px;width:0;transition:width .55s ease;}
-  .badge-inf{display:inline-block;font-family:var(--mono);font-size:11px;color:var(--accent-light);
-    border:1px solid rgba(29,158,117,0.4);border-radius:99px;padding:4px 11px;}
+  .badge-inf{display:inline-block;font-family:var(--mono);font-size:12px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--accent-light);
+    border:1px solid var(--accent-line);background:var(--accent-soft);border-radius:99px;padding:4px 11px;}
 
   /* dettaglio per workflow */
-  .det-label{font-family:var(--mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin:22px 2px 10px;}
-  .det{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px;}
-  .det-card{background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:14px 16px;}
-  .det-card .n{font-family:var(--mono);font-size:26px;font-weight:500;color:#fff;line-height:1;}
-  .det-card .l{font-size:12px;color:var(--muted);margin-top:6px;line-height:1.35;}
+  .det-label{font-family:var(--mono);font-size:11px;font-weight:700;letter-spacing:.25em;text-transform:uppercase;color:var(--accent-light);margin:24px 2px 10px;}
+  .det{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;}
+  .det-card{background:var(--panel);border:1px solid var(--border-strong);border-radius:12px;padding:14px 16px;}
+  .det-card .n{font-family:var(--display);font-size:36px;font-weight:400;color:var(--accent-light);line-height:.92;}
+  .det-card .l{font-size:14px;color:var(--soft);margin-top:6px;line-height:1.35;}
 
-  .empty{border:1px dashed var(--border-strong);border-radius:16px;padding:44px 24px;text-align:center;color:var(--muted);}
-  .empty h3{color:#fff;font-weight:500;margin:0 0 6px;font-size:17px;}
+  .empty{background:var(--panel);border:1px dashed var(--border-strong);border-radius:16px;padding:44px 24px;text-align:center;color:var(--soft);}
+  .empty h3{font-family:var(--display);color:#fff;font-weight:400;font-size:28px;line-height:.92;text-transform:uppercase;letter-spacing:.01em;margin:0 0 10px;}
 
   footer{margin-top:38px;padding-top:18px;border-top:1px solid var(--border);
-    display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;font-family:var(--mono);font-size:11px;color:rgba(255,255,255,0.22);}
+    display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;font-family:var(--mono);font-size:12px;color:var(--yb-grigio-chiaro);}
 
-  @media (max-width:560px){h1{font-size:22px}.hero .big{font-size:52px}}
+  @media (max-width:560px){.wrap{padding:24px 16px 64px;}h1{font-size:36px}.hero{padding:22px}.hero .big{font-size:68px}.lookup{padding:18px}.btn{width:100%;justify-content:center;}}
   @media (prefers-reduced-motion:reduce){.fill{transition:none;}.result.show{animation:none;}}
 </style>
 </head>
@@ -96,7 +104,7 @@
 <div class="wrap">
   <header>
     <div>
-      <img src="../yobee-logo.png" alt="Yobee" class="logo-img">
+      <img src="../yobee-logo-negativo.png" alt="Yobee" class="logo-img">
       <p class="eyebrow">AI Operations</p>
       <h1>I tuoi lanci</h1>
       <p class="sub">Inserisci il tuo numero per vedere quanti lanci ti restano questo mese.</p>
