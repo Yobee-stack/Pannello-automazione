@@ -410,8 +410,13 @@
       setStatus(true, 'aggiornato alle ' + new Date().toLocaleTimeString('it-IT', {hour:'2-digit', minute:'2-digit'}));
     }catch(err){
       if(mia !== richiesta) return;
-      // senza dati validi non si mostra nessun numero
-      if(!DATI) showGate('Errore: ' + err.message);
+      // senza dati validi non si mostra nessun numero.
+      // Un utente che non esiste da' un 404 senza intestazioni CORS: il browser lo vede come errore di rete.
+      const rete = err instanceof TypeError;
+      if(!DATI){
+        if(rete) sessionStorage.removeItem(AUTH_KEY);
+        showGate(rete ? 'Credenziali non valide, oppure n8n non raggiungibile.' : 'Errore: ' + err.message);
+      }
       setStatus(false, 'errore: ' + err.message);
     }
   }
