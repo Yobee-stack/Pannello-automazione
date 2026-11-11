@@ -71,6 +71,10 @@
   .range label{display:flex;flex-direction:column;gap:6px;font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--soft);}
   .apply{font-family:var(--font);font-size:13px;font-weight:700;background:var(--accent);color:var(--yb-navy);border:none;border-radius:8px;padding:9px 14px;cursor:pointer;}
   .period-note{font-size:13px;color:var(--muted);margin:-10px 0 18px;}
+  /* durante il caricamento i numeri vecchi si spengono: si vede che sta aggiornando */
+  #dashboard.carico .credits,#dashboard.carico section,#dashboard.carico .alerts{opacity:.35;transition:opacity .15s;}
+  .carico-msg{display:none;color:var(--accent);font-weight:700;}
+  #dashboard.carico .carico-msg{display:inline;}
 
   /* ---- Calendario accanto all'andamento ---- */
   .trend-wrap{display:grid;grid-template-columns:minmax(0,1fr) 300px;gap:18px;align-items:start;}
@@ -262,7 +266,7 @@
         <button type="button" class="apply" onclick="applicaIntervallo()">Mostra</button>
       </div>
     </div>
-    <p class="period-note" id="periodNote"></p>
+    <p class="period-note"><span id="periodNote"></span> <span class="carico-msg" role="status">· Caricamento dei dati…</span></p>
 
     <div class="alerts" id="alerts" role="status"></div>
 
@@ -486,9 +490,11 @@
     const url = WEBHOOK_PREFISSO + encodeURIComponent(utente) + '?dal=' + dal + '&al=' + al;
     const mia = ++richiesta;
     setStatus(true, 'aggiornamento…');
+    document.getElementById('dashboard').classList.add('carico');
     try{
       const res = await fetch(url, { headers: authHeader(), cache: 'no-store' });
       if(mia !== richiesta) return;
+      document.getElementById('dashboard').classList.remove('carico');
       if(res.status === 401 || res.status === 403 || res.status === 404){
         sessionStorage.removeItem(AUTH_KEY);
         showGate('Credenziali non valide.');
@@ -505,6 +511,7 @@
       setStatus(true, 'aggiornato alle ' + new Date().toLocaleTimeString('it-IT', {hour:'2-digit', minute:'2-digit'}));
     }catch(err){
       if(mia !== richiesta) return;
+      document.getElementById('dashboard').classList.remove('carico');
       // senza dati validi non si mostra nessun numero.
       // Un utente che non esiste da' un 404 senza intestazioni CORS: il browser lo vede come errore di rete.
       const rete = err instanceof TypeError;
