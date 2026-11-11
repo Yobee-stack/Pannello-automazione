@@ -105,8 +105,9 @@
 
   /* ---- Riquadri credito ---- */
   .credits{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-bottom:28px;}
-  .ccard{background:var(--panel-2);border:1px solid var(--border-strong);border-radius:16px;padding:18px;display:grid;
-    grid-template-columns:96px 1fr;gap:16px;align-items:center;}
+  .ccard{background:linear-gradient(160deg,color-mix(in srgb,var(--yb-indaco) 16%,var(--panel-2)) 0%,var(--panel-2) 60%);
+    border:1px solid var(--border-strong);border-radius:20px;padding:20px;display:grid;
+    grid-template-columns:112px 1fr;gap:18px;align-items:center;}
   .ccard.low{border-color:var(--warn);}
   .ccard .svc{display:flex;align-items:center;gap:8px;font-family:var(--display);font-size:22px;letter-spacing:.02em;text-transform:uppercase;}
   .sw{width:10px;height:10px;border-radius:3px;display:inline-block;flex-shrink:0;}
@@ -123,7 +124,7 @@
   .sec-head{display:flex;justify-content:space-between;align-items:baseline;flex-wrap:wrap;gap:6px 12px;margin-bottom:14px;}
   .sec-head h2{font-family:var(--display);font-size:26px;font-weight:400;line-height:.92;margin:0;text-transform:uppercase;letter-spacing:.01em;}
   .sec-head span{font-size:13px;color:var(--muted);}
-  .card{background:var(--panel);border:1px solid var(--border-strong);border-radius:14px;padding:18px;}
+  .card{background:var(--panel);border:1px solid var(--border-strong);border-radius:20px;padding:20px;}
   .legend{display:flex;gap:16px;flex-wrap:wrap;font-size:13px;color:var(--soft);margin-bottom:14px;}
   .legend span{display:inline-flex;align-items:center;gap:6px;}
 
@@ -132,9 +133,12 @@
   .hrow{display:grid;grid-template-columns:260px 1fr 92px;align-items:center;gap:12px;}
   .hrow .name{font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
   .hrow .name small{color:var(--muted);font-size:12px;margin-left:4px;}
-  .htrack{display:flex;gap:2px;height:14px;align-items:stretch;}
-  .hseg{height:100%;min-width:2px;}
-  .hseg:last-child{border-radius:0 4px 4px 0;}
+  /* barre a pillola come il modello: binario tenue, segmenti per servizio separati da 2px, estremi arrotondati */
+  .htrack{display:flex;gap:2px;height:14px;align-items:stretch;background:var(--grid);border-radius:99px;overflow:hidden;}
+  .hseg{height:100%;min-width:3px;}
+  .hseg:last-child{border-radius:0 99px 99px 0;}
+  .hrow.zero .name,.hrow.zero .val{color:var(--muted);}
+  .hnote{font-size:13px;color:var(--muted);margin-top:12px;}
   .hrow .val{font-family:var(--display);font-size:18px;text-align:right;color:var(--soft);}
 
   /* andamento */
@@ -143,6 +147,9 @@
   .trend .gridline{stroke:var(--grid);stroke-width:1;}
   .trend .col-hit{fill:transparent;}
   .trend .col-hit:hover{fill:color-mix(in srgb,var(--yb-lavanda) 6%,transparent);}
+  .trend .cross{stroke:var(--soft);stroke-width:1;stroke-dasharray:3 3;pointer-events:none;}
+  .trend .giorno-dot{fill:var(--yb-lavanda);opacity:.55;}
+  .trend .picco text{font-family:var(--display);font-size:15px;fill:#fff;}
 
   details.tbl{margin-top:14px;font-size:13px;color:var(--soft);}
   details.tbl summary{cursor:pointer;color:var(--accent);}
@@ -169,8 +176,8 @@
   .bar-list{display:flex;flex-direction:column;gap:10px;}
   .bar-row{display:grid;grid-template-columns:220px 1fr 46px;align-items:center;gap:12px;}
   .bar-row .name{font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-  .bar-track{background:var(--panel);border:1px solid var(--border);border-radius:6px;height:10px;overflow:hidden;}
-  .bar-fill{height:100%;background:linear-gradient(90deg,var(--accent-dim),var(--accent));}
+  .bar-track{background:var(--grid);border-radius:99px;height:10px;overflow:hidden;}
+  .bar-fill{height:100%;border-radius:99px;background:linear-gradient(90deg,var(--accent-dim),var(--accent));}
   .bar-row .count{font-family:var(--display);font-size:18px;color:var(--soft);text-align:right;}
   .log{background:var(--panel);border:1px solid var(--border-strong);border-radius:12px;overflow:hidden;}
   .log-row{display:grid;grid-template-columns:150px 1fr 200px;gap:14px;padding:10px 16px;border-bottom:1px solid var(--border);font-size:13px;align-items:center;}
@@ -531,8 +538,17 @@
     const ordine = { workflow:0, progetto:1, radar:2, fuori_n8n:3 };
     const tipo = Object.fromEntries((DATI.voci || []).map(v => [v.voce, v.tipo_voce]));
     voci.sort((a,b) => (ordine[tipo[a]] ?? 0) - (ordine[tipo[b]] ?? 0) || a.localeCompare(b, 'it'));
-    sel.innerHTML = '<option value="">Tutti i workflow</option>' + voci.map(v => `<option value="${esc(v)}">${esc(v)}</option>`).join('');
+    // in fondo, sotto "Senza spesa", le voci che nel periodo non hanno speso niente sui tre servizi
+    const spende = new Set(DATI.consumi.filter(c => (Number(c.costo_usd) || 0) !== 0 || (Number(c.quantita) || 0) !== 0).map(c => c.voce));
+    const opt = v => `<option value="${esc(v)}">${esc(v)}</option>`;
+    const con = voci.filter(v => spende.has(v)), senza = voci.filter(v => !spende.has(v));
+    sel.innerHTML = '<option value="">Tutti i workflow</option>' +
+      (con.length ? `<optgroup label="Con spesa nel periodo">${con.map(opt).join('')}</optgroup>` : '') +
+      (senza.length ? `<optgroup label="Senza spesa (0,00 $ su OpenRouter, Serper e Apify)">${senza.map(opt).join('')}</optgroup>` : '');
     sel.value = voci.includes(cur) ? cur : '';
+  }
+  function haSpeso(voce){
+    return DATI.consumi.some(c => c.voce === voce && ((Number(c.costo_usd) || 0) !== 0 || (Number(c.quantita) || 0) !== 0));
   }
 
   // ---------- disegno ----------
@@ -574,15 +590,23 @@
       `<li>${esc(NOME_SERVIZIO[c.servizio] || c.servizio)}: restano ${esc(quanto(c.credito, c.unita))}, soglia ${esc(quanto(c.soglia, c.unita))}</li>`).join('') + '</ul>';
   }
 
+  // anello come il modello: spesso, punta arrotondata, sfumatura dal colore del servizio schiarito al colore pieno
+  let nGrad = 0;
+  function sfumatura(id, colore, verticale){
+    const dir = verticale ? 'x1="0" y1="0" x2="0" y2="1"' : 'x1="0" y1="0" x2="1" y2="1"';
+    return `<linearGradient id="${id}" ${dir}>
+      <stop offset="0" style="stop-color:color-mix(in srgb,${colore} 55%,#fff)"/><stop offset="1" style="stop-color:${colore}"/></linearGradient>`;
+  }
   function anello(frazione, colore, testo){
-    const r = 38, circ = 2 * Math.PI * r;
+    const r = 44, sw = 11, c = 56, circ = 2 * Math.PI * r, id = 'anello' + (++nGrad);
     const f = frazione == null ? null : Math.max(0, Math.min(1, frazione));
     const arco = f == null || f === 0 ? '' :
-      `<circle cx="48" cy="48" r="${r}" fill="none" stroke="${colore}" stroke-width="8" stroke-linecap="round"
-        stroke-dasharray="${(circ * f).toFixed(1)} ${circ.toFixed(1)}" transform="rotate(-90 48 48)"/>`;
-    return `<svg class="ring" viewBox="0 0 96 96" width="96" height="96" role="img" aria-label="${esc(testo)}">
-      <circle cx="48" cy="48" r="${r}" fill="none" stroke="var(--grid)" stroke-width="8"/>${arco}
-      <text x="48" y="55" text-anchor="middle" font-size="${f == null ? 15 : 20}">${esc(testo)}</text></svg>`;
+      `<circle cx="${c}" cy="${c}" r="${r}" fill="none" stroke="url(#${id})" stroke-width="${sw}" stroke-linecap="round"
+        stroke-dasharray="${(circ * f).toFixed(1)} ${circ.toFixed(1)}" transform="rotate(-90 ${c} ${c})"/>`;
+    return `<svg class="ring" viewBox="0 0 112 112" width="112" height="112" role="img" aria-label="${esc(testo)}">
+      <defs>${sfumatura(id, colore)}</defs>
+      <circle cx="${c}" cy="${c}" r="${r}" fill="none" stroke="var(--grid)" stroke-width="${sw}"/>${arco}
+      <text x="${c}" y="${c + 8}" text-anchor="middle" font-size="${f == null ? 17 : 26}">${esc(testo)}</text></svg>`;
   }
 
   function disegnaCrediti(righe, wf){
@@ -650,6 +674,7 @@
     // un workflow scelto senza consumi nel periodo si mostra con 0
     if(!voci.length && wf) voci.push([wf, { tot: 0, s: {} }]);
     if(!voci.length){ box.innerHTML = '<div class="empty">Nessun costo nel periodo scelto.</div>'; return; }
+    const zero = wf && !haSpeso(wf);
     // le barre disegnano solo le parti positive ("Fuori da n8n" puo' essere negativo); il numero a destra e' il totale vero
     const positivo = v => SERVIZI.reduce((t, s) => t + Math.max(0, (v.s[s.id] || {usd:0}).usd), 0);
     const max = Math.max(0, ...voci.map(([,v]) => positivo(v))) || 1;
@@ -657,7 +682,7 @@
     box.innerHTML = '';
     voci.forEach(([nome, v]) => {
       const row = document.createElement('div');
-      row.className = 'hrow';
+      row.className = 'hrow' + (zero ? ' zero' : '');
       const nota = tipi[nome] === 'progetto' ? '<small>progetto</small>' : '';
       const segs = SERVIZI.filter(s => v.s[s.id] && v.s[s.id].usd > 0).map(s =>
         `<div class="hseg" style="background:${s.colore};width:${(v.s[s.id].usd / max * 100).toFixed(3)}%"></div>`).join('');
@@ -666,6 +691,8 @@
       row.addEventListener('mouseleave', nascondiTip);
       box.appendChild(row);
     });
+    if(zero) box.insertAdjacentHTML('beforeend',
+      '<p class="hnote">Nel periodo scelto questo workflow non ha speso niente su OpenRouter, Serper e Apify: lo 0,00 $ è giusto, non è un errore.</p>');
   }
 
   function scalaPulita(max){
@@ -673,6 +700,29 @@
     const grezzo = max / 4, pot = Math.pow(10, Math.floor(Math.log10(grezzo)));
     const passo = [1, 2, 2.5, 5, 10].map(m => m * pot).find(x => x >= grezzo);
     return { top: Math.ceil(max / passo - 1e-9) * passo, passo };
+  }
+
+  // Curva monotona (Fritsch-Carlson): passa per ogni valore, non oscilla, non va sotto il minimo dei due giorni vicini.
+  // Restituisce i valori campionati "passi" volte fra un giorno e l'altro.
+  function curvaMonotona(v, passi){
+    const n = v.length, d = [], m = new Array(n).fill(0);
+    for(let i = 0; i < n - 1; i++) d.push(v[i + 1] - v[i]);
+    m[0] = d[0]; m[n - 1] = d[n - 2];
+    for(let i = 1; i < n - 1; i++) m[i] = d[i - 1] * d[i] <= 0 ? 0 : (d[i - 1] + d[i]) / 2;
+    for(let i = 0; i < n - 1; i++){
+      if(d[i] === 0){ m[i] = 0; m[i + 1] = 0; continue; }
+      const a = m[i] / d[i], b = m[i + 1] / d[i], s = a * a + b * b;
+      if(s > 9){ const t = 3 / Math.sqrt(s); m[i] = t * a * d[i]; m[i + 1] = t * b * d[i]; }
+    }
+    const out = [];
+    for(let i = 0; i < n - 1; i++){
+      for(let k = 0; k < passi; k++){
+        const t = k / passi, t2 = t * t, t3 = t2 * t;
+        out.push(Math.max(0, (2*t3 - 3*t2 + 1) * v[i] + (t3 - 2*t2 + t) * m[i] + (-2*t3 + 3*t2) * v[i + 1] + (t3 - t2) * m[i + 1]));
+      }
+    }
+    out.push(v[n - 1]);
+    return out;
   }
 
   function disegnaAndamento(righe, p){
@@ -687,7 +737,6 @@
     // stessi decimali per tutte le etichette dell'asse, quanti ne servono al passo (0,005 -> 3)
     const decAsse = Math.min(6, Math.max(0, (String(+passo.toPrecision(6)).split('.')[1] || '').length));
     const n = giorni.length, slot = pw / n;
-    const bw = Math.max(2, Math.min(42, slot * 0.62));
     const y = v => mT + ph - (v / top) * ph;
     let svg = `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Costo giorno per giorno, in dollari"><g class="axis">`;
     for(let i = 0; i * passo <= top + 1e-9; i++){
@@ -700,29 +749,79 @@
       if(i % ogni === 0) svg += `<text x="${mL + slot * i + slot / 2}" y="${H - 8}" text-anchor="middle">${esc(etichettaGiorno(g))}</text>`;
     });
     svg += '</g>';
-    giorni.forEach((g, i) => {
-      const x = mL + slot * i + (slot - bw) / 2;
-      let base = 0;
-      const segs = SERVIZI.filter(s => per[g].s[s.id] && per[g].s[s.id].usd > 0);
-      segs.forEach((s, k) => {
-        const v = per[g].s[s.id].usd;
-        const yt = y(base + v), ybase = y(base) - (k > 0 ? 2 : 0);
-        const h = Math.max(1, ybase - yt);
-        const yb = yt + h;
-        const rr = k === segs.length - 1 ? Math.min(4, bw / 2, h) : 0;
-        svg += rr > 0
-          ? `<path fill="${s.colore}" d="M${x},${yb} L${x},${yt + rr} Q${x},${yt} ${x + rr},${yt} L${x + bw - rr},${yt} Q${x + bw},${yt} ${x + bw},${yt + rr} L${x + bw},${yb} Z"/>`
-          : `<rect fill="${s.colore}" x="${x}" y="${yt}" width="${bw}" height="${h}"/>`;
-        base += v;
+    const cx = i => mL + slot * i + slot / 2;
+    const pos = (g, s) => Math.max(0, (per[g].s[s.id] || {usd:0}).usd);
+    const attivi = SERVIZI.filter(s => giorni.some(g => pos(g, s) > 0));
+    if(n >= 3){
+      // ONDA come il modello: aree impilate e morbide, una per servizio.
+      // Ogni strato si arrotonda da solo con una curva monotona (non scende sotto zero e non supera i suoi valori),
+      // poi gli strati si sommano: le linee non si incrociano e l'altezza totale resta quella vera nei giorni.
+      const PASSI = 12;
+      const xs = [], strati = attivi.map(() => []);
+      attivi.forEach((s, k) => {
+        const camp = curvaMonotona(giorni.map(g => pos(g, s)), PASSI);
+        camp.forEach((v, j) => { strati[k][j] = v; });
       });
-      svg += `<rect class="col-hit" data-g="${g}" x="${mL + slot * i}" y="${mT}" width="${slot}" height="${ph}"/>`;
+      for(let j = 0; j <= (n - 1) * PASSI; j++) xs.push(cx(0) + slot * j / PASSI);
+      const cum = []; let sotto = xs.map(() => 0);
+      svg += '<defs>' + attivi.map((s, k) => `<linearGradient id="onda${k}" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0" style="stop-color:${s.colore};stop-opacity:.95"/><stop offset="1" style="stop-color:${s.colore};stop-opacity:.35"/></linearGradient>`).join('') + '</defs>';
+      attivi.forEach((s, k) => {
+        const sopra = sotto.map((b, j) => b + strati[k][j]);
+        const su = xs.map((x, j) => `${x.toFixed(1)},${y(sopra[j]).toFixed(1)}`);
+        const giu = xs.map((x, j) => `${x.toFixed(1)},${y(sotto[j]).toFixed(1)}`).reverse();
+        svg += `<path fill="url(#onda${k})" d="M${su.join(' L')} L${giu.join(' L')} Z"/>`;
+        cum.push(sopra); sotto = sopra;
+      });
+      // linea di cima di ogni strato, 2px, con un filo del colore di fondo sotto per staccarla
+      cum.forEach((sopra, k) => {
+        const d = 'M' + xs.map((x, j) => `${x.toFixed(1)},${y(sopra[j]).toFixed(1)}`).join(' L');
+        svg += `<path d="${d}" fill="none" stroke="var(--yb-ink)" stroke-width="4" stroke-linejoin="round"/>` +
+               `<path d="${d}" fill="none" stroke="${attivi[k].colore}" stroke-width="2" stroke-linejoin="round"/>`;
+      });
+      // pallini dei giorni sull'asse, come il modello
+      if(n <= 31) giorni.forEach((g, i) => { svg += `<circle class="giorno-dot" cx="${cx(i)}" cy="${y(0)}" r="3"/>`; });
+      // etichetta del picco: il giorno che e' costato di piu'
+      const tot = g => attivi.reduce((t, s) => t + pos(g, s), 0);
+      let ip = 0; giorni.forEach((g, i) => { if(tot(g) > tot(giorni[ip])) ip = i; });
+      const px = cx(ip), py = y(tot(giorni[ip])), et = usd(per[giorni[ip]].tot), lw = et.length * 8.5 + 18;
+      const bx = Math.min(W - mR - lw, Math.max(mL, px - lw / 2)), by = Math.max(0, py - 40);
+      svg += `<g class="picco" aria-hidden="true"><circle cx="${px}" cy="${py}" r="5" fill="#fff" stroke="var(--yb-indaco)" stroke-width="3"/>
+        <rect x="${bx}" y="${by}" width="${lw}" height="26" rx="13" fill="var(--yb-indaco)"/>
+        <text x="${bx + lw / 2}" y="${by + 18}" text-anchor="middle">${esc(et)}</text></g>`;
+      svg += `<line class="cross" id="cross" x1="0" x2="0" y1="${mT}" y2="${y(0)}" style="display:none"/>`;
+    } else {
+      // uno o due giorni: colonne a pillola come le barre del modello
+      giorni.forEach((g, i) => {
+        const bwc = Math.min(64, slot * 0.4), x = cx(i) - bwc / 2;
+        let base = 0;
+        const segs = attivi.filter(s => pos(g, s) > 0);
+        segs.forEach((s, k) => {
+          const v = pos(g, s);
+          const yt = y(base + v), ybase = y(base) - (k > 0 ? 2 : 0);
+          const h = Math.max(1, ybase - yt), yb = yt + h;
+          const rr = k === segs.length - 1 ? Math.min(bwc / 2, h, 16) : 0;
+          svg += rr > 0
+            ? `<path fill="${s.colore}" d="M${x},${yb} L${x},${yt + rr} Q${x},${yt} ${x + rr},${yt} L${x + bwc - rr},${yt} Q${x + bwc},${yt} ${x + bwc},${yt + rr} L${x + bwc},${yb} Z"/>`
+            : `<rect fill="${s.colore}" x="${x}" y="${yt}" width="${bwc}" height="${h}"/>`;
+          base += v;
+        });
+      });
+    }
+    giorni.forEach((g, i) => {
+      svg += `<rect class="col-hit" data-g="${g}" data-x="${cx(i)}" x="${mL + slot * i}" y="${mT}" width="${slot}" height="${ph}"/>`;
     });
     svg += `<line x1="${mL}" x2="${W - mR}" y1="${y(0)}" y2="${y(0)}" stroke="var(--border-strong)"/></svg>`;
     const box = document.getElementById('trend');
     box.innerHTML = max > 0 ? svg : '<div class="empty">Nessun costo nel periodo scelto.</div>';
+    const cross = box.querySelector('#cross');
     box.querySelectorAll('.col-hit').forEach(el => {
-      el.addEventListener('mousemove', e => { const g = el.dataset.g; mostraTip(e, righeTip(etichettaGiorno(g, true), per[g].s, per[g].tot)); });
-      el.addEventListener('mouseleave', nascondiTip);
+      el.addEventListener('mousemove', e => {
+        const g = el.dataset.g;
+        if(cross){ cross.setAttribute('x1', el.dataset.x); cross.setAttribute('x2', el.dataset.x); cross.style.display = ''; }
+        mostraTip(e, righeTip(etichettaGiorno(g, true), per[g].s, per[g].tot));
+      });
+      el.addEventListener('mouseleave', () => { if(cross) cross.style.display = 'none'; nascondiTip(); });
     });
     let t = '<table><thead><tr><th>Giorno</th>' + SERVIZI.map(s => `<th>${s.nome}</th>`).join('') + '<th>Totale</th></tr></thead><tbody>';
     giorni.forEach(g => {
