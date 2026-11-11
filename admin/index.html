@@ -308,7 +308,7 @@
   }
   function usd(v){
     v = Number(v) || 0;
-    const dec = v === 0 ? 2 : (Math.abs(v) < 0.01 ? 4 : 2);
+    const dec = v === 0 ? 2 : (Math.abs(v) < 1 ? 4 : 2);   // costi piccoli: 4 decimali (0,0255 $), sopra 1 $ due
     return v.toLocaleString('it-IT', {minimumFractionDigits:dec, maximumFractionDigits:dec}) + ' $';
   }
   function crediti(v){ return (Number(v) || 0).toLocaleString('it-IT', {maximumFractionDigits:0}) + ' crediti'; }
@@ -545,7 +545,9 @@
     document.getElementById('wfSpan').textContent = wf ? 'un workflow' : (voci.length + ' voci · totale ' + usd(totale));
     const box = document.getElementById('hbars');
     if(!voci.length){ box.innerHTML = '<div class="empty">Nessun costo nel periodo scelto.</div>'; return; }
-    const max = Math.max(...voci.map(([,v]) => v.tot)) || 1;
+    // le barre disegnano solo le parti positive ("Fuori da n8n" puo' essere negativo); il numero a destra e' il totale vero
+    const positivo = v => SERVIZI.reduce((t, s) => t + Math.max(0, (v.s[s.id] || {usd:0}).usd), 0);
+    const max = Math.max(0, ...voci.map(([,v]) => positivo(v))) || 1;
     const tipi = Object.fromEntries((DATI.voci || []).map(v => [v.voce, v.tipo_voce]));
     box.innerHTML = '';
     voci.forEach(([nome, v]) => {
@@ -574,8 +576,11 @@
     const per = Object.fromEntries(giorni.map(g => [g, tutti[g] || { tot:0, s:{} }]));
     const W = 1000, H = 260, mL = 64, mR = 8, mT = 14, mB = 28;
     const pw = W - mL - mR, ph = H - mT - mB;
-    const max = Math.max(0, ...giorni.map(g => per[g].tot));
+    // scala sulle sole parti positive: un valore negativo non si disegna ma resta nel totale e in tabella
+    const max = Math.max(0, ...giorni.map(g => SERVIZI.reduce((t, s) => t + Math.max(0, (per[g].s[s.id] || {usd:0}).usd), 0)));
     const { top, passo } = scalaPulita(max);
+    // stessi decimali per tutte le etichette dell'asse, quanti ne servono al passo (0,005 -> 3)
+    const decAsse = Math.min(6, Math.max(0, (String(+passo.toPrecision(6)).split('.')[1] || '').length));
     const n = giorni.length, slot = pw / n;
     const bw = Math.max(2, Math.min(42, slot * 0.62));
     const y = v => mT + ph - (v / top) * ph;
@@ -583,7 +588,7 @@
     for(let i = 0; i * passo <= top + 1e-9; i++){
       const v = i * passo;
       svg += `<line class="gridline" x1="${mL}" x2="${W - mR}" y1="${y(v)}" y2="${y(v)}"/>` +
-             `<text x="${mL - 8}" y="${y(v) + 4}" text-anchor="end">${esc(usd(v))}</text>`;
+             `<text x="${mL - 8}" y="${y(v) + 4}" text-anchor="end">${esc(v.toLocaleString('it-IT', {minimumFractionDigits: decAsse, maximumFractionDigits: decAsse}) + ' $')}</text>`;
     }
     const ogni = Math.ceil(n / 12);
     giorni.forEach((g, i) => {
