@@ -734,7 +734,11 @@
       const pct = fr == null ? 'saldo' : Math.round(fr * 100) + '%';
       const sotto = [];
       if(c.totale) sotto.push('su ' + quanto(c.totale, c.unita) + (s.id === 'apify' ? ' (tetto del mese)' : ' caricati'));
-      if(c.fine_ciclo) sotto.push('ciclo fino al ' + new Date(c.fine_ciclo).toLocaleDateString('it-IT', {timeZone:FUSO, day:'numeric', month:'long'}));
+      // il ciclo di Apify finisce alle 23:59 UTC: si mostra il giorno UTC, come sul sito di Apify (in ora di Roma diventerebbe il giorno dopo)
+      if(c.fine_ciclo){
+        const g = new Date(c.fine_ciclo).toLocaleDateString('it-IT', {timeZone:'UTC', day:'numeric', month:'long'});
+        sotto.push('ciclo fino ' + (/^(8|11) /.test(g) ? 'all\'' : 'al ') + g);
+      }
       if(c.soglia != null) sotto.push('avviso sotto ' + quanto(c.soglia, c.unita));
       sotto.push('letto ' + oraIt(c.letto_il));
       return `<div class="ccard${c.sotto_soglia ? ' low' : ''}">${anello(fr, s.colore, pct)}
