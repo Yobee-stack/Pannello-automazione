@@ -350,7 +350,8 @@
         <div class="seg" role="group" aria-label="Periodo">
           <button type="button" data-p="oggi" aria-pressed="true">Oggi</button>
           <button type="button" data-p="ieri" aria-pressed="false">Ieri</button>
-          <button type="button" data-p="mese" aria-pressed="false">Questo mese</button>
+          <button type="button" data-p="mese" aria-pressed="false">Mese corrente</button>
+          <button type="button" data-p="mesePrec" aria-pressed="false">Mese precedente</button>
           <button type="button" data-p="intervallo" aria-pressed="false">Intervallo</button>
         </div>
         <div class="range" id="rangeBox">
@@ -517,6 +518,7 @@
     if(periodo === 'oggi') return { dal: oggi, al: oggi };
     if(periodo === 'ieri'){ const i = addGiorni(oggi, -1); return { dal: i, al: i }; }
     if(periodo === 'mese') return { dal: oggi.slice(0,8) + '01', al: oggi };
+    if(periodo === 'mesePrec'){ const fine = addGiorni(oggi.slice(0,8) + '01', -1); return { dal: fine.slice(0,8) + '01', al: fine }; }
     return { dal: document.getElementById('dDal').value, al: document.getElementById('dAl').value };
   }
   document.querySelectorAll('.seg button').forEach(b => b.addEventListener('click', () => {
@@ -819,7 +821,10 @@
       if(p.al === addGiorni(oggi, -1)) return 'Spesa di ieri · ' + g(p.al);
       return 'Spesa di ' + g(p.al);
     }
-    if(p.al === oggi && p.dal === oggi.slice(0, 8) + '01') return 'Spesa di questo mese · dal ' + g(p.dal) + ' a oggi';
+    const nomeMese = x => new Date(x + 'T12:00:00Z').toLocaleDateString('it-IT', {month:'long', year:'numeric', timeZone:'UTC'});
+    if(p.al === oggi && p.dal === oggi.slice(0, 8) + '01') return 'Spesa del mese corrente · ' + nomeMese(p.al) + ', dal 1° a oggi';
+    const finePrec = addGiorni(oggi.slice(0, 8) + '01', -1);
+    if(p.al === finePrec && p.dal === finePrec.slice(0, 8) + '01') return 'Spesa del mese precedente · ' + nomeMese(p.al) + ', tutto il mese';
     return 'Spesa dal ' + g(p.dal) + ' al ' + g(p.al);
   }
   function disegnaSpesa(righe, wf, p, nGiorni){
