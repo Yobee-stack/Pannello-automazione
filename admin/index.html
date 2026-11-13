@@ -879,7 +879,9 @@
   function disegnaBarre(righe, wf){
     const voci = Object.entries(somma(righe, 'voce')).sort((a,b) => b[1].tot - a[1].tot);
     const totale = voci.reduce((a, [,v]) => a + v.tot, 0);
-    document.getElementById('wfSpan').textContent = wf ? 'un workflow' : (voci.length + (voci.length === 1 ? ' voce' : ' voci') + ' · totale ' + usd(totale));
+    // stesso conto del riquadro Spesa: le voci con una riga a zero non sono "con spesa"
+    const nSpesa = new Set(righe.filter(r => (Number(r.costo_usd) || 0) !== 0 || (Number(r.quantita) || 0) !== 0).map(r => r.voce)).size;
+    document.getElementById('wfSpan').textContent = wf ? 'un workflow' : (nSpesa + (nSpesa === 1 ? ' voce con spesa' : ' voci con spesa') + ' · totale ' + usd(totale));
     const box = document.getElementById('vbars');
     // un workflow scelto senza consumi nel periodo si mostra con 0
     if(!voci.length && wf) voci.push([wf, { tot: 0, s: {} }]);
