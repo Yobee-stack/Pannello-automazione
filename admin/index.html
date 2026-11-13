@@ -94,11 +94,30 @@
   .range.on{display:flex;}
   .range label{display:flex;flex-direction:column;gap:6px;font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--soft);}
   .apply{font-family:var(--font);font-size:13px;font-weight:700;background:var(--accent);color:var(--yb-navy);border:none;border-radius:99px;padding:9px 16px;cursor:pointer;}
-  .period-note{font-size:13px;color:var(--muted);margin:0 0 16px 6px;}
+  .period-note{font-size:13px;color:var(--muted);margin:0 0 6px 6px;min-height:0;}
   /* durante il caricamento i numeri vecchi si spengono: si vede che sta aggiornando */
-  #dashboard.carico .credits,#dashboard.carico .riga2,#dashboard.carico .trend,#dashboard.carico .admin,#dashboard.carico .alerts{opacity:.35;transition:opacity .15s;}
+  #dashboard.carico .spesa-card,#dashboard.carico .crediti-sec,#dashboard.carico .riga2,#dashboard.carico .trend,#dashboard.carico .admin,#dashboard.carico .alerts{opacity:.35;transition:opacity .15s;}
   .carico-msg{display:none;color:var(--accent);font-weight:700;}
   #dashboard.carico .carico-msg{display:inline;}
+
+  /* ---- Stato dei dati: quando sono stati raccolti ---- */
+  .dati-stato{display:flex;flex-wrap:wrap;gap:4px 10px;align-items:baseline;font-size:13px;color:var(--soft);margin:0 0 16px 6px;}
+  .dati-stato b{color:#fff;font-weight:700;}
+  .dati-stato.tardi b{color:var(--warn);}
+
+  /* ---- Spesa del periodo: le cifre in alto, stessi filtri dei dati sotto ---- */
+  .spesa-card{margin-bottom:18px;}
+  .spesa-card .ctit{margin-bottom:4px;}
+  .spesa-sub{font-size:13px;color:var(--muted);margin:0 0 16px;line-height:1.45;}
+  .spesa{display:grid;grid-template-columns:1.25fr 1fr 1fr 1fr;gap:14px;}
+  .sbox{border:1px solid var(--border);border-radius:16px;padding:14px 16px;background:var(--panel);min-width:0;}
+  .sbox.tot{border-color:var(--accent-line);background:var(--accent-soft);}
+  .sbox .l{display:flex;align-items:center;gap:8px;font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--soft);}
+  .sbox .q{font-family:var(--display);font-size:34px;line-height:1;margin-top:10px;white-space:nowrap;}
+  .sbox.tot .q{font-size:42px;}
+  .sbox .d{font-size:12.5px;color:var(--muted);margin-top:8px;line-height:1.4;}
+  .crediti-sec{margin-bottom:30px;}
+  .crediti-sec .credits{margin-bottom:0;}
 
   /* ---- Avvisi ---- */
   .alerts{display:none;border:1px solid var(--warn);background:color-mix(in srgb,var(--warn) 10%,transparent);
@@ -113,7 +132,7 @@
   .ctit-row{display:flex;justify-content:space-between;align-items:baseline;gap:6px 12px;flex-wrap:wrap;}
   .ctit-sub{font-size:13px;color:var(--muted);}
 
-  /* riga 1: crediti con anello + cursore sotto */
+  /* crediti: anello + numero */
   .credits{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-bottom:18px;}
   .ccard{background:var(--panel-2);border:1px solid var(--border-strong);border-radius:var(--r);padding:20px 20px 16px;
     display:grid;grid-template-columns:116px 1fr;column-gap:16px;align-items:center;}
@@ -125,25 +144,10 @@
   .ring text{font-family:var(--display);fill:#fff;}
   .tag-low{display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;
     color:var(--warn);border:1px solid var(--warn);border-radius:99px;padding:2px 8px;margin-top:6px;}
-  .cursore{grid-column:1 / -1;display:grid;grid-template-columns:1fr auto;gap:14px;align-items:center;margin-top:16px;}
-  .c-track{position:relative;height:6px;border-radius:99px;background:var(--grid);}
-  .c-fill{position:absolute;left:0;top:0;bottom:0;border-radius:99px;}
-  .c-knob{position:absolute;top:50%;width:16px;height:16px;border-radius:50%;background:#fff;border:4px solid;transform:translate(-50%,-50%);}
-  .c-lab{font-size:12px;color:var(--soft);white-space:nowrap;}
-  .ccard .cost{font-size:12.5px;color:var(--soft);margin-top:8px;}
-  .ccard .cost b{font-family:var(--display);font-weight:400;font-size:18px;color:#fff;letter-spacing:.02em;white-space:nowrap;}
-  .c-lab b{font-family:var(--display);font-weight:400;font-size:17px;color:#fff;letter-spacing:.02em;margin-right:4px;}
 
-  /* riga 2: riepilogo + colonne per workflow */
-  .riga2{display:grid;grid-template-columns:minmax(260px,1fr) 2.2fr;gap:18px;margin-bottom:18px;align-items:stretch;}
-  .riga2 > .card:first-child{display:flex;flex-direction:column;}
-  .riep{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;align-content:start;margin-top:18px;}
-  .rbox{display:flex;flex-direction:column;align-items:center;gap:10px;text-align:center;}
-  .rbox .q{width:100%;aspect-ratio:1;max-width:92px;display:flex;align-items:center;justify-content:center;border:2px dashed var(--border-strong);
+  /* riga 2: colonne per workflow */
+  .riga2{display:grid;grid-template-columns:minmax(0,1fr);gap:18px;margin-bottom:18px;align-items:stretch;}
     border-radius:10px;font-family:var(--display);font-size:19px;letter-spacing:.02em;position:relative;padding:4px;}
-  .rbox .q::after{content:"";position:absolute;inset:6px;border:2px solid var(--accent-line);border-radius:6px;}
-  .rbox .l{font-family:var(--display);font-size:14px;letter-spacing:.04em;text-transform:uppercase;}
-  .rbox .d{font-size:12px;color:var(--muted);line-height:1.35;margin-top:-6px;}
   .wf-wrap{display:grid;grid-template-columns:minmax(0,1fr) 210px;gap:18px;align-items:start;}
   .vbars-scroll{overflow-x:auto;padding-top:22px;}
   .vbars{display:flex;align-items:flex-end;gap:6px;height:236px;min-width:min-content;border-bottom:1px solid var(--border-strong);position:relative;}
@@ -253,7 +257,8 @@
 
   @media (max-width:1180px){
     .credits{grid-template-columns:1fr;}
-    .riga2{grid-template-columns:1fr;}
+    .spesa{grid-template-columns:1fr 1fr;}
+    .sbox.tot{grid-column:1 / -1;}
     .hero{grid-template-columns:1fr;}
   }
   @media (max-width:900px){
@@ -268,13 +273,15 @@
     .side-nav a,.side-nav button{padding:8px 12px;border-radius:99px;white-space:nowrap;width:auto;font-size:13px;gap:6px;}
     .side-nav a.on{box-shadow:none;}
     .main{padding:20px 16px 60px;}
-    .trend-wrap{grid-template-columns:1fr;}
-    .wf-wrap{grid-template-columns:1fr;}
+    .trend-wrap{grid-template-columns:minmax(0,1fr);}
+    .wf-wrap{grid-template-columns:minmax(0,1fr);}
     .leg-dx{flex-direction:row;flex-wrap:wrap;margin-top:6px;}
   }
   @media (max-width:560px){
     h1{font-size:30px;}
     .seg{flex-wrap:wrap;border-radius:18px;}
+    .spesa{grid-template-columns:1fr;}
+    .sbox .q{font-size:30px;} .sbox.tot .q{font-size:38px;}
     .ccard{grid-template-columns:96px 1fr;}
     .mini-grid{grid-template-columns:1fr 1fr 1fr;gap:10px;}
     .mini-card{padding:12px;}
@@ -295,9 +302,10 @@
       <div class="nome" id="nomeUtente"></div>
     </div>
     <nav class="side-nav" aria-label="Sezioni">
-      <a href="#secCrediti" class="on"><span class="ico">◧</span>Crediti</a>
+      <a href="#secSpesa" class="on"><span class="ico">Σ</span>Spesa</a>
       <a href="#secWorkflow"><span class="ico">▥</span>Costo per workflow</a>
       <a href="#secAndamento"><span class="ico">∿</span>Andamento</a>
+      <a href="#secCrediti"><span class="ico">◧</span>Credito di adesso</a>
       <a href="#adminSec"><span class="ico">#</span>Contatore lanci</a>
       <a href="../"><span class="ico">⌂</span>Hub</a>
       <button type="button" onclick="esci()"><span class="ico">⏻</span>Esci</button>
@@ -351,19 +359,22 @@
           <button type="button" class="apply" onclick="applicaIntervallo()">Mostra</button>
         </div>
       </div>
-      <p class="period-note"><span id="periodNote"></span> <span class="carico-msg" role="status">· Caricamento dei dati…</span></p>
+      <p class="period-note"><span class="carico-msg" role="status">Caricamento dei dati…</span></p>
+
+      <!-- quando sono stati raccolti i dati che si vedono (non l'ora in cui si e' aperta la pagina) -->
+      <p class="dati-stato" id="datiStato" role="status"></p>
 
       <div class="alerts" id="alerts" role="status"></div>
 
-      <!-- riga 1: i tre crediti (anello + cursore) -->
-      <div class="credits" id="secCrediti"></div>
+      <!-- riga 1: la spesa del periodo e del workflow scelti. Sono le stesse somme delle tabelle sotto. -->
+      <section class="card spesa-card" id="secSpesa" aria-labelledby="hSpesa">
+        <h2 class="ctit" id="hSpesa">Spesa</h2>
+        <p class="spesa-sub" id="spesaSub"></p>
+        <div class="spesa" id="spesa"></div>
+      </section>
 
-      <!-- riga 2: riepilogo (riquadri piccoli) + costo per workflow (colonne) -->
+      <!-- riga 2: costo per workflow (colonne) -->
       <div class="riga2">
-        <section class="card" aria-labelledby="hRiep">
-          <h2 class="ctit" id="hRiep">Riepilogo</h2>
-          <div class="riep" id="riepilogo"></div>
-        </section>
         <section class="card" id="secWorkflow" aria-labelledby="hWf">
           <div class="ctit-row"><h2 class="ctit" id="hWf">Costo per workflow</h2><span class="ctit-sub" id="wfSpan"></span></div>
           <div class="wf-wrap">
@@ -395,6 +406,13 @@
         </div>
       </section>
 
+      <!-- il credito residuo: un valore di adesso, non segue periodo ne' workflow -->
+      <section class="crediti-sec" id="secCrediti" aria-labelledby="hCred">
+        <div class="sec-head"><h2 id="hCred">Credito di adesso</h2><span id="creditiSpan"></span></div>
+        <div class="credits" id="creditiGrid"></div>
+        <p class="hnote" id="creditiNota"></p>
+      </section>
+
       <section id="adminSec" class="admin">
         <div class="sec-head"><h2>Contatore lanci</h2><span id="adminSpan"></span></div>
         <div id="adminBody"></div>
@@ -416,6 +434,10 @@
   const WEBHOOK_PREFISSO = N8N_BASE + "/webhook/torre-";
   const AUTH_KEY = 'yobee_torre_auth', USER_KEY = 'yobee_torre_utente';
   const FUSO = 'Europe/Rome';
+  // primo giorno in cui la torre ha registrato i consumi: prima non ci sono costi (i crediti invece contano tutto lo speso)
+  const INIZIO_RACCOLTA = '2026-11-11';
+  const RICARICA_OGNI_MIN = 5;      // la pagina aperta richiede i dati da sola
+  const RACCOLTA_OGNI_MIN = 60;     // la raccolta di n8n gira una volta all'ora
 
   const SERVIZI = [
     { id:'openrouter', nome:'OpenRouter', colore:'var(--s-openrouter)' },
@@ -587,14 +609,19 @@
 
   // ---------- caricamento ----------
   let richiesta = 0;
-  async function carica(){
+  let ultimoCarico = 0;
+  async function carica(silenzioso){
+    silenzioso = silenzioso === true;
     const utente = sessionStorage.getItem(USER_KEY);
     if(!utente || !sessionStorage.getItem(AUTH_KEY)){ showGate(); return; }
     const { dal, al } = intervallo();
     const url = WEBHOOK_PREFISSO + encodeURIComponent(utente) + '?dal=' + dal + '&al=' + al;
     const mia = ++richiesta;
-    setStatus(true, 'aggiornamento…');
-    document.getElementById('dashboard').classList.add('carico');
+    ultimoCarico = Date.now();
+    if(!silenzioso){
+      setStatus(true, 'carico i dati…');
+      document.getElementById('dashboard').classList.add('carico');
+    }
     try{
       const res = await fetch(url, { headers: authHeader(), cache: 'no-store' });
       if(mia !== richiesta) return;
@@ -612,7 +639,7 @@
       showDashboard();
       riempiFiltroWorkflow();
       disegna();
-      setStatus(true, 'aggiornato alle ' + new Date().toLocaleTimeString('it-IT', {hour:'2-digit', minute:'2-digit'}));
+      setStatus(true, 'collegato');
     }catch(err){
       if(mia !== richiesta) return;
       document.getElementById('dashboard').classList.remove('carico');
@@ -626,6 +653,17 @@
       setStatus(false, 'errore: ' + err.message);
     }
   }
+
+  // La pagina aperta si ricarica da sola: senza spegnere i numeri, e non mentre si sta scegliendo un intervallo.
+  function ricaricaDaSola(){
+    if(!DATI || document.hidden || calAttesa !== null) return;
+    if(Date.now() - ultimoCarico < RICARICA_OGNI_MIN * 60000 - 2000) return;
+    const { dal, al } = intervallo();
+    if(!dal || !al || dal > al) return;
+    carica(true);
+  }
+  setInterval(ricaricaDaSola, 30000);
+  document.addEventListener('visibilitychange', ricaricaDaSola);
 
   function riempiFiltroWorkflow(){
     const sel = document.getElementById('selWf');
@@ -659,14 +697,12 @@
     const wf = document.getElementById('selWf').value;
     const p = DATI.periodo || intervallo();
     const nGiorni = giorniTra(p.dal, p.al).length;
-    document.getElementById('periodNote').textContent =
-      (p.dal === p.al ? etichettaGiorno(p.dal, true) : 'dal ' + etichettaGiorno(p.dal, true) + ' al ' + etichettaGiorno(p.al, true)) +
-      ' · ' + (wf ? wf : 'tutti i workflow') + ' · costi in dollari';
     const righe = righeFiltrate();
+    disegnaStato(p);
     disegnaAvvisi();
-    disegnaCrediti(righe, wf);
+    disegnaSpesa(righe, wf, p, nGiorni);
+    disegnaCrediti();
     disegnaBarre(righe, wf);
-    disegnaRiepilogo(righe, wf, nGiorni);
     disegnaAndamento(righe, p);
     disegnaAdmin();
     disegnaCalendario();
@@ -674,7 +710,7 @@
     document.getElementById('legend2').innerHTML = legenda;
     document.getElementById('trendSpan').textContent = nGiorni + (nGiorni === 1 ? ' giorno' : ' giorni');
     document.getElementById('footer').textContent =
-      'Consumi raccolti fino a ' + oraIt(DATI.ultima_raccolta) + ' · risposta delle ' + oraIt(DATI.generato_il) +
+      'Consumi raccolti fino a ' + oraIt(DATI.ultima_raccolta) + ' · pagina ricaricata alle ' + soloOra(DATI.generato_il) +
       ' · utente ' + (DATI.utente || sessionStorage.getItem(USER_KEY) || '');
   }
 
@@ -708,27 +744,19 @@
 
   // positivo: la parte che si disegna ("Fuori da n8n" puo' avere correzioni negative, restano nei totali scritti)
   const pos = x => Math.max(0, Number(x) || 0);
-  function disegnaCrediti(righe, wf){
-    const box = document.getElementById('secCrediti');
-    const perServ = Object.fromEntries(SERVIZI.map(s => [s.id, righe.filter(r => r.servizio === s.id)]));
-    const spesaPos = Object.fromEntries(SERVIZI.map(s => [s.id, perServ[s.id].reduce((a, r) => a + pos(r.costo_usd), 0)]));
-    const totPos = SERVIZI.reduce((a, s) => a + spesaPos[s.id], 0);
+  function disegnaCrediti(){
+    const box = document.getElementById('creditiGrid');
+    const letti = DATI.crediti.map(c => c.letto_il).filter(Boolean).sort();
+    document.getElementById('creditiSpan').textContent =
+      'quello che resta sui tre servizi · non cambia con il periodo né con il workflow' + (letti.length ? ' · letto ' + oraIt(letti[letti.length - 1]) : '');
+    document.getElementById('creditiNota').textContent =
+      'Il credito conta tutto quello che è stato speso sul servizio, da sempre. I costi qui sopra sono registrati dalla torre dal ' +
+      etichettaGiorno(INIZIO_RACCOLTA, true) + ': quello speso prima non compare nei costi, quindi le due cifre non vanno sommate fra loro.';
     box.innerHTML = SERVIZI.map(s => {
       const c = DATI.crediti.find(x => x.servizio === s.id);
-      const mie = perServ[s.id];
-      const costo = mie.reduce((a, r) => a + (Number(r.costo_usd) || 0), 0);
-      const qta = mie.reduce((a, r) => a + (Number(r.quantita) || 0), 0);
-      const costoTxt = `<div class="cost">Costo nel periodo: <b>${esc(usd(costo))}</b>` +
-        (s.id === 'serper' ? ` <span style="color:var(--muted)">· ${esc(crediti(qta))}</span>` : '') + '</div>';
-      // cursore sotto, come il modello: quota di questo servizio sulla spesa del periodo
-      const quota = totPos > 0 ? spesaPos[s.id] / totPos : 0, qp = Math.round(quota * 100);
-      const cursore = `<div class="cursore" role="img" aria-label="${s.nome}: ${qp}% della spesa del periodo">
-        <div class="c-track"><span class="c-fill" style="width:${(quota * 100).toFixed(1)}%;background:linear-gradient(90deg,color-mix(in srgb,${s.colore} 55%,#fff),${s.colore})"></span>
-        <span class="c-knob" style="left:${(quota * 100).toFixed(1)}%;border-color:${s.colore}"></span></div>
-        <div class="c-lab"><b>${qp}%</b>della spesa del periodo</div></div>`;
       if(!c){
         return `<div class="ccard">${anello(null, s.colore, '—')}<div><div class="svc"><i class="sw" style="background:${s.colore}"></i>${s.nome}</div>
-          <div class="sub">Credito non letto.</div>${costoTxt}</div>${cursore}</div>`;
+          <div class="sub">Credito non letto.</div></div></div>`;
       }
       const fr = (c.totale && Number(c.totale) > 0) ? Number(c.credito) / Number(c.totale) : null;
       const pct = fr == null ? 'saldo' : Math.round(fr * 100) + '%';
@@ -744,22 +772,79 @@
       return `<div class="ccard${c.sotto_soglia ? ' low' : ''}">${anello(fr, s.colore, pct)}
         <div><div class="svc"><i class="sw" style="background:${s.colore}"></i>${s.nome}</div>
         <div class="big">${esc(quanto(c.credito, c.unita))}</div>
-        <div class="sub">${sotto.map(esc).join(' · ')}</div>
+        <div class="sub">credito che resta adesso · ${sotto.map(esc).join(' · ')}</div>
         ${c.sotto_soglia ? '<span class="tag-low">⚠ sotto soglia</span>' : ''}
-        ${costoTxt}</div>${cursore}</div>`;
+        </div></div>`;
     }).join('');
   }
 
-  // riquadri piccoli, come "Views" del modello
-  function disegnaRiepilogo(righe, wf, nGiorni){
-    const tot = righe.reduce((a, r) => a + (Number(r.costo_usd) || 0), 0);
-    const conSpesa = new Set(righe.filter(r => (Number(r.costo_usd) || 0) !== 0 || (Number(r.quantita) || 0) !== 0).map(r => r.voce)).size;
+  // ---------- stato dei dati: l'ora della raccolta, non l'ora del browser ----------
+  function soloOra(iso){ if(!iso) return '—'; const d = new Date(iso); return isNaN(d) ? '—' : d.toLocaleTimeString('it-IT', {timeZone:FUSO, hour:'2-digit', minute:'2-digit'}); }
+  function disegnaStato(p){
+    const box = document.getElementById('datiStato');
+    const oggi = oggiRoma();
+    // Per un periodo che arriva a oggi vale il giro piu' recente: i crediti si leggono a ogni giro,
+    // le righe dei consumi invece cambiano solo se nell'ora si e' speso qualcosa.
+    let ultima = DATI.ultima_raccolta || null;
+    if(p.al >= oggi) DATI.crediti.forEach(c => { if(c.letto_il && (!ultima || c.letto_il > ultima)) ultima = c.letto_il; });
+    const u = ultima ? new Date(ultima) : null;
+    const ricarica = 'pagina ricaricata alle ' + soloOra(DATI.generato_il) + ' (si ricarica da sola ogni ' + RICARICA_OGNI_MIN + ' minuti)';
+    box.classList.remove('tardi');
+    if(!u || isNaN(u)){
+      box.innerHTML = '<b>Nessun dato raccolto in questo periodo.</b><span>' + esc(ricarica) + '</span>';
+      return;
+    }
+    if(p.al < oggi){
+      // periodo gia' chiuso: i dati non cambiano piu'
+      box.innerHTML = `<b>Periodo chiuso: ultimo dato raccolto il ${esc(oraIt(ultima))}.</b><span>Non cambia più.</span>`;
+      return;
+    }
+    const stessoGiorno = fmtGiorno.format(u) === oggi;
+    const quando = stessoGiorno ? 'alle ' + soloOra(ultima) : 'il ' + oraIt(ultima);
+    const prossima = new Date(u.getTime() + RACCOLTA_OGNI_MIN * 60000);
+    const ritardo = Date.now() - u.getTime() > (RACCOLTA_OGNI_MIN + 30) * 60000;
+    if(ritardo) box.classList.add('tardi');
+    box.innerHTML = `<b>Dati raccolti ${esc(quando)}.</b>` +
+      (ritardo ? '<span>⚠ La raccolta è in ritardo: doveva girare verso le ' + esc(soloOra(prossima.toISOString())) + '.</span>'
+               : '<span>La raccolta gira ogni ora: prossima verso le ' + esc(soloOra(prossima.toISOString())) + '. Quello che si spende dopo compare al giro successivo.</span>') +
+      '<span>· ' + esc(ricarica) + '</span>';
+  }
+
+  // ---------- spesa del periodo: le cifre in alto ----------
+  // Stesse righe (periodo + workflow scelti) delle colonne, dell'andamento e delle tabelle sotto.
+  function titoloPeriodo(p){
+    const oggi = oggiRoma(), g = x => etichettaGiorno(x, true);
+    if(p.dal === p.al){
+      if(p.al === oggi) return 'Spesa di oggi · ' + g(p.al);
+      if(p.al === addGiorni(oggi, -1)) return 'Spesa di ieri · ' + g(p.al);
+      return 'Spesa di ' + g(p.al);
+    }
+    if(p.al === oggi && p.dal === oggi.slice(0, 8) + '01') return 'Spesa di questo mese · dal ' + g(p.dal) + ' a oggi';
+    return 'Spesa dal ' + g(p.dal) + ' al ' + g(p.al);
+  }
+  function disegnaSpesa(righe, wf, p, nGiorni){
+    const n = v => Number(v) || 0;
+    const tot = righe.reduce((a, r) => a + n(r.costo_usd), 0);
+    const conSpesa = new Set(righe.filter(r => n(r.costo_usd) !== 0 || n(r.quantita) !== 0).map(r => r.voce)).size;
+    document.getElementById('hSpesa').textContent = titoloPeriodo(p);
+    const giorni = nGiorni === 1 ? '1 giorno' : nGiorni + ' giorni';
+    let sub = (wf ? 'Solo il workflow «' + wf + '»' : 'Tutti i workflow') + ' · ' + giorni +
+      ' · in dollari · stesse somme dei grafici e delle tabelle qui sotto.';
+    if(p.dal < INIZIO_RACCOLTA) sub += ' La torre registra i costi dal ' + etichettaGiorno(INIZIO_RACCOLTA, true) + ': i giorni prima restano a 0,00 $.';
+    document.getElementById('spesaSub').textContent = sub;
     const media = nGiorni ? tot / nGiorni : 0;
-    const box = (q, l, d) => `<div class="rbox"><div class="q">${esc(q)}</div><div class="l">${esc(l)}</div><div class="d">${esc(d)}</div></div>`;
-    document.getElementById('riepilogo').innerHTML =
-      box(usd(tot), 'Totale', wf ? 'questo workflow, nel periodo' : 'tutti i workflow, nel periodo') +
-      box(String(wf ? (conSpesa ? 1 : 0) : conSpesa), 'Con spesa', wf ? 'workflow con spesa' : 'voci con spesa nel periodo') +
-      box(usd(media), 'Al giorno', 'media su ' + nGiorni + (nGiorni === 1 ? ' giorno' : ' giorni'));
+    const dTot = nGiorni > 1
+      ? 'somma dei tre servizi · in media ' + usd(media) + ' al giorno' + (wf ? '' : ' · ' + conSpesa + (conSpesa === 1 ? ' voce con spesa' : ' voci con spesa'))
+      : 'somma dei tre servizi' + (wf ? '' : ' · ' + conSpesa + (conSpesa === 1 ? ' voce con spesa' : ' voci con spesa'));
+    let h = `<div class="sbox tot" data-k="totale"><div class="l">Totale</div><div class="q">${esc(usd(tot))}</div><div class="d">${esc(dTot)}</div></div>`;
+    SERVIZI.forEach(s => {
+      const mie = righe.filter(r => r.servizio === s.id);
+      const costo = mie.reduce((a, r) => a + n(r.costo_usd), 0), qta = mie.reduce((a, r) => a + n(r.quantita), 0);
+      const quota = tot > 0 ? Math.round(Math.max(0, costo) / tot * 100) + '% del totale' : 'nessuna spesa';
+      h += `<div class="sbox" data-k="${s.id}"><div class="l"><i class="sw" style="background:${s.colore}"></i>${s.nome}</div>
+        <div class="q">${esc(usd(costo))}</div><div class="d">${esc(quota)}${s.id === 'serper' ? ' · ' + esc(crediti(qta)) + ' usati' : ''}</div></div>`;
+    });
+    document.getElementById('spesa').innerHTML = h;
   }
 
   // tooltip
@@ -1012,7 +1097,7 @@
     const body = document.getElementById('adminBody');
     const mese = a.mese || a.meseFiltro || '';
     const nomeMese = /^\d{4}-\d{2}$/.test(mese) ? new Date(mese + '-15T12:00:00Z').toLocaleDateString('it-IT', {month:'long', year:'numeric', timeZone:'UTC'}) : 'tutto lo storico';
-    document.getElementById('adminSpan').textContent = 'lanci dal pannello · ' + nomeMese + ' (si filtra per mese, non per giorno)';
+    document.getElementById('adminSpan').textContent = 'lanci dal pannello · ' + (/^\d{4}-\d{2}$/.test(mese) ? 'tutto il mese di ' + nomeMese : nomeMese) + ' · non segue il periodo scelto sopra';
     if(a.errore){ body.innerHTML = `<div class="errbox">Il contatore non ha risposto: ${esc(a.errore)}</div>`; return; }
     const eventi = a.ultimiEventi || [];
     body.innerHTML = `
