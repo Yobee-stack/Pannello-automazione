@@ -437,7 +437,9 @@
   const FUSO = 'Europe/Rome';
   // primo giorno in cui la torre ha registrato i consumi: prima non ci sono costi (i crediti invece contano tutto lo speso)
   const INIZIO_RACCOLTA = '2026-11-11';
-  const RICARICA_OGNI_MIN = 5;      // la pagina aperta richiede i dati da sola
+  // Ogni caricamento della pagina e' un'esecuzione in n8n: la pagina aperta si ricarica solo quando c'e' un giro nuovo
+  // della raccolta (una volta all'ora), e al massimo ogni RICARICA_OGNI_MIN se il giro tarda.
+  const RICARICA_OGNI_MIN = 30;
   const RACCOLTA_OGNI_MIN = 60;     // la raccolta di n8n gira una volta all'ora
 
   const SERVIZI = [
@@ -657,14 +659,19 @@
   }
 
   // La pagina aperta si ricarica da sola: senza spegnere i numeri, e non mentre si sta scegliendo un intervallo.
+  let prossimaRaccolta = null;   // ms: quando e' atteso il prossimo giro (solo se il periodo arriva a oggi)
   function ricaricaDaSola(){
     if(!DATI || document.hidden || calAttesa !== null) return;
-    if(Date.now() - ultimoCarico < RICARICA_OGNI_MIN * 60000 - 2000) return;
+    if(prossimaRaccolta === null) return;                      // periodo chiuso: i dati non cambiano
+    const atteso = prossimaRaccolta + 3 * 60000;               // 3 minuti dopo il giro
+    const giroNuovo = Date.now() >= atteso && ultimoCarico < atteso;
+    const scaduto = Date.now() - ultimoCarico >= RICARICA_OGNI_MIN * 60000;
+    if(!giroNuovo && !scaduto) return;
     const { dal, al } = intervallo();
     if(!dal || !al || dal > al) return;
     carica(true);
   }
-  setInterval(ricaricaDaSola, 30000);
+  setInterval(ricaricaDaSola, 60000);
   document.addEventListener('visibilitychange', ricaricaDaSola);
 
   function riempiFiltroWorkflow(){
@@ -790,7 +797,8 @@
     let ultima = DATI.ultima_raccolta || null;
     if(p.al >= oggi) DATI.crediti.forEach(c => { if(c.letto_il && (!ultima || c.letto_il > ultima)) ultima = c.letto_il; });
     const u = ultima ? new Date(ultima) : null;
-    const ricarica = 'pagina ricaricata alle ' + soloOra(DATI.generato_il) + ' (si ricarica da sola ogni ' + RICARICA_OGNI_MIN + ' minuti)';
+    const ricarica = 'pagina ricaricata alle ' + soloOra(DATI.generato_il) + ' (si ricarica da sola dopo ogni raccolta)';
+    prossimaRaccolta = null;
     box.classList.remove('tardi');
     if(!u || isNaN(u)){
       box.innerHTML = '<b>Nessun dato raccolto in questo periodo.</b><span>' + esc(ricarica) + '</span>';
@@ -804,6 +812,7 @@
     const stessoGiorno = fmtGiorno.format(u) === oggi;
     const quando = stessoGiorno ? 'alle ' + soloOra(ultima) : 'il ' + oraIt(ultima);
     const prossima = new Date(u.getTime() + RACCOLTA_OGNI_MIN * 60000);
+    prossimaRaccolta = prossima.getTime();
     const ritardo = Date.now() - u.getTime() > (RACCOLTA_OGNI_MIN + 30) * 60000;
     if(ritardo) box.classList.add('tardi');
     box.innerHTML = `<b>Dati raccolti ${esc(quando)}.</b>` +
