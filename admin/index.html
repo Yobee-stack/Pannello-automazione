@@ -79,7 +79,9 @@
     border-radius:99px;padding:4px 8px 4px 18px;}
   .cerca:focus-within{border-color:var(--accent);}
   .lente{font-size:20px;color:var(--accent);line-height:1;}
-  .cerca select{flex:1;min-width:0;background:transparent;border:none;font-style:normal;padding:9px 4px;}
+  /* il menu non si allarga con i nomi lunghi dei workflow (sul telefono la pagina andava di lato) */
+  .cerca{min-width:0;max-width:100%;}
+  .cerca select{flex:1;width:100%;min-width:0;max-width:100%;text-overflow:ellipsis;background:transparent;border:none;font-style:normal;padding:9px 4px;}
   select,input[type=date]{font-family:var(--font);font-size:14px;font-weight:600;background:var(--bg2);border:1px solid var(--border-strong);
     color:var(--text);padding:8px 10px;border-radius:8px;color-scheme:dark;}
   select option,select optgroup{background:var(--yb-navy);color:#fff;}
