@@ -92,6 +92,7 @@
   .item a.title:hover{color:var(--accent-light);text-decoration:underline;}
   .meta{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-top:6px;font-family:var(--mono);font-size:13px;color:var(--muted);}
   .badge-nl{display:inline-block;color:var(--accent-light);border:1px solid var(--accent-line);background:var(--accent-soft);border-radius:99px;padding:2px 9px;font-weight:600;}
+  .badge-gv{display:inline-block;color:#fff;border:1px solid var(--border-strong);background:color-mix(in srgb,var(--yb-indaco) 45%,transparent);border-radius:99px;padding:2px 9px;font-weight:600;}
   .item p{margin:8px 0 0;color:var(--soft);font-size:15px;line-height:1.5;}
 
   .empty{background:var(--panel);border:1px dashed var(--border-strong);border-radius:16px;padding:44px 24px;text-align:center;color:var(--soft);}
@@ -289,6 +290,7 @@
         card.appendChild(titolo);
         var meta = el('div', 'meta');
         meta.appendChild(el('span', null, x.testata));
+        if (x.gara_vinta === true) meta.appendChild(el('span', 'badge-gv', 'gara vinta'));
         if (x.in_newsletter) meta.appendChild(el('span', 'badge-nl', 'proposta in newsletter il ' + giornoCorto(x.in_newsletter)));
         card.appendChild(meta);
         if (x.sintesi) card.appendChild(el('p', null, x.sintesi));
