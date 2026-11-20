@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#000000">
+<meta name="robots" content="noindex">
+<title>Proposte LinkedIn — Yobee</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Staatliches&family=Urbanist:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  /* Palette Yobee — Brand book 1.0 (ottobre 2026), come il resto del pannello. */
+  :root{
+    --yb-nero:#000000; --yb-indaco:#3533CD; --yb-teal:#71BABC;
+    --yb-ink:#0B0B1A; --yb-lavanda:#C9CBE8; --yb-navy:#15144D;
+    --yb-corallo:#FF6A4D; --yb-ambra:#E0A23C;
+    --yb-gradiente:linear-gradient(90deg,var(--yb-nero) 0%,var(--yb-indaco) 100%);
+
+    --bg:var(--yb-nero); --bg2:var(--yb-navy);
+    --panel:color-mix(in srgb,var(--yb-ink) 55%,transparent); --panel-2:color-mix(in srgb,var(--yb-ink) 72%,transparent);
+    --border:color-mix(in srgb,var(--yb-lavanda) 18%,transparent); --border-strong:color-mix(in srgb,var(--yb-lavanda) 32%,transparent);
+    --text:#FFFFFF; --muted:color-mix(in srgb,var(--yb-lavanda) 82%,transparent); --soft:var(--yb-lavanda);
+    --field:color-mix(in srgb,var(--yb-nero) 35%,transparent);
+    --accent:var(--yb-teal); --accent-soft:color-mix(in srgb,var(--yb-teal) 14%,transparent); --accent-line:color-mix(in srgb,var(--yb-teal) 45%,transparent);
+    --warn:var(--yb-ambra); --danger:var(--yb-corallo);
+    --font:'Urbanist',system-ui,sans-serif;
+    --display:'Staatliches','Urbanist',sans-serif;
+    --r:22px;
+  }
+  *{box-sizing:border-box;}
+  body{margin:0;background:var(--yb-gradiente) var(--bg);color:var(--text);font-family:var(--font);font-size:16px;
+    -webkit-font-smoothing:antialiased;min-height:100vh;overflow-x:hidden;}
+  a{color:var(--accent);}
+  .wrap{max-width:860px;margin:0 auto;padding:24px 16px 70px;}
+
+  .top{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;margin-bottom:22px;}
+  .logo{height:26px;width:auto;display:block;margin-bottom:14px;}
+  .eyebrow{font-size:11px;font-weight:700;letter-spacing:.25em;text-transform:uppercase;color:var(--accent);margin:0 0 6px;}
+  h1{font-family:var(--display);font-size:40px;font-weight:400;line-height:.92;margin:0;text-transform:uppercase;}
+  .azioni-top{display:flex;gap:8px;flex-wrap:wrap;}
+  .btn-line{font-family:var(--font);font-size:14px;font-weight:600;background:transparent;border:1px solid var(--border-strong);
+    color:var(--text);padding:9px 16px;border-radius:99px;cursor:pointer;text-decoration:none;display:inline-block;}
+  .btn-line:hover{border-color:var(--accent);}
+
+  /* ---- Accesso ---- */
+  .login-gate{display:flex;justify-content:center;padding:30px 0;}
+  .login-box{width:100%;max-width:380px;background:var(--panel-2);border:1px solid var(--border-strong);border-radius:var(--r);padding:28px;}
+  .login-box h2{font-family:var(--display);font-size:34px;font-weight:400;line-height:.92;text-transform:uppercase;margin:8px 0 10px;}
+  .login-box .sub{color:var(--soft);font-size:15px;margin:0 0 18px;line-height:1.5;}
+  .campo{display:flex;flex-direction:column;gap:6px;margin-bottom:14px;}
+  .campo label{font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--soft);}
+  .campo input{background:var(--field);border:1px solid var(--border-strong);border-radius:12px;color:#fff;font-family:var(--font);font-size:16px;padding:11px 12px;width:100%;}
+  .campo input:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft);}
+  .btn{background:var(--accent);color:var(--yb-navy);border:none;border-radius:99px;padding:12px 20px;font-family:var(--font);font-size:15px;font-weight:700;cursor:pointer;}
+  .btn:disabled{opacity:.5;cursor:default;}
+  .login-box .btn{width:100%;}
+  .login-status{margin-top:12px;font-size:14px;color:var(--danger);min-height:1em;}
+
+  /* ---- Riepilogo ---- */
+  .riepilogo{font-size:15px;color:var(--soft);margin:0 0 18px;line-height:1.5;}
+  .riepilogo b{color:#fff;}
+  .avviso{border-radius:14px;padding:12px 16px;margin-bottom:16px;font-size:15px;display:none;}
+  .avviso.on{display:block;}
+  .avviso.ok{border:1px solid var(--accent-line);background:var(--accent-soft);}
+  .avviso.err{border:1px solid var(--danger);background:color-mix(in srgb,var(--danger) 10%,transparent);color:#fff;}
+  .vuoto{text-align:center;padding:34px 20px;color:var(--soft);background:var(--panel);border:1px dashed var(--border-strong);border-radius:16px;}
+
+  /* ---- Una proposta ---- */
+  .prop{background:var(--panel-2);border:1px solid var(--border-strong);border-radius:var(--r);padding:20px;margin-bottom:18px;}
+  .prop.fatta{opacity:.78;}
+  .testa{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;flex-wrap:wrap;margin-bottom:14px;}
+  .azienda{font-family:var(--display);font-size:30px;font-weight:400;line-height:1;text-transform:uppercase;margin:0;}
+  .etichette{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px;}
+  .tag{font-size:12px;font-weight:700;padding:4px 10px;border-radius:99px;border:1px solid var(--border-strong);color:var(--soft);}
+  .tag.cliente{border-color:var(--warn);color:var(--warn);}
+  .stato{font-size:13px;font-weight:700;padding:6px 12px;border-radius:99px;white-space:nowrap;}
+  .stato.da{background:var(--yb-indaco);color:#fff;}
+  .stato.approvata{background:var(--accent);color:var(--yb-navy);}
+  .stato.inviata{border:1px solid var(--accent-line);color:var(--accent);}
+  .stato.scartata{border:1px solid var(--border-strong);color:var(--muted);}
+
+  .blocco{margin-bottom:14px;}
+  .blocco h3{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);margin:0 0 6px;}
+  .blocco p{margin:0;line-height:1.5;}
+  .piccolo{font-size:13px;color:var(--muted);}
+  .persona{font-weight:700;}
+  .btn-li{display:inline-block;margin-top:8px;font-size:14px;font-weight:700;color:#fff;background:#0A66C2;border-radius:99px;padding:8px 16px;text-decoration:none;}
+  .avviso-cliente{border:1px solid var(--warn);background:color-mix(in srgb,var(--warn) 10%,transparent);border-radius:12px;padding:10px 14px;font-size:14px;margin-bottom:14px;}
+
+  .testo{background:var(--field);border:1px solid var(--border);border-radius:12px;padding:12px 14px;white-space:pre-wrap;line-height:1.5;font-size:15px;}
+  .riga-copia{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-top:8px;flex-wrap:wrap;}
+  .copia{font-family:var(--font);font-size:14px;font-weight:700;background:transparent;color:var(--accent);border:1px solid var(--accent-line);border-radius:99px;padding:8px 16px;cursor:pointer;}
+  .copia.fatto{background:var(--accent);color:var(--yb-navy);}
+
+  .decidi{border-top:1px solid var(--border);margin-top:16px;padding-top:16px;}
+  .decidi .domanda{font-weight:700;margin:0 0 10px;}
+  .bottoni{display:flex;gap:10px;flex-wrap:wrap;}
+  .b{font-family:var(--font);font-size:15px;font-weight:700;border-radius:99px;padding:11px 18px;cursor:pointer;border:1px solid transparent;}
+  .b:disabled{opacity:.5;cursor:default;}
+  .b.si{background:var(--accent);color:var(--yb-navy);}
+  .b.no{background:transparent;color:#fff;border-color:var(--border-strong);}
+  .b.no:hover{border-color:var(--danger);}
+  .b.leggero{background:transparent;color:var(--muted);border-color:transparent;text-decoration:underline;padding:11px 8px;}
+
+  /* ---- Storico ---- */
+  .storico{margin-top:34px;}
+  .storico h2{font-family:var(--display);font-size:26px;font-weight:400;text-transform:uppercase;margin:0 0 12px;}
+  details.sett{background:var(--panel);border:1px solid var(--border);border-radius:16px;margin-bottom:10px;}
+  details.sett summary{cursor:pointer;padding:14px 16px;font-weight:700;}
+  details.sett .dentro{padding:0 12px 4px;}
+
+  footer{font-size:12px;color:var(--muted);border-top:1px solid var(--border);padding-top:14px;margin-top:30px;}
+  @media (max-width:520px){
+    h1{font-size:32px;}
+    .azienda{font-size:26px;}
+    .prop{padding:16px;}
+    .b{flex:1 1 auto;}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <div>
+      <img src="../yobee-logo-negativo.png" alt="Yobee" class="logo">
+      <p class="eyebrow">Paleari bot</p>
+      <h1>Proposte LinkedIn</h1>
+    </div>
+    <div class="azioni-top" id="azioniTop" style="display:none">
+      <button class="btn-line" type="button" onclick="carica()">↻ Aggiorna</button>
+      <button class="btn-line" type="button" onclick="esci()">Esci</button>
+    </div>
+  </header>
+
+  <div class="login-gate" id="loginGate">
+    <form class="login-box" onsubmit="entra(event)">
+      <p class="eyebrow">Accesso riservato</p>
+      <h2>Le tue proposte</h2>
+      <p class="sub">Scrivi il tuo utente e la tua password.</p>
+      <div class="campo"><label for="u">Utente</label><input id="u" autocomplete="username" autocapitalize="none" spellcheck="false"></div>
+      <div class="campo"><label for="p">Password</label><input id="p" type="password" autocomplete="current-password"></div>
+      <button class="btn" type="submit" id="btnEntra">Entra</button>
+      <div class="login-status" id="loginStatus" role="alert"></div>
+    </form>
+  </div>
+
+  <main id="pagina" style="display:none">
+    <p class="riepilogo" id="riepilogo"></p>
+    <div class="avviso" id="avviso" role="status"></div>
+    <section id="settimana"></section>
+    <section class="storico" id="storico" style="display:none">
+      <h2>Settimane passate</h2>
+      <div id="storicoLista"></div>
+    </section>
+    <footer>Su LinkedIn scrivi tu: apri il profilo, incolla la nota d'invito e, quando accetta, il messaggio. Poi torna qui e segna com'è andata.</footer>
+  </main>
+</div>
+
+<script>
+  // ===== UNICO PUNTO DA CAMBIARE PER MIGRARE L'ISTANZA n8n =====
+  // In locale (localhost) la pagina parla con il server finto delle prove.
+  const N8N_BASE = (location.hostname === 'localhost' || location.hostname === '127.0.0.1')
+    ? location.origin : "https://ops.yobee.ai";
+  // =============================================================
+  // Workflow n8n "Paleari bot - Scheda": due webhook con la stessa credenziale Basic Auth.
+  const URL_PROPOSTE = N8N_BASE + "/webhook/paleari-proposte";
+  const URL_DECISIONE = N8N_BASE + "/webhook/paleari-decisione";
+  const AUTH_KEY = 'yobee_paleari_auth';
+  const FUSO = 'Europe/Rome';
+  const MOTIVI = ["persona sbagliata", "azienda non adatta", "messaggio da rifare", "altro"];
+
+  let DATI = null;            // ultima risposta di paleari-proposte
+  const aperti = {};          // id della proposta -> true se il riquadro "perché scarti?" è aperto
+  let occupato = false;
+
+  // ---------- utilità ----------
+  function esc(s){ return String(s == null ? '' : s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+  function linkSicuro(u){ return (typeof u === 'string' && /^https?:\/\//i.test(u)) ? u : null; }
+  function giorno(iso){ if(!iso) return ''; const d = new Date(iso); return isNaN(d) ? String(iso) : d.toLocaleDateString('it-IT', {timeZone:FUSO, day:'numeric', month:'long'}); }
+  function paeseNome(p){ return p === 'IT' ? 'Italia' : (p === 'HU' ? 'Ungheria' : (p || '')); }
+  function lingua(l){ return l === 'en' ? 'in inglese' : (l === 'it' ? 'in italiano' : ''); }
+  function authHeader(){ const v = sessionStorage.getItem(AUTH_KEY); return v ? { 'Authorization': 'Basic ' + v } : {}; }
+  function avviso(testo, tipo){
+    const el = document.getElementById('avviso');
+    el.className = 'avviso' + (testo ? ' on ' + (tipo || 'ok') : '');
+    el.textContent = testo || '';
+  }
+
+  // ---------- accesso ----------
+  function mostraAccesso(msg){
+    DATI = null;
+    document.getElementById('loginGate').style.display = 'flex';
+    document.getElementById('pagina').style.display = 'none';
+    document.getElementById('azioniTop').style.display = 'none';
+    document.getElementById('loginStatus').textContent = msg || '';
+    document.getElementById('btnEntra').disabled = false;
+  }
+  function mostraPagina(){
+    document.getElementById('loginGate').style.display = 'none';
+    document.getElementById('pagina').style.display = 'block';
+    document.getElementById('azioniTop').style.display = 'flex';
+  }
+  function entra(e){
+    e.preventDefault();
+    const u = document.getElementById('u').value.trim().toLowerCase();
+    const p = document.getElementById('p').value;
+    if(!u || !p){ document.getElementById('loginStatus').textContent = 'Scrivi utente e password.'; return; }
+    sessionStorage.setItem(AUTH_KEY, btoa(unescape(encodeURIComponent(u + ':' + p))));
+    document.getElementById('p').value = '';
+    document.getElementById('btnEntra').disabled = true;
+    document.getElementById('loginStatus').textContent = '';
+    carica();
+  }
+  function esci(){ sessionStorage.removeItem(AUTH_KEY); mostraAccesso(); }
+
+  // ---------- lettura ----------
+  async function carica(){
+    if(!sessionStorage.getItem(AUTH_KEY)){ mostraAccesso(); return; }
+    try{
+      const res = await fetch(URL_PROPOSTE, { headers: authHeader(), cache: 'no-store' });
+      if(res.status === 401 || res.status === 403){ sessionStorage.removeItem(AUTH_KEY); mostraAccesso('Utente o password sbagliati.'); return; }
+      let data = null;
+      try{ data = await res.json(); }catch(_){ data = null; }
+      if(!res.ok) throw new Error((data && data.errore) ? data.errore : 'risposta ' + res.status);
+      if(!data || !Array.isArray(data.proposte)) throw new Error('risposta senza le proposte');
+      DATI = data;
+      mostraPagina();
+      disegna();
+    }catch(err){
+      // Senza login giusto o con n8n spento il browser vede spesso solo un errore di rete.
+      const rete = err instanceof TypeError;
+      if(!DATI){
+        if(rete) sessionStorage.removeItem(AUTH_KEY);
+        mostraAccesso(rete ? 'Utente o password sbagliati, oppure il servizio non risponde. Riprova tra poco.' : 'Errore: ' + err.message);
+      } else {
+        avviso('Non riesco ad aggiornare la pagina: ' + err.message + '. Riprova tra poco.', 'err');
+      }
+    }
+  }
+
+  // ---------- disegno ----------
+  function disegna(){
+    const tutte = DATI.proposte;
+    const corrente = DATI.settimana_corrente;
+    const questa = tutte.filter(p => p.settimana === corrente);
+    const passate = tutte.filter(p => p.settimana !== corrente);
+    const daDecidere = questa.filter(p => (p.stato || 'da proporre') === 'da proporre').length;
+    const daSegnare = questa.filter(p => p.stato === 'approvata').length;
+
+    let r = '';
+    if(!questa.length){ r = 'Per ora non ci sono proposte. Arrivano ogni lunedì mattina.'; }
+    else{
+      r = 'Proposte di questa settimana: <b>' + questa.length + '</b>.';
+      if(daDecidere) r += ' Da decidere: <b>' + daDecidere + '</b>.';
+      if(daSegnare) r += ' Approvate da segnare come inviate: <b>' + daSegnare + '</b>.';
+      if(!daDecidere && !daSegnare) r += ' Hai deciso tutto, grazie.';
+    }
+    document.getElementById('riepilogo').innerHTML = r;
+
+    document.getElementById('settimana').innerHTML = questa.length
+      ? questa.map(scheda).join('')
+      : '<div class="vuoto">Nessuna proposta questa settimana.</div>';
+
+    const gruppi = {};
+    passate.forEach(p => { (gruppi[p.settimana || '—'] = gruppi[p.settimana || '—'] || []).push(p); });
+    const chiavi = Object.keys(gruppi).sort().reverse();
+    document.getElementById('storico').style.display = chiavi.length ? 'block' : 'none';
+    document.getElementById('storicoLista').innerHTML = chiavi.map(k => {
+      const lista = gruppi[k];
+      const inviate = lista.filter(p => p.stato === 'inviata').length;
+      return '<details class="sett"><summary>Settimana ' + esc(settimanaLeggibile(k)) + ' · ' + lista.length + ' proposte, ' + inviate + ' inviate</summary>' +
+        '<div class="dentro">' + lista.map(scheda).join('') + '</div></details>';
+    }).join('');
+  }
+
+  function settimanaLeggibile(s){
+    const m = /^(\d{4})-W(\d{2})$/.exec(s || '');
+    if(!m) return s;
+    // lunedì della settimana ISO
+    const anno = +m[1], sett = +m[2];
+    const g4 = new Date(Date.UTC(anno, 0, 4));
+    const lun = new Date(g4); lun.setUTCDate(g4.getUTCDate() - ((g4.getUTCDay() || 7) - 1) + (sett - 1) * 7);
+    return 'del ' + lun.toLocaleDateString('it-IT', {timeZone:'UTC', day:'numeric', month:'long'});
+  }
+
+  function statoEtichetta(p){
+    const s = p.stato || 'da proporre';
+    if(s === 'approvata') return '<span class="stato approvata">Approvata</span>';
+    if(s === 'inviata') return '<span class="stato inviata">Inviata</span>';
+    if(s === 'scartata') return '<span class="stato scartata">Scartata</span>';
+    return '<span class="stato da">Da decidere</span>';
+  }
+
+  function scheda(p){
+    const s = p.stato || 'da proporre';
+    const id = Number(p.id);
+    const notizia = linkSicuro(p.link_notizia);
+    const li = linkSicuro(p.link_linkedin);
+    const fatta = (s === 'inviata' || s === 'scartata');
+    let h = '<article class="prop' + (fatta ? ' fatta' : '') + '" id="prop-' + id + '">';
+    h += '<div class="testa"><div><h2 class="azienda">' + esc(p.azienda) + '</h2><div class="etichette">' +
+      '<span class="tag">' + esc(paeseNome(p.paese)) + '</span>' +
+      (p.lingua ? '<span class="tag">Testi ' + esc(lingua(p.lingua)) + '</span>' : '') +
+      (p.gia_cliente ? '<span class="tag cliente">Già cliente</span>' : '') +
+      '</div></div>' + statoEtichetta(p) + '</div>';
+
+    if(p.gia_cliente) h += '<div class="avviso-cliente"><b>Attenzione: è già cliente di Yobee</b> (è nella cartella clienti di Drive). Decidi tu se scrivere o lasciare stare.</div>';
+
+    h += '<div class="blocco"><h3>Perché adesso</h3><p>' +
+      (notizia ? '<a href="' + esc(notizia) + '" target="_blank" rel="noopener">' + esc(p.titolo_notizia || notizia) + '</a>' : esc(p.titolo_notizia || '')) +
+      '</p>' + (p.data_notizia ? '<p class="piccolo">' + esc(p.data_notizia) + '</p>' : '') + '</div>';
+
+    h += '<div class="blocco"><h3>A chi scrivere</h3><p><span class="persona">' + esc(p.dm_nome) + '</span>' +
+      (p.dm_ruolo ? ' — ' + esc(p.dm_ruolo) : '') + '</p>' +
+      (li ? '<a class="btn-li" href="' + esc(li) + '" target="_blank" rel="noopener">Apri il profilo LinkedIn</a>' : '') + '</div>';
+
+    h += '<div class="blocco"><h3>Cosa proporre</h3><p><b>' + esc(p.servizio) + '</b></p>' +
+      (p.motivo ? '<p class="piccolo">' + esc(p.motivo) + '</p>' : '') + '</div>';
+
+    h += testoDaCopiare(id, 'nota', "1 · Nota d'invito (con la richiesta di collegamento)", p.nota_invito, true);
+    h += testoDaCopiare(id, 'messaggio', '2 · Messaggio (quando accetta il collegamento)', p.messaggio, false);
+
+    h += '<div class="decidi">' + decisione(p, id, s) + '</div>';
+    h += '</article>';
+    return h;
+  }
+
+  function testoDaCopiare(id, chi, titolo, testo, conteggio){
+    const t = testo || '';
+    return '<div class="blocco"><h3>' + esc(titolo) + '</h3><div class="testo" id="t-' + chi + '-' + id + '">' + esc(t) + '</div>' +
+      '<div class="riga-copia"><span class="piccolo">' + (conteggio ? t.length + ' caratteri (LinkedIn ne accetta 200 nella nota)' : '') + '</span>' +
+      '<button class="copia" type="button" onclick="copia(this, ' + id + ', \'' + chi + '\')">Copia</button></div></div>';
+  }
+
+  function decisione(p, id, s){
+    const dis = occupato ? ' disabled' : '';
+    if(aperti[id]){
+      return '<p class="domanda">Perché la scarti?</p><div class="bottoni">' +
+        MOTIVI.map((m, i) => '<button class="b no" type="button"' + dis + ' onclick="scarta(' + id + ', ' + i + ')">' + esc(m.charAt(0).toUpperCase() + m.slice(1)) + '</button>').join('') +
+        '<button class="b leggero" type="button" onclick="chiudiScarto(' + id + ')">Lascia stare</button></div>';
+    }
+    if(s === 'da proporre'){
+      return '<p class="domanda">La mandi?</p><div class="bottoni">' +
+        '<button class="b si" type="button"' + dis + ' onclick="decidi(' + id + ', \'approva\')">Approva</button>' +
+        '<button class="b no" type="button"' + dis + ' onclick="apriScarto(' + id + ')">Scarta</button></div>';
+    }
+    if(s === 'approvata'){
+      return '<p class="domanda">Approvata. Dopo averla mandata su LinkedIn, dimmi com\'è andata:</p><div class="bottoni">' +
+        '<button class="b si" type="button"' + dis + ' onclick="decidi(' + id + ', \'inviato_cosi\')">Inviato così com\'era</button>' +
+        '<button class="b si" type="button"' + dis + ' onclick="decidi(' + id + ', \'inviato_modifiche\')">Inviato con modifiche</button>' +
+        '<button class="b no" type="button"' + dis + ' onclick="apriScarto(' + id + ')">Scarta</button>' +
+        '<button class="b leggero" type="button"' + dis + ' onclick="decidi(' + id + ', \'annulla\')">Annulla</button></div>';
+    }
+    let frase = '';
+    if(s === 'inviata') frase = 'Inviata ' + (p.invio ? '(' + esc(p.invio) + ')' : '') + (p.deciso_il ? ' il ' + esc(giorno(p.deciso_il)) : '') + '.';
+    else if(s === 'scartata') frase = 'Scartata' + (p.motivo_scarto ? ': ' + esc(p.motivo_scarto) : '') + (p.deciso_il ? ' (' + esc(giorno(p.deciso_il)) + ')' : '') + '.';
+    else frase = 'Stato: ' + esc(s) + '.';
+    return '<p class="domanda">' + frase + '</p><div class="bottoni">' +
+      '<button class="b leggero" type="button"' + dis + ' onclick="decidi(' + id + ', \'annulla\')">Annulla</button></div>';
+  }
+
+  // ---------- copia ----------
+  async function copia(btn, id, chi){
+    const p = DATI && DATI.proposte.find(x => Number(x.id) === id);
+    const testo = p ? (chi === 'nota' ? p.nota_invito : p.messaggio) || '' : '';
+    let ok = false;
+    try{ await navigator.clipboard.writeText(testo); ok = true; }
+    catch(_){
+      // ripiego per i browser che non danno gli appunti: seleziona il testo
+      const el = document.getElementById('t-' + chi + '-' + id);
+      const ta = document.createElement('textarea'); ta.value = testo; document.body.appendChild(ta); ta.select();
+      try{ ok = document.execCommand('copy'); }catch(__){ ok = false; }
+      document.body.removeChild(ta);
+      if(!ok && el){ const r = document.createRange(); r.selectNodeContents(el); const s = getSelection(); s.removeAllRanges(); s.addRange(r); }
+    }
+    btn.textContent = ok ? 'Copiato ✓' : 'Selezionato: premi Cmd+C';
+    btn.classList.toggle('fatto', ok);
+    setTimeout(() => { btn.textContent = 'Copia'; btn.classList.remove('fatto'); }, 2500);
+  }
+
+  // ---------- decisioni ----------
+  function apriScarto(id){ aperti[id] = true; disegna(); }
+  function chiudiScarto(id){ delete aperti[id]; disegna(); }
+  function scarta(id, i){ decidi(id, 'scarta', MOTIVI[i]); }
+
+  async function decidi(id, azione, motivo){
+    if(occupato) return;
+    occupato = true; disegna();
+    avviso('');
+    const corpo = { id, azione };
+    if(azione === 'scarta') corpo.motivo = motivo;
+    try{
+      const res = await fetch(URL_DECISIONE, {
+        method: 'POST',
+        headers: Object.assign({ 'Content-Type': 'application/json' }, authHeader()),
+        body: JSON.stringify(corpo),
+        cache: 'no-store'
+      });
+      if(res.status === 401 || res.status === 403){ sessionStorage.removeItem(AUTH_KEY); occupato = false; mostraAccesso('Accesso scaduto: rientra con utente e password.'); return; }
+      let data = null;
+      try{ data = await res.json(); }catch(_){ data = null; }
+      occupato = false;
+      delete aperti[id];
+      if(res.ok && data && data.proposta){
+        const i = DATI.proposte.findIndex(x => Number(x.id) === id);
+        if(i >= 0) DATI.proposte[i] = data.proposta;
+        disegna();
+        avviso(messaggioFatto(azione, data.proposta), 'ok');
+        return;
+      }
+      if(res.status === 409){
+        avviso('Questa proposta era già stata aggiornata: ricarico la pagina.', 'ok');
+        await carica();
+        return;
+      }
+      throw new Error((data && data.errore) ? data.errore : 'risposta ' + res.status);
+    }catch(err){
+      occupato = false; disegna();
+      avviso('La scelta non è stata salvata: ' + (err instanceof TypeError ? 'il servizio non risponde' : err.message) + '. Riprova tra poco.', 'err');
+    }
+  }
+
+  function messaggioFatto(azione, p){
+    const a = p && p.azienda ? p.azienda : 'la proposta';
+    if(azione === 'approva') return 'Approvata ' + a + '. Quando l\'hai mandata su LinkedIn, segnalo qui sotto.';
+    if(azione === 'inviato_cosi' || azione === 'inviato_modifiche') return 'Segnata come inviata: ' + a + '.';
+    if(azione === 'scarta') return 'Scartata ' + a + '.';
+    if(azione === 'annulla') return 'Annullato: ' + a + ' è di nuovo da decidere.';
+    return 'Salvato.';
+  }
+
+  if(sessionStorage.getItem(AUTH_KEY)){ carica(); } else { mostraAccesso(); }
+</script>
+</body>
+</html>
