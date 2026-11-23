@@ -126,9 +126,12 @@
       <p class="eyebrow">Paleari bot</p>
       <h1>Proposte LinkedIn</h1>
     </div>
-    <div class="azioni-top" id="azioniTop" style="display:none">
-      <button class="btn-line" type="button" onclick="carica()">↻ Aggiorna</button>
-      <button class="btn-line" type="button" onclick="esci()">Esci</button>
+    <div class="azioni-top">
+      <a class="btn-line" href="../" style="text-decoration:none">← Hub</a>
+      <span class="azioni-top" id="azioniTop" style="display:none">
+        <button class="btn-line" type="button" onclick="carica()">↻ Aggiorna</button>
+        <button class="btn-line" type="button" onclick="esci()">Esci</button>
+      </span>
     </div>
   </header>
 
@@ -176,6 +179,14 @@
   // ---------- utilità ----------
   function esc(s){ return String(s == null ? '' : s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
   function linkSicuro(u){ return (typeof u === 'string' && /^https?:\/\//i.test(u)) ? u : null; }
+  // La data di Serper è relativa al momento della ricerca ("7 ore fa"): da sola invecchia.
+  // Si mostra il giorno in cui il bot l'ha trovata, con il testo di Serper tra parentesi.
+  function dataNotizia(p){
+    const trovata = giorno(p.data_esecuzione);
+    if(!trovata && !p.data_notizia) return '';
+    const testo = trovata ? 'Trovata il ' + trovata + (p.data_notizia ? ' (' + p.data_notizia + ')' : '') : p.data_notizia;
+    return '<p class="piccolo">' + esc(testo) + '</p>';
+  }
   function giorno(iso){ if(!iso) return ''; const d = new Date(iso); return isNaN(d) ? String(iso) : d.toLocaleDateString('it-IT', {timeZone:FUSO, day:'numeric', month:'long'}); }
   function paeseNome(p){ return p === 'IT' ? 'Italia' : (p === 'HU' ? 'Ungheria' : (p || '')); }
   function lingua(l){ return l === 'en' ? 'in inglese' : (l === 'it' ? 'in italiano' : ''); }
@@ -308,7 +319,7 @@
 
     h += '<div class="blocco"><h3>Perché adesso</h3><p>' +
       (notizia ? '<a href="' + esc(notizia) + '" target="_blank" rel="noopener">' + esc(p.titolo_notizia || notizia) + '</a>' : esc(p.titolo_notizia || '')) +
-      '</p>' + (p.data_notizia ? '<p class="piccolo">' + esc(p.data_notizia) + '</p>' : '') + '</div>';
+      '</p>' + dataNotizia(p) + '</div>';
 
     h += '<div class="blocco"><h3>A chi scrivere</h3><p><span class="persona">' + esc(p.dm_nome) + '</span>' +
       (p.dm_ruolo ? ' — ' + esc(p.dm_ruolo) : '') + '</p>' +
