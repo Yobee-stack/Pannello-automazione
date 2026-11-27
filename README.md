@@ -1,5 +1,7 @@
 # Yobee AI Operations Hub
 
+Ideato e costruito da Alfonso Buonaiuto (2026). Dal 27/11/2026 lo gestisce Marco Donadei.
+
 Sito unico su GitHub Pages, servito da `main`: https://yobee-stack.github.io/Pannello-automazione/
 
 - `/` — Automazioni (colleghi): avvia i workflow n8n dalle card.
